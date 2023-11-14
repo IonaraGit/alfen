@@ -158,7 +158,13 @@ router.get ('/admin/orcamentos/decisao/:id', (req, res) => {
             Modelo.findAll().then(modelos => {
               Orcamento.findAll().then(orcamentos => {
                 Colaborador.findAll().then(colaboradores => {
-                  res.render('orcamento/decisao', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos: orcamentos, colaboradores: colaboradores, id})
+                  Prestacao.findAll().then(prestacoes => {
+                    Btu.findAll().then(btus => {
+                      Ambiente.findAll().then(ambientes => {
+                        res.render('orcamento/decisao', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id})
+                      })
+                    })
+                  })
                 })
               })
               
