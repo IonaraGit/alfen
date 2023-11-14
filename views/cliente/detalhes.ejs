@@ -1,0 +1,589 @@
+<%- include ('../../partials/conf_header.ejs') %>
+<%- include ('../../partials/header_sistema.ejs') %>
+
+<body>
+  <div class="row">
+    <div class="col-md-2">
+      <div class="nav flex-column nav-pills principal" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#dados-pessoais" role="tab" aria-controls="dados-pessoais" aria-selected="false">Dados Pessoais</a>
+        <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#novo-orcamento" role="tab" aria-controls="v-pills-profile" aria-selected="false">Novo Orçamento</a>
+        <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#servicos-prestados" role="tab" aria-controls="#servicos-prestados" aria-selected="true">Serviços Prestados</a>
+        <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#orcamentos-cadastrados" role="tab" aria-controls="v-pills-settings" aria-selected="false">Orçamentos Cadastrados</a>
+          
+        <a href="/admin/orcamento/novo/<%= cliente.id %>">
+          N**ovo Orçamento
+        </a>
+        
+      </div>
+    </div>
+    <div class="col-md-10">
+      <div class="tab-content principal" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="dados-pessoais" role="tabpanel" aria-labelledby="v-pills-home-tab">
+          <!-- INICIO DADOS PESSOAIS -->
+            <div class="principal" style="height: 100vh; text-transform: uppercase;">
+              <form method="POST" action="">
+                <div class="p-1" style="background-color: #e3e3e3;">
+                  <div class="form-row">
+                    <div class="form-group col-md-12">
+                      <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
+                      <input type="text" class="form-control" name="nome" id="nome" value="<%= cliente.nome%>" required>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="cpf" class="label-novo">CPF <span style="color: crimson;">*</span></label>
+                      <input type="text" class="form-control" name="cpf" id="cpf" value="<%= cliente.cpf%>" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="rg" class="label-novo">RG</label>
+                      <input type="text" class="form-control" name="rg" id="rg" value="<%= cliente.rg%>">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="celular" class="label-novo">Celular <span style="color: crimson;">*</span></label>
+                      <input type="text" class="form-control" name="celular" id="celular" value="<%= cliente.celular%>" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="telefone" class="label-novo">Telefone</label>
+                      <input type="text" class="form-control" name="telefone" id="telefone" value="<%= cliente.telefone%>">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="complemento" class="label-novo">E-mail <span style="color: crimson;">*</span></label>
+                    <input type="email" class="form-control" name="email" id="email" value="<%= cliente.email%>" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="qtd" class="label-novo">Como conheceu nossa empresa? <span style="color: crimson;">*</span></label>
+                    <select class="form-control" name="origem">
+                      <% origens.forEach((origem) => { %>
+                        <% if (origem.id == cliente.origenId) { %>
+                          <option value="<%= origem.id %>"><%= origem.descricao %></option>
+                        <% } %>
+                      <% }) %>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="p-1 mt-1" style="background-color: #e3e3e3;">
+                  <% enderecos.forEach (endereco => { %>
+                    <% if (endereco.clienteId === cliente.id) { %>
+                      <div class="form-row">
+                        <div class="form-group col-md-8">
+                          <label for="logadouro" class="label-novo">Logadouro <span style="color: crimson;">*</span></label>
+                          <input type="text" class="form-control" name="logadouro" id="logadouro" value="<%= endereco.logadouro %>" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label for="numero" class="label-novo">N° <span style="color: crimson;">*</span></label>
+                          <input type="text" class="form-control" name="numero" id="numero" value="<%= endereco.numero %>" required>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="complemento" class="label-novo">Complemento <span style="color: crimson;">*</span></label>
+                        <input type="text" class="form-control" name="complemento" id="complemento" value="<%= endereco.complemento %>" required>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="cidade" class="label-novo">Cidade <span style="color: crimson;">*</span></label>
+                          <input type="text" class="form-control" name="cidade" id="cidade" value="<%= endereco.cidade %>" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="cep" class="label-novo">CEP <span style="color: crimson;">*</span></label>
+                          <input type="text" class="form-control" name="cep" id="cep" value="<%= endereco.cep %>" required>
+                        </div>
+                      </div>
+                    <% } %>
+                  <% }) %>
+                </div>
+               
+              
+               
+          
+             
+              
+                
+          
+                <div class="row">
+                  
+                  <div class="col mt-3">
+                    <a type="button"class="btn bg-secondary" style="width: 100%; color: aliceblue;" data-toggle="modal" data-target="#exampleModal"><i class="bi bi-calculator"></i> CALCULO RÁPIDO</a>
+                  </div>
+                  <div class="col mt-3">
+                    <button class="btn btn-success" style="width: 100%;">SALVAR ALTERAÇÕES</button>
+                  </div>
+                </div>
+          
+                
+                
+              
+              </form>
+            </div>
+          <!-- FIM DADOS PESSOAIS -->
+        </div>
+        <div class="tab-pane fade" id="novo-orcamento" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+          <!--INICIO NOVO ORÇAMENTO -->
+          <div class="mt-3">
+    
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
+                <input type="text" class="form-control" name="nome" id="nome" value="<%= cliente.nome%>" readonly>
+              </div>
+            </div>
+        
+            <% enderecos.forEach (endereco => { %>
+              <% if (endereco.clienteId === cliente.id) { %>
+                <div class="form-row">
+                  <div class="form-group col-md-8">
+                    <label for="logadouro" class="label-novo">Logadouro <span style="color: crimson;">*</span></label>
+                    <input type="text" class="form-control" name="logadouro" id="logadouro" value="<%= endereco.logadouro %>" readonly>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="numero" class="label-novo">N° <span style="color: crimson;">*</span></label>
+                    <input type="text" class="form-control" name="numero" id="numero" value="<%= endereco.numero %>" readonly>
+                  </div>
+                </div>
+              <% } %> 
+            <% }) %>   
+            
+            <hr>
+                
+            <!--INICIO ABRIR NOVOS SERVICOS-->
+            <div id="modeloCamposServico" style="display: none;">
+              <hr>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-row">
+        
+                    <div class="form-group col-lg-1">
+                      <label for="quantidade" class="label-novo">Qtd <span style="color: crimson;">*</span></label>
+                      <input type="number" class="form-control" name="quantidade" id="quantidade" required>
+                    </div>
+                    <div class="form-group col-lg-1">
+                      <label for="marca" class="label-novo">PRESTAÇÃO<span style="color: crimson;">*</span></label>
+                      <select id="prestacaoSelect" class="form-control" name="prestacao">
+                        <% prestacoes.forEach ((prestacao) => { %>
+                        <option value="<%=prestacao.id%>"><%=prestacao.descricao%></option>
+                        <% }) %>
+                      </select>
+                    </div>
+                    <div class="form-group col-lg-1">
+                      <label for="btus" class="label-novo">Btus<span style="color: crimson;">*</span></label>
+                      <select id="selecaoBtus" class="form-control" name="btus">
+                        <% btus.forEach ((btu) => { %>
+                          <option value="<%=btu.id%>"><%=btu.descricao%></option>
+                        <% }) %>
+                      </select>
+                    </div>
+            
+                    <div class="form-group col-lg-1">
+                      <label for="marca" class="label-novo">Marca<span style="color: crimson;">*</span></label>
+                      <select id="marcaSelect" class="form-control" name="marca">
+                        <% marcas.forEach ((marca) => { %>
+                        <option value="<%=marca.id%>"><%=marca.descricao%></option>
+                        <% }) %>
+                      </select>
+                    </div>
+            
+                    <div class="form-group col-lg-1">
+                      <label for="modelo" class="label-novo">MODELO<span style="color: crimson;">*</span></label>
+                      <select id="modeloSelect" class="form-control" name="modelo">
+                        <% modelos.forEach ((modelo) => { %>
+                          <option value="<%=modelo.id%>"><%=modelo.descricao%></option>
+                        <% }) %>
+                      </select>
+                    </div>
+            
+                    <div class="form-group col-lg-1">
+                      <label for="ambiente" class="label-novo">AMBIENTE<span style="color: crimson;">*</span></label>
+                        <select id="ambiente" class="form-control" name="ambiente">
+                          <% ambientes.forEach ((ambiente) => { %>
+                            <option value="<%=ambiente.id%>"><%=ambiente.descricao%></option>
+                          <% }) %> 
+                        </select>
+                      </div>
+            
+                    <div class="form-group col-lg-1">
+                      <label for="valor" class="label-novo">Valor <span style="color: crimson;">*</span></label>
+                      <input type="number" class="form-control" name="valor" id="valor" required>
+                    </div>
+                  
+                  
+                  <div class="form-group col-lg-4">
+                    <label for="observacoes" class="label-novo">Observações <span style="color: crimson;">*</span></label>
+                    <input class="form-control" name="observacao"></input>
+                  </div>
+                  <div class=" form-group col-lg-1 m-auto text-center">
+                    <button class="btn-danger botao-remover-servico rounded-circle"><i class="bi bi-x-lg"></i></button>
+                  </div>
+                    
+                </div>
+                </div>       
+              </div>
+              
+              
+              
+            
+            </div>
+           
+            <!--FIM ABRIR NOVOS SERVICOS-->
+           
+            <form method="POST" action="/orcamento/salvar" >
+              <input type="hidden" value="<%= cliente.id %>" name="id"/>
+      
+              
+             
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-row">
+                    <div class="form-group col-lg-1">
+                      <label for="quantidade" class="label-novo">Qtd <span style="color: crimson;">*</span></label>
+                      <input type="number" class="form-control" name="quantidade" id="quantidade" required>
+                    </div>
+        
+                    <div class="form-group col-lg-1">
+                      <label for="marca" class="label-novo">PRESTAÇÃO<span style="color: crimson;">*</span></label>
+                      <select id="prestacaoSelect" class="form-control" name="prestacao">
+                        <% prestacoes.forEach ((prestacao) => { %>
+                        <option value="<%=prestacao.id%>"><%=prestacao.descricao%></option>
+                        <% }) %>
+                      </select>
+                    </div>
+      
+                    <div class="form-group col-lg-1">
+                      <label for="btus" class="label-novo">Btus<span style="color: crimson;">*</span></label>
+                      <select id="selecaoBtus" class="form-control" name="btus">
+                        <% btus.forEach ((btu) => { %>
+                          <option value="<%=btu.id%>"><%=btu.descricao%></option>
+                        <% }) %>
+                      </select>
+                    </div>
+        
+                    <div class="form-group col-lg-1">
+                      <label for="marca" class="label-novo">Marca<span style="color: crimson;">*</span></label>
+                      <select id="marcaSelect" class="form-control" name="marca">
+                        <% marcas.forEach ((marca) => { %>
+                        <option value="<%=marca.id%>"><%=marca.descricao%></option>
+                        <% }) %>
+                      </select>
+                    </div>
+                    <div class="form-group col-lg-1">
+                      <label for="modelo" class="label-novo">MODELO<span style="color: crimson;">*</span></label>
+                      <select id="modeloSelect" class="form-control" name="modelo">
+                        <% modelos.forEach ((modelo) => { %>
+                          <option value="<%=modelo.id%>"><%=modelo.descricao%></option>
+                        <% }) %>
+                      </select>
+                    </div>
+        
+                    <div class="form-group col-lg-1">
+                      <label for="ambiente" class="label-novo">AMBIENTE<span style="color: crimson;">*</span></label>
+                      <select id="ambiente" class="form-control" name="ambiente">
+                        <% ambientes.forEach ((ambiente) => { %>
+                          <option value="<%=ambiente.id%>"><%=ambiente.descricao%></option>
+                        <% }) %> 
+                      </select>
+                    </div>
+        
+                    <div class="form-group col-lg-1">
+                      <label for="valor" class="label-novo">Valor <span style="color: crimson;">*</span></label>
+                      <input type="number" class="form-control" name="valor" id="valor" required>
+                    </div>
+                  
+                    <div class="form-group col-lg-4">
+                      <label for="observacoes" class="label-novo">Observações <span style="color: crimson;">*</span></label>
+                      <input class="form-control" rows="1" name="observacao"></input>
+                    </div>
+                    <div class="form-group col-lg-1 m-auto text-center">
+                      <button class="btn-secondary botao-remover-servico rounded-circle" disabled><i class="bi bi-x-lg"></i></button>
+                    </div>
+                    
+                  </div>
+                  <div id="campoServicoContainer">
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <div class="form-row">
+                  <div class="form-group col text-center">
+                    <button type="button" id="adicionarServicoButton" class="btn btn-primary float-left">Adicionar mais serviços <i class="bi bi-plus-circle"></i></button>
+                  </div>
+                  <div class="form-group col text-center">
+                    <button type="submit" class="btn btn-success float-right">Salvar 
+                      <i class="bi bi-check2-circle"></i></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+           
+          </div>
+          <!--FIM NOVO ORÇAMENTO -->
+        </div>
+        <div class="tab-pane fade" id="servicos-prestados" role="tabpanel" aria-labelledby="servicos-prestados">
+          <table class="table table-bordered mt-2">
+            <thead>
+              <tr>
+                <th>Quantidade</th>
+                <th>Serviço Prestado</th>
+                <th>BTUS</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Ambiente</th>
+                <th>Observações</th>
+                <th>Data de Finalização</th>
+                <th>Responsável</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orcamentos.forEach((orcamento) => { %>
+                <% if ((cliente.id == orcamento.clienteId) && (orcamento.contratado == 1)) { %>
+                  <tr>
+                    <td><%= orcamento.qtd %></td>
+                    <% prestacoes.forEach((prestacao) => { %>
+                      <% if (prestacao.id == orcamento.prestacoId) { %>
+                        <td><%= prestacao.descricao %></td>
+                      <% } %>
+                    <% }) %>
+                    <% btus.forEach((btu) => { %>
+                      <% if (btu.id == orcamento.btuId) { %>
+                        <td><%= btu.descricao %></td>
+                      <% } %>
+                    <% }) %>
+                    <% marcas.forEach((marca) => { %>
+                      <% if (marca.id == orcamento.marcaId) { %>
+                        <td><%= marca.descricao %></td>
+                      <% } %>
+                    <% }) %>
+                    <% modelos.forEach((modelo) => { %>
+                      <% if (modelo.id == orcamento.modeloId) { %>
+                        <td><%= modelo.descricao %></td>
+                      <% } %>
+                    <% }) %>
+                    <% ambientes.forEach((ambiente) => { %>
+                      <% if (ambiente.id == orcamento.ambienteId) { %>
+                        <td><%= ambiente.descricao %></td>
+                      <% } %>
+                    <% }) %>
+                    <td><%= orcamento.observacao %></td>
+                    <td><%= new Date(orcamento.updatedAt).toLocaleDateString('pt-BR') %></td>
+                    <% colaboradores.forEach((colaborador) => { %>
+                      <% if (colaborador.id == orcamento.colaboradoreId) { %>
+                        <td><%= colaborador.nome %></td>
+                      <% } %>
+                    <% }) %>
+                  </tr>
+                <% } %>
+              <% }) %>
+            </tbody>
+          </table>
+          
+
+        </div>
+        <div class="tab-pane fade" id="orcamentos-cadastrados" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+          <!--INICIO ORCAMENTOS CADASTRADOS -->
+            <div class="principal">
+              <div class="mt-3">
+                <div class="form-row">
+                  <div class="form-group col-md-12">
+                    <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
+                    <input type="text" class="form-control" name="nome" id="nome" value="<%= cliente.nome%>" readonly>
+                  </div>
+                </div>
+            
+                <% enderecos.forEach (endereco => { %>
+                  <% if (endereco.clienteId === cliente.id) { %>
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <label for="logadouro" class="label-novo">Logadouro <span style="color: crimson;">*</span></label>
+                        <input type="text" class="form-control" name="logadouro" id="logadouro" value="<%= endereco.logadouro %>" readonly>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="numero" class="label-novo">N° <span style="color: crimson;">*</span></label>
+                        <input type="text" class="form-control" name="numero" id="numero" value="<%= endereco.numero %>" readonly>
+                      </div>
+                    </div>
+                  <% } %> 
+                <% }) %>  
+          
+              </div>
+              <div id="mensagem" class="alert alert-success text-center" role="alert">
+                Orçamento cadastrado com sucesso!
+              </div>
+              <div class="row">
+                <div class="col-md-3 mt-1">
+                  <button class="btn btn-info btn-block">
+                    Voltar e editar
+                  </button>
+                </div>
+                <div class="col-md-3 mt-1">
+                  <button class="btn btn-info btn-block">
+                    Enviar por e-mail e finalizar
+                  </button>
+                </div>
+                <div class="col-md-3 mt-1">
+                  <button class="btn btn-info btn-block">
+                    Somente finalizar
+                  </button>
+                </div>
+                <div class="col-md-3 mt-1">
+                  <button class="btn btn-info btn-block">
+                    Prosseguir agendamento
+                  </button>
+                </div>
+              </div>
+            </div>
+          <!--FIM ORCAMENTOS CADASTRADOS -->
+        </div>
+      </div>
+      <input value="<%= cliente.id %>" name="id"/>
+      
+    </div>
+  </div>
+  
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Novo orçamento</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="cpf" class="label-novo">Comprimento <span style="color: crimson;">*</span></label>
+              <input type="number" class="form-control" name="comprimento" id="comprimento" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="cpf" class="label-novo">Largura <span style="color: crimson;">*</span></label>
+              <input type="number" class="form-control" name="largura" id="largura" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="cpf" class="label-novo">Altura <span style="color: crimson;">*</span></label>
+              <input type="number" class="form-control" name="altura" id="altura" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="cpf" class="label-novo">Fator isolamento <span style="color: crimson;">*</span></label>
+              <input type="number" class="form-control" name="largura" id="largura" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="cpf" class="label-novo">Qtd de pessoas <span style="color: crimson;">*</span></label>
+              <input type="number" class="form-control" name="pessoas" id="pessoas" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="cpf" class="label-novo">Fontes de calor<span style="color: crimson;">*</span></label>
+              <input type="number" class="form-control" name="largura" id="largura" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="cpf" class="label-novo">Sugestão de Btus<span style="color: crimson;">*</span></label>
+              <select id="selecaoBtus" style="display: none;" class="form-control">
+                <option value="7">7 BTUs</option>
+                <option value="9">9 BTUs</option>
+                <option value="12">12 BTUs</option>
+              </select>
+            </div>
+          </div>
+        
+        </div>
+        <div class="modal-footer">
+         <button type="button" class="btn btn-primary" onclick="calcularESelecionarBtus()">Calcular</button>
+         <button id="alterarBotao" class="btn btn-primary"  onclick="habilitarEdicao()"  style="display: none;">Prosseguir para orçamento</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  
+  
+</body>
+
+<script>
+
+  function calcularESelecionarBtus() {
+    var largura = parseFloat(document.getElementById('largura').value);
+  
+    console.log(largura)
+    if (isNaN(largura)) {
+    alert('Por favor, preencha todos os campos antes de calcular.');
+    return;
+    }
+
+    // Realize os cálculos, por exemplo:
+    var resultado = largura * largura;
+    
+    // Obtenha o elemento select
+    var selecaoBtus = document.getElementById('selecaoBtus');
+  
+    // Calcule a diferença mínima e inicialize a variável para armazenar o valor mais próximo
+    var diferencaMinima = Infinity;
+    var opcaoSelecionada = null;
+  
+    // Percorra as opções do select
+    for (var i = 0; i < selecaoBtus.options.length; i++) {
+      var valorOpcao = parseFloat(selecaoBtus.options[i].value);
+      var diferenca = Math.abs(resultado - valorOpcao);
+  
+      // Verifique se a diferença é menor que a diferença mínima atual
+      if (diferenca < diferencaMinima) {
+        diferencaMinima = diferenca;
+        opcaoSelecionada = selecaoBtus.options[i];
+      }
+    }
+  
+    // Selecione a opção mais próxima
+    opcaoSelecionada.selected = true;
+    selecaoBtus.style.display = 'block'
+    alterarBotao.style.display = 'block';
+  }
+  
+  
+  //CALCULAR BTUS
+  function calcularOrcamento() {
+    var largura = parseFloat(document.getElementById('largura').value);
+  
+    // Realize os cálculos, por exemplo:
+    var teste = largura * largura;
+  
+     // Selecione o campo de entrada e o botão "Alterar"
+    var resultadoInput = document.getElementById('resultadoInput');
+    var alterarBotao = document.getElementById('alterarBotao');
+  
+    // Defina o valor do campo de entrada com o resultado
+    resultadoInput.value = 'Carga Térmica: ' + teste + ' BTUs';
+  
+    // Mostre o campo de entrada e o botão "Alterar"
+    resultadoInput.style.display = 'block';
+    alterarBotao.style.display = 'block';
+  }
+  
+  
+  </script>
+
+<script>
+  var botaoAdicionarServico = document.getElementById('adicionarServicoButton');
+  var camposServicoContainer = document.getElementById('campoServicoContainer'); // Use o ID correto do contêiner
+  
+  // Adicione um ouvinte de evento para o botão "Adicionar mais serviços"
+  botaoAdicionarServico.addEventListener('click', function () {
+    var novoCampoServico = document.getElementById('modeloCamposServico').cloneNode(true); // Clone o modelo
+  
+    novoCampoServico.style.display = 'block'; // Tornar o novo campo de serviço visível
+  
+    // Adicione um ouvinte de evento para o botão "X" do novo campo de serviço
+    var botaoRemover = novoCampoServico.querySelector('.botao-remover-servico');
+    botaoRemover.addEventListener('click', function () {
+      camposServicoContainer.removeChild(novoCampoServico); // Remova o campo de serviço
+    });
+  
+    camposServicoContainer.appendChild(novoCampoServico); // Adicione o novo campo de serviço ao contêiner
+  });
+  
+  </script>
+
+<%- include ('../../partials/conf_footer.ejs') %>

@@ -1,0 +1,110 @@
+<%- include ('../../partials/conf_header.ejs') %>
+<%- include ('../../partials/header_sistema.ejs') %>
+<body>
+  <div class="principal" style="height: 100vh;">
+    <form method="post" action="/orcamento/agendamento/salvar">
+      <div class="mt-3">
+      
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
+            <input type="text" class="form-control" name="nome" id="nome" value="<%= cliente.nome%>" readonly>
+          </div>
+        </div>
+    
+        <% enderecos.forEach (endereco => { %>
+          <% if (endereco.clienteId === cliente.id) { %>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="logadouro" class="label-novo">Logadouro <span style="color: crimson;">*</span></label>
+                <input type="text" class="form-control" name="logadouro" id="logadouro" value="<%= endereco.logadouro %>" readonly>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="numero" class="label-novo">N° <span style="color: crimson;">*</span></label>
+                <input type="text" class="form-control" name="numero" id="numero" value="<%= endereco.numero %>" readonly>
+              </div>
+            </div>
+          <% } %> 
+        <% }) %>   
+        
+        <hr>
+        <div class="row">
+          <% orcamentos.forEach((orcamento) => { %>
+            <% if((orcamento.clienteId == cliente.id) && (orcamento.contratado == false)) { %>
+            
+              <div class="col-lg-6 mt-1 justify-content-center align-items-center" style="background-color: aqua;">
+                <h6><b>Descrição do serviço:</b></h6>
+                <p><b> Instalação</b>
+                <p><b> <%= orcamento.btus %> </b>btus</p>
+                <h6><b>Ambiente: </b> <%= orcamento.ambiente %></h6>
+              </div>
+              <div class="col-lg-6 mt-1 d-flex justify-content-center align-items-center">
+                <button type="button" class="btn-light agendar-button vermelho-icon" data-target="date<%= orcamento.id %> date2<%= orcamento.id %> coladorador<%= orcamento.id %> horario<%= orcamento.id %>" style="cursor: pointer;"> 
+                  <i class="bi bi-calendar2-x"></i>
+                </button>
+                <input class="data-margin" id="date<%= orcamento.id %>" type="date" name="data1" disabled/>
+                <input id="date2<%= orcamento.id %>" name="data2" type="date" disabled/>
+                
+                <select id="coladorador<%= orcamento.id %>" class="data-margin" id="colaborador" name="colaborador" disabled>
+                  <% colaboradores.forEach (colaborador => { %>
+                    <option value="<%= colaborador.id %>"><%= colaborador.nome %></option>
+                  <% }) %>
+                </select>
+                <input id="horario<%= orcamento.id %>" type="time" min="09:00" max="18:00" required disabled/>
+              </div>
+              
+            <% }%>
+          <% }) %>
+        </div> 
+
+      </div>
+
+      <div>
+
+      </div>
+
+  
+      <div>
+        <div class="row text-center">
+          <div class="col-lg-3 mt-1">
+            <button type="submit" class="btn bg-warning">Enviar orçamento por e-mail</button>
+          </div>
+        </div>
+      
+      </div>
+    </form>
+  </div>
+</body>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const agendarButtons = document.querySelectorAll('.agendar-button');
+
+    agendarButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        const targets = button.getAttribute('data-target').split(' '); // Separa os alvos em um array
+        targets.forEach(function (targetId) {
+          const dateInput = document.getElementById(targetId);
+
+          if (dateInput.disabled) {
+            dateInput.disabled = false;
+            button.innerHTML = '<i class="bi bi-calendar-check verde-icon"></i>';
+          } else {
+            dateInput.disabled = true;
+            button.innerHTML = '<i class="bi bi-calendar2-x vermelho-icon"></i>';
+          }
+        });
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+<%- include ('../../partials/conf_footer.ejs') %>

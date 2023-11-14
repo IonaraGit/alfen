@@ -1,0 +1,71 @@
+<%- include ('../../partials/conf_header.ejs') %>
+<%- include ('../../partials/header.ejs') %>
+
+<div class="container" style="height: 70vh;">
+  
+    <form class="form-login" method="get" action="/acesso/adm">
+      <div style="text-align: center;">
+        <img src="img/logologin.png" alt="logo" style="width: 130px;"/>
+      </div>
+      <br>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+      <div class="col-sm-10">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputPassword3" class="col-sm-2 col-form-label">Senha</label>
+      <div class="col-sm-10">
+        <input type="password" class="form-control" id="inputPassword3" placeholder="Senha">
+        <span toggle="#inputPassword3" class="fa fa-fw fa-eye field-icon toggle-password"><i class="bi bi-eye"></i></span>
+      </div>
+    </div>
+    
+    <fieldset class="form-group filset-login">
+      <div class="row">
+        <div class="col-sm-10">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="opcao1" checked>
+            <label class="form-check-label" for="gridRadios1">
+              Administrativo
+            </label>
+          </div>
+          <br>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="opcao2">
+            <label class="form-check-label" for="gridRadios2">
+              Geral
+            </label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <div class="form-group row">
+      <div class="col text-center">
+        <button type="submit" class="btn btn-outline-primary" style="width: 80%;">Entrar</button>
+      </div>
+    </div>
+  </form>
+
+
+  
+</div>
+
+<%- include ('../../partials/footer.ejs') %>
+<%- include ('../../partials/conf_footer.ejs') %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const passwordField = document.getElementById('inputPassword3');
+    const togglePassword = document.querySelector('.toggle-password');
+  
+    togglePassword.addEventListener('click', function () {
+      const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordField.setAttribute('type', type);
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+  });
+  </script>
+  

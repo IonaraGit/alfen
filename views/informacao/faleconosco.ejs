@@ -1,0 +1,87 @@
+<%- include ('../../partials/conf_header.ejs') %>
+<%- include ('../../partials/header.ejs') %>
+
+<body>
+  <div class="principal">
+    <form>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="nome">Nome</label>
+          <input type="text" class="form-control" id="nome" placeholder="Nome">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="senha">Sobrenome</label>
+          <input type="text" class="form-control" id="sobrenome" placeholder="Sobrenome">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="telefone">Telefone</label>
+          <input type="text" class="form-control" id="telefone" placeholder="(35) 0000-0000">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="celular">Celular</label>
+          <input type="text" class="form-control" id="celular" placeholder="(35) 9 0000-0000">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="complemento">E-mail</label>
+        <input type="email" class="form-control" id="email" placeholder="email@email.com">
+      </div>
+      <div class="form-group">
+        <label for="complemento">Complemento</label>
+        <input type="text" class="form-control" id="complemento" placeholder="Apartamento, casa, sobrado, etc...">
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="cidade">Cidade</label>
+          <input type="text" class="form-control" id="cidade" placeholder="Cidade">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="cep">CEP</label>
+          <input type="text" class="form-control" id="cep" placeholder="13000-000">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="qtd">Qtd de aparelhos</label>
+        <select class="form-control">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="qtd">Serviço</label>
+        <select class="form-control">
+          <option>Conserto</option>
+          <option>Instalação/Desinstação</option>
+          <option>Limpeza</option>
+          <option>Pré instalação</option>
+          <option>Outros</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Quero que...</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Se quiser, expecifique delatlhes sobre o que precisa"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="qtd">Como conheceu nossa empresa?</label>
+        <select class="form-control">
+          <option>Indicação</option>
+          <option>Google</option>
+          <option>Instagra/Facebook</option>
+          <option>Outros</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Enviar</button>
+      </div>
+     
+    </form>
+  </div>
+</body>
+
+<%- include ('../../partials/footer.ejs') %>
+<%- include ('../../partials/conf_footer.ejs') %>

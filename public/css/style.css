@@ -1,0 +1,353 @@
+/*INICIO AJUSTE GERAL*/
+/*geral html*/
+* {
+  padding: 0px;
+  margin: 0px;
+}
+
+html {
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  line-height: 1 !important;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: #1b1e4e;
+}
+
+input {
+  text-transform: uppercase;
+}
+.principal {
+  margin: 15px;
+}
+
+.img-square {
+  width: 100%;
+  padding: 10px;
+  object-fit: cover;
+  transition: transform 0.2s; /* Adicione uma transição suave para a transformação */
+  cursor: pointer;
+  border-radius: 24px;
+  height: 90%;
+
+}
+
+.img-hover:hover {
+  transform: scale(1.1); /* Aumenta o tamanho da imagem em 10% ao passar o mouse */
+}
+.carousel-item img {
+  max-width: 100%;
+  height: 290px;
+}
+
+/*responsivos*/
+@media screen and (max-width: 1440px) {
+  #imgResponse{
+    display: none;
+  }
+}
+@media screen and (min-width: 1441px) {
+  #carouselExampleIndicators{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 970px) {
+  #faleConosco{
+    margin-top: 0px;
+  }
+}
+@media screen and (min-width: 971px) {
+  #faleConosco{
+    margin-top: 92px;
+  }
+}
+@media screen and (max-width: 550px) {
+  #imgSecretaria{
+   width: 100%;
+  }
+
+  .h2Response {
+    font-size: 28px !important;
+  }
+
+  .pResponde {
+    font-size: 16px !important;
+  }
+
+  .form-login {
+    margin-top: 20px !important;
+    margin-bottom: 0px !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .bgsomos{
+    border-radius: 86px 86px 0px 0px !important;
+  }
+
+  .somos {
+    width: 80%;
+  }
+
+  h5 {
+    font-size: 16px;
+  }
+}
+
+#banner {
+	background: #0d5891;
+	overflow: hidden;
+	padding: 25px 15px;
+	margin-bottom: 100px; 
+}
+
+.container1 {
+	max-width: 1200px;
+	width: 100%;
+	margin: 0 auto;
+}
+
+.bloco-2 {
+	width: 50%;
+	float: left;
+}
+
+#banner input::placeholder {
+	color: #0d5891;
+}
+
+#banner h2 {
+	font-size: 40px;
+	margin-bottom: 0px;
+	color: #fff;
+}
+#banner p{
+	font-size: 20px;
+	margin-top: 10px;
+	color: #d3dfe9;
+}
+
+.somos {
+  width: 70%;
+ }
+
+ .bgsomos {
+  background: #1755af;
+  border-radius: 220px 0px 220px 0px;
+  align-items: center;
+  background-size: 160px 81%;
+  margin-top: 61px;
+}
+
+@keyframes wave {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.footer {
+  left: 0;
+  width: 100%;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  position: absolute;
+}
+
+.redes-link {
+  text-decoration: none;
+  color: white; /* Define a cor como branco */
+  transition: transform 0.2s; /* Adiciona uma transição de transformação para suavizar o efeito de escala */
+
+  /* Define o tamanho padrão e o tamanho quando o mouse passa por cima */
+  font-size: 1rem;
+}
+
+.redes-link:hover {
+  transform: scale(1.1); /* Aumenta o tamanho em 10% quando o mouse passa por cima */
+  color: rgb(21, 197, 168);
+  text-decoration: none;
+}
+
+/*TELA LOGIN*/
+.form-login {
+  background-color: #b7cfff;
+  padding: 15px;
+  margin: 125px;
+  border-radius: 18px;
+}
+
+.field-icon {
+  float: right;
+  margin-right: 10px;
+  margin-top: -25px;
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+
+ /*TELA CLIENTES/ADM*/
+
+ @media screen and (max-width: 767px) {
+  .btn-novo-cliente {
+    width: 100%;
+  }
+  .input-group {
+    width: 100% !important;
+    margin-top: 17px;
+    margin-bottom: 17px
+  }
+}
+ /*NOVO CLIENTE*/
+ .label-novo {
+  color: #0079e3;
+  font-weight: 700;
+ }
+
+ fieldset {
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 0 24px;
+  margin-top: 15px;
+}
+legend {
+  text-align: -webkit-center;
+  display: block;
+  width: 16%;
+  max-width: 100%;
+  padding: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  line-height: inherit;
+  color: #3d19e6;
+  white-space: normal;
+  font-size: 106%;
+  font-weight: 600;
+}
+
+.modal-footer {
+  justify-content: space-between !important;
+}
+
+/*LOGIN*/
+.filset-login {
+  border: 1px solid #fff;
+  border-radius: 5px;
+  padding: 10px 7px;
+  margin-top: 15px;
+}
+
+
+/*INICIO ALERT*/
+.custom-alert {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  z-index: 999;
+  max-width: 300px;
+  text-align: center;
+}
+
+.alert-content {
+  margin-bottom: 10px;
+}
+
+.alert-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+#confirmButton {
+  margin-left: 10px;
+}
+
+#confirmationAlert.show {
+  display: block;
+}
+/*FINAL ALERT*/
+
+.agendar-button {
+  background-color: rgb(255, 255, 255); /* Cor para o estado "Agendar" */
+  color: white; /* Cor do texto para o estado "Agendar" */
+}
+
+.desfazer-button {
+  background-color: rgb(0, 0, 0); /* Cor para o estado "Desfazer" */
+  color: white; /* Cor do texto para o estado "Desfazer" */
+}
+
+.vermelho-icon {
+  color: red;
+}
+
+.verde-icon {
+  color: green;
+}
+
+.data-margin {
+  margin: 0px 6px;
+}
+
+.drop-left {
+  left: -103px !important;
+}
+
+/*PISCAR ORCAMENTO CADASTRADO*/
+.piscar {
+  animation: piscar 1s;
+}
+
+@keyframes piscar {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+/* Estilizando as linhas pares */
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+ /* Alterando a cor ao passar o mouse sobre a linha */
+ tbody tr:hover {
+  background-color: #ddd;
+}
+thead {
+  background: #4d89be !important;
+  color: #f1f1f1 !important;
+}

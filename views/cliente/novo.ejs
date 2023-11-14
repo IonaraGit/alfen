@@ -1,0 +1,92 @@
+<%- include ('../../partials/conf_header.ejs') %>
+<%- include ('../../partials/header_sistema.ejs') %>
+
+<body>
+  <div class="container" style="height: 100vh; text-transform: uppercase;">
+    <form class="mt-5" method="POST" action="/clientes/salvar">
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
+          <input type="text" class="form-control" name="nome" id="nome" placeholder="FULANO DE TAL" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="cpf" class="label-novo">CPF <span style="color: crimson;">*</span></label>
+          <input type="text" class="form-control" name="cpf" id="cpf" placeholder="111.222.333-44" onkeypress="$(this).mask('000.000.000-00');" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="rg" class="label-novo">RG</label>
+          <input type="text" class="form-control" name="rg" id="rg" placeholder="MG-989898-1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="celular" class="label-novo">Celular <span style="color: crimson;">*</span></label>
+          <input type="text" class="form-control" name="celular" id="celular" placeholder="(35) 9 0000-0000" onkeypress="$(this).mask('(00) 0 0000-0000');" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="telefone" class="label-novo">Telefone</label>
+          <input type="text" class="form-control" name="telefone" id="telefone" onkeypress="$(this).mask('(00) 0000-0000');" placeholder="(35) 0000-0000">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="complemento" class="label-novo">E-mail <span style="color: crimson;">*</span></label>
+        <input type="email" class="form-control" name="email" id="email" placeholder="email@email.com" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-8">
+          <label for="logadouro" class="label-novo">Logadouro <span style="color: crimson;">*</span></label>
+          <input type="text" class="form-control" name="logadouro" id="logadouro" placeholder="Rua Bandeirantes" required>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="numero" class="label-novo">N° <span style="color: crimson;">*</span></label>
+          <input type="text" class="form-control" name="numero" id="numero" placeholder="77 A" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="complemento" class="label-novo">Complemento <span style="color: crimson;">*</span></label>
+        <input type="text" class="form-control" name="complemento" id="complemento" placeholder="Apartamento, casa, sobrado, etc..." required>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="cidade" class="label-novo">Cidade <span style="color: crimson;">*</span></label>
+          <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="cep" class="label-novo">CEP <span style="color: crimson;">*</span></label>
+          <input type="text" class="form-control" name="cep" id="cep" onkeypress="$(this).mask('00000-000');" placeholder="13000-000" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="qtd" class="label-novo">Como conheceu nossa empresa? <span style="color: crimson;">*</span></label>
+        <select class="form-control" name="origem">
+          <% origens.forEach((origem) => { %>
+            <option value="<%= origem.id %>"><%= origem.descricao %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <p id="alert-message" style="display: none" class="alert alert-success show text-center" role="alert"></p>
+      </div>
+      
+      <button class="btn btn-primary" style="width: 100%;">SALVAR</button>
+      </div>
+     
+    </form>
+  </div>
+</body>
+
+<script>
+  const alertMessage = document.getElementById("alert-message");
+
+  // Verifica se a mensagem 'msg' está definida após a submissão do formulário
+  const msg = '<%= msg %>';
+  if (msg) {
+    alertMessage.textContent = msg;
+    alertMessage.style.display = "block";
+  }
+</script>
+<%- include ('../../partials/footer.ejs') %>
+<%- include ('../../partials/conf_footer.ejs') %>
