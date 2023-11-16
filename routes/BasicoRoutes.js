@@ -9,6 +9,7 @@ const Modelo = require ('../models/Modelo');
 const Orcamento = require('../models/Orcamento');
 const Ambiente = require('../models/Ambiente');
 const Prestacao = require('../models/Prestacao');
+const Empresa = require ('../models/Empresa')
 const Btu = require('../models/Btu');
 
 
@@ -38,7 +39,9 @@ router.get('/acesso/adm', (req, res) =>{
 
 router.get('/acesso/adm/clientes', (req, res) =>{
   Cliente.findAll().then(clientes => {
-    res.render('sistema/clientes', {clientes:clientes})
+    Empresa.findAll().then(empresas => {
+      res.render('sistema/clientes', {clientes:clientes, empresas: empresas})
+    })
   })
 })
 
@@ -179,6 +182,38 @@ router.get ('/admin/orcamentos/decisao/:id', (req, res) => {
   })
 })
 
+router.get ('/admin/orcamentos/decisao2/:id', (req, res) => {
+  var id = req.params.id
+
+  Cliente.findByPk(id).then (cliente => {
+    if (cliente != undefined) {
+      Endereco.findAll().then(enderecos => {
+        Origem.findAll().then(origens => {
+          Marca.findAll().then(marcas => {
+            Modelo.findAll().then(modelos => {
+              Orcamento.findAll().then(orcamentos => {
+                Colaborador.findAll().then(colaboradores => {
+                  Prestacao.findAll().then(prestacoes => {
+                    Btu.findAll().then(btus => {
+                      Ambiente.findAll().then(ambientes => {
+                        res.render('orcamento/decisao2', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id})
+                      })
+                    })
+                  })
+                })
+              })
+              
+            })
+          })
+         
+        })
+      })
+    } else {
+      res.send ('erro')
+    } 
+  })
+})
+
 router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
   var id = req.params.id
 
@@ -207,7 +242,7 @@ router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
 /*** FIM ORCAMENTOS */
 
 /* INICIO COLABORADORES */
-router.get('/acesso/adm/colaboradores', (req, res) =>{
+router.get('/acesso/adm/colaboradores/:empresa', (req, res) =>{
   Colaborador.findAll().then(colaboradores => {
     res.render('colaborador/index', {colaboradores:colaboradores})
   })

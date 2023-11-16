@@ -3,23 +3,29 @@
 
 <body>
   <div class="row">
-    <div class="col-md-2">
-      <a href="/admin/cliente/detalhes/<%= cliente.id %>">
-        Dados Pessoais
-      </a>
-      <br>
-      <a href="/admin/orcamento/novo/<%= cliente.id %>">
-        Novo Orçamento
-      </a>
-      <br>
-      <a href="/admin/orcamentos/decisao/<%= cliente.id %>">
-        Orçamentos Cadastrados
-      </a>
-      <br>
-      <a href="">
-        Orçamentos Finalizados
-      </a>
-
+    <div class="col-md-2 lateral">
+      <ul class="lateral-ul">
+        <li class="lateral-li">
+          <a href="/admin/cliente/detalhes/<%= cliente.id %>">
+            Dados Pessoais
+          </a>
+        </li>
+        <li class="lateral-li" style="background-color: #b8b8c0">
+          <a href="/admin/orcamento/novo/<%= cliente.id %>">
+            Novo Orçamento
+          </a>
+        </li>
+        <li class="lateral-li">
+          <a href="/admin/orcamentos/decisao2/<%= cliente.id %>">
+            Orçamentos Cadastrados
+          </a>
+        </li>
+        <li class="lateral-li">
+          <a href="">
+            Orçamentos Finalizados
+          </a>
+        </li class="lateral-li">
+      </ul>
     </div>
     <div class="col-md-10">
       <div class="principal">

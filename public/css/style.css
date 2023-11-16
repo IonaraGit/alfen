@@ -16,10 +16,6 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
-a {
-  text-decoration: none;
-  color: #1b1e4e;
-}
 
 input {
   text-transform: uppercase;
@@ -350,4 +346,41 @@ tr:nth-child(even) {
 thead {
   background: #4d89be !important;
   color: #f1f1f1 !important;
+}
+
+.lateral {
+  background-color: #f2f2f2; /* Cor de fundo cinza bem clarinha */
+  padding: 10px; /* Adiciona um espaçamento interno para melhorar a aparência */
+  height: 100vh;
+}
+
+.lateral-ul {
+  list-style: none; /* Remove os pontos de lista padrão */
+  padding: 0; /* Remove o espaçamento interno padrão da lista */
+  margin: 4px 15px;
+}
+
+.lateral-li {
+  border-bottom: 1px solid #ddd; /* Adiciona uma linha entre os itens da lista */
+  padding: 8px; /* Adiciona espaçamento interno para melhorar a aparência */
+}
+
+li:last-child {
+  border-bottom: none; /* Remove a linha da última li para evitar uma linha extra no final */
+}
+
+a {
+  text-decoration: none !important; /* Remove o sublinhado padrão dos links */
+  color: #333; /* Define a cor do texto para um tom mais escuro */
+  display: block; /* Faz com que os links ocupem toda a largura do contêiner li */
+}
+
+/* Estilo para campo válido */
+.is-valid {
+  border-color: green;
+}
+
+/* Estilo para campo inválido */
+.is-invalid {
+  border-color: crimson;
 }

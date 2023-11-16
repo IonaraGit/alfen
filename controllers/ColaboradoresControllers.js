@@ -10,12 +10,28 @@ router.post ('/colaborador/salvar', (req,res) => {
   var nome = req.body.nome
   var cpf = req.body.cpf
   var ativo = 1
+  var senha = 'SEM ACESSO'
+  var primeiro_acesso = 0
+  var pergunta = 'SEM ACESSO'
+  var resposta = 'SEM ACESSO'
+  var email = req.body.email
+  var contato = req.body.contato
+  var permissoId = req.body.permisao
+  var empresaId = sessao.empresaId
 
   if (nome != undefined) {
     Colaborador.create({
       nome: nome.toUpperCase(),
       cpf: cpf,
-      ativo: ativo
+      ativo: ativo,
+      senha: senha,
+      primeiro_acesso: primeiro_acesso,
+      pergunta: pergunta,
+      resposta: resposta,
+      email: email,
+      contato: contato,
+      permissoId: permissoId,
+      empresaId: empresaId
     }).then(() => {
       res.redirect('/acesso/adm/colaboradores')
     })

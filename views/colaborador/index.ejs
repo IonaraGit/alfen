@@ -81,6 +81,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Cadastrar Colaborador</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Empresa</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -89,17 +90,42 @@
           <form method="POST" action="/colaborador/salvar">
             <div class="form-row">
               <div class="form-group col-md-12">
-                <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
-                <input type="text" class="form-control" name="nome" id="nome" placeholder="FULANO DE TAL" required>
+                <label for="nome" class="label-novo">Nome: <span style="color: crimson;">*</span></label>
+                <input type="text" class="form-control" name="nome" id="nome" required>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-12">
                 <label for="cpf" class="label-novo">CPF <span style="color: crimson;">*</span></label>
-                <input type="text" class="form-control" name="cpf" id="cpf" placeholder="111.222.333-44" required>
+                <input type="text" class="form-control" name="cpf" id="cpf" onkeypress="$(this).mask('000.000.000-00')" required>
               </div>
             </div>
-            <button class="btn btn-secondary">SAlvar</button>
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="cpf" class="label-novo">E-mail <span style="color: crimson;">*</span></label>
+                <input type="email" class="form-control" name="email" id="email" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-sm-6">
+  
+                <input type="radio" name="permissao" id="gridRadios1" value="adm" checked>
+                <label class="form-check-label" for="gridRadios1">
+                  Administrativo
+                </label>
+              </div>
+              <div class="col-sm-6">
+                
+                <input type="radio" name="permissao" id="gridRadios2" value="geral">
+                <label class="form-check-label" for="gridRadios2">
+                  Geral
+                </label>
+              </div>
+            </div>
+            <br>
+           
+
+            <button class="btn btn-secondary">Salvar</button>
           </form>
         </div>
         <div class="modal-footer">
@@ -151,6 +177,8 @@ function confirmaAtivar(event, form) {
 }
 
 </script>
+
+
 
 
 

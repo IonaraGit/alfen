@@ -1,6 +1,7 @@
 const express = require ('express')
 const app = express();
 const bodyParser = require ('body-parser')
+const session = require ('express-session')
 const connection = require ('./database/database')
 
 //Routes
@@ -16,6 +17,7 @@ const AmbientesControllers = require ('./controllers/AmbientesControllers')
 const PrestacoesControllers = require ('./controllers/PrestacoesControllers')
 const OrigensControllers = require ('./controllers/OrigensControllers')
 const BtusControllers = require ('./controllers/BtusControllers')
+const LoginsControllers = require ('./controllers/LoginsControllers')
 
 //Models
 const Cliente = require ('./models/Cliente')
@@ -28,6 +30,17 @@ const Modelo = require ('./models/Modelo')
 const Prestacao = require ('./models/Prestacao')
 const Ambiente = require ('./models/Ambiente')
 const Btu = require ('./models/Btu')
+const Permissao = require ('./models/Permissao')
+const Empresa = require ('./models/Empresa')
+
+//Sessions
+app.use(session({
+  secret: 'sua_chave_secreta_aqui', // Troque por uma chave segura
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Em produção, defina como true se estiver usando HTTPS
+}));
+
 
 //View engine
 app.set('view engine', 'ejs')
@@ -60,11 +73,11 @@ app.use('/', PrestacoesControllers)
 app.use('/', OrcamentosControllers)
 app.use('/', OrigensControllers)
 app.use('/', BtusControllers)
+app.use('/', LoginsControllers)
 
 app.get ('/', (req, res) => {
   res.render('informacao/index')
 })
-
 
 app.listen(8080, () => {
   console.log ('Servidor Rodando!')
