@@ -8,11 +8,13 @@ const Modelo = require ('../models/Modelo')
 router.post ('/modelo/salvar', (req,res) => {
   var descricao = req.body.descricao
   var ativo = 1
+  var empresaId = req.body.empresa
 
   if (descricao != undefined) {
     Modelo.create({
       descricao: descricao.toUpperCase(),
-      ativo: ativo
+      ativo: ativo,
+      empresaId: empresaId
     }).then(() => {
       res.redirect('/acesso/adm/modelos')
     })

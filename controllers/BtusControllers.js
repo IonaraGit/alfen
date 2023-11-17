@@ -8,11 +8,13 @@ const Btu = require ('../models/Btu')
 router.post ('/btu/salvar', (req,res) => {
   var descricao = req.body.descricao
   var ativo = 1
+  var empresaId = req.body.empresa
 
   if (descricao != undefined) {
     Btu.create({
       descricao: descricao.toUpperCase(),
-      ativo: ativo
+      ativo: ativo,
+      empresaId: empresaId
     }).then(() => {
       res.redirect('/acesso/adm/btus')
     })
@@ -52,6 +54,5 @@ router.post ('/btu/ativar', (req, res) => {
     console.send ('Erro, entre em contato com o suporte!')
   })
 })
-
 
 module.exports = router

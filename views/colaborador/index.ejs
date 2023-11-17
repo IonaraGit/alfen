@@ -2,7 +2,16 @@
 <%- include ('../../partials/header_sistema.ejs') %>
 
 <body>
-  <% var idt = 0%>
+  Id Empresa => <%=sessao.empresaId%>
+  <br>
+  <% empresas.forEach (empresa => { %>
+    <% if (empresa.id == sessao.empresaId) { %>
+      Nome empresa => <%=empresa.descricao%>
+    <% } %>
+  <% })%>
+  <br>
+  Colaborador => <%=sessao.nome%>
+
   <div class="principal" style="height: 100vh;">
 
     <div class="row mt-3 mb-3">
@@ -33,43 +42,45 @@
       </thead>
       <tbody>
         <% colaboradores.forEach (colaborador => { %>
-          <tr>
-            <th scope="row"><%= colaborador.cpf %></th>
-            <td> <%= colaborador.nome %> </td>
-          
-            <td>
-              <% if (colaborador.ativo == 1) { %>
-                <form method="POST" action="/colaborador/desativar" style="display: inline;" onsubmit="confirmaDesativar(event, this)">
-                  <input type="hidden" name="id" value="<%= colaborador.id %>">
-                  <button type="submit" class="btn btn-success" data-toggle="popover" data-trigger="hover" data-content="Colaborador Ativo" data-placement="top">
-                    <i class="bi bi-check2"></i>
-                  </button>
-                </form>
-
-                <div class="custom-alert" id="confirmationAlert">
-                  <div class="alert-content">
-                    <p>Deseja realmente alterar o status deste colaborador?</p>
-                  </div>
-                  <div class="alert-buttons">
-                    <button class="btn btn-secondary" id="cancelButton">Cancelar</button>
-                    <button class="btn btn-danger" id="confirmButton">Confirmar</button>
-                  </div>
-                </div>
-
-              <% } else if (colaborador.ativo == 0) { %>
-                <form method="POST" action="/colaborador/ativar" style="display: inline;" onsubmit="confirmaAtivar(event, this)">
-                  <input type="hidden" name="id" value="<%= colaborador.id %>">
-                  <button type="submit" class="btn btn-danger" data-toggle="popover" data-trigger="hover" data-content="Colaborador Inativo" data-placement="top">
-                    <i class="bi bi-x-lg"></i>
-                  </button>
+          <% if ((colaborador.empresaId == sessao.empresaId) && (colaborador.id != sessao.id)) { %>
+            <tr>
+              <th scope="row"><%= colaborador.cpf %></th>
+              <td> <%= colaborador.nome %> </td>
+            
+              <td class="d-flex justify-content-around">
+                <% if (colaborador.ativo == 1) { %>
+                  <form method="POST" action="/colaborador/desativar" style="display: inline;" onsubmit="confirmaDesativar(event, this)">
+                    <input type="hidden" name="id" value="<%= colaborador.id %>">
+                    <button type="submit" class="btn btn-success" data-toggle="popover" data-trigger="hover" data-content="Colaborador Ativo" data-placement="top">
+                      <i class="bi bi-check2"></i>
+                    </button>
                   </form>
-              <% } %>
-              
-              <a href="/admin/colaborador/<%=colaborador.id%>" style="text-decoration: none;">
-                <button type="button" class="btn btn-info"><i class="bi bi-eye"></i></button>
-              </a>                
-            </td>
-          </tr>
+
+                  <div class="custom-alert" id="confirmationAlert">
+                    <div class="alert-content">
+                      <p>Deseja realmente alterar o status deste colaborador?</p>
+                    </div>
+                    <div class="alert-buttons">
+                      <button class="btn btn-secondary" id="cancelButton">Cancelar</button>
+                      <button class="btn btn-danger" id="confirmButton">Confirmar</button>
+                    </div>
+                  </div>
+
+                <% } else if (colaborador.ativo == 0) { %>
+                  <form method="POST" action="/colaborador/ativar" style="display: inline;" onsubmit="confirmaAtivar(event, this)">
+                    <input type="hidden" name="id" value="<%= colaborador.id %>">
+                    <button type="submit" class="btn btn-danger" data-toggle="popover" data-trigger="hover" data-content="Colaborador Inativo" data-placement="top">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                    </form>
+                <% } %>
+                
+                <a href="/admin/colaborador/<%=colaborador.id%>" style="text-decoration: none;">
+                  <button type="button" class="btn btn-info"><i class="bi bi-eye"></i></button>
+                </a>                
+              </td>
+            </tr>
+          <% } %>
         <% }) %>
       </tbody>
     </table>
@@ -107,16 +118,33 @@
               </div>
             </div>
             <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="cpf" class="label-novo">Contato <span style="color: crimson;">*</span></label>
+                <input type="text" class="form-control" name="contato" id="contato" onkeypress="$(this).mask('(00) 0 0000-0000')" required>
+              </div>
+            </div>
+            <div class="form-row">
+              
+               
+              <% empresas.forEach(empresa => { %>
+                <% if (empresa.id == sessao.empresaId) { %>
+                  <input type="hidden" class="form-control" name="empresa" id="empresa" value="<%=empresa.id%>" readonly>
+                <% } %>
+              <% }) %>
+                
+              
+            </div>
+            <div class="form-row">
               <div class="col-sm-6">
   
-                <input type="radio" name="permissao" id="gridRadios1" value="adm" checked>
+                <input type="radio" name="permissao" id="gridRadios1" value="1" checked>
                 <label class="form-check-label" for="gridRadios1">
                   Administrativo
                 </label>
               </div>
               <div class="col-sm-6">
                 
-                <input type="radio" name="permissao" id="gridRadios2" value="geral">
+                <input type="radio" name="permissao" id="gridRadios2" value="2">
                 <label class="form-check-label" for="gridRadios2">
                   Geral
                 </label>

@@ -7,12 +7,15 @@ const Ambiente = require ('../models/Ambiente')
 
 router.post ('/ambiente/salvar', (req,res) => {
   var descricao = req.body.descricao
+  var empresaId = req.body.empresa
   var ativo = 1
+  
 
   if (descricao != undefined) {
     Ambiente.create({
       descricao: descricao.toUpperCase(),
-      ativo: ativo
+      ativo: ativo,
+      empresaId: empresaId
     }).then(() => {
       res.redirect('/acesso/adm/ambientes')
     })
@@ -52,6 +55,5 @@ router.post ('/ambiente/ativar', (req, res) => {
     console.send ('Erro, entre em contato com o suporte!')
   })
 })
-
 
 module.exports = router

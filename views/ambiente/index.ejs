@@ -2,7 +2,15 @@
 <%- include ('../../partials/header_sistema.ejs') %>
 
 <body>
-  <% var idt = 0%>
+  Id Empresa => <%=sessao.empresaId%>
+  <br>
+  <% empresas.forEach (empresa => { %>
+    <% if (empresa.id == sessao.empresaId) { %>
+      Nome empresa => <%=empresa.descricao%>
+    <% } %>
+  <% })%>
+  <br>
+  Colaborador => <%=sessao.nome%>
   <div class="principal" style="height: 100vh;">
 
     <div class="row mt-3 mb-3">
@@ -32,42 +40,44 @@
       </thead>
       <tbody>
         <% ambientes.forEach (ambiente => { %>
-          <tr>
-            <td> <%= ambiente.descricao %> </td>
-          
-            <td>
-              <% if (ambiente.ativo == 1) { %>
-                <form method="POST" action="/ambiente/desativar" style="display: inline;" onsubmit="confirmaDesativar(event, this)">
-                  <input type="hidden" name="id" value="<%= ambiente.id %>">
-                  <button type="submit" class="btn btn-success" data-toggle="popover" data-trigger="hover" data-content="Ambiente Ativo" data-placement="top">
-                    <i class="bi bi-check2"></i>
-                  </button>
-                </form>
-
-                <div class="custom-alert" id="confirmationAlert">
-                  <div class="alert-content">
-                    <p>Deseja realmente alterar o status deste ambiente?</p>
-                  </div>
-                  <div class="alert-buttons">
-                    <button class="btn btn-secondary" id="cancelButton">Cancelar</button>
-                    <button class="btn btn-danger" id="confirmButton">Confirmar</button>
-                  </div>
-                </div>
-
-              <% } else if (ambiente.ativo == 0) { %>
-                <form method="POST" action="/ambiente/ativar" style="display: inline;" onsubmit="confirmaAtivar(event, this)">
-                  <input type="hidden" name="id" value="<%= ambiente.id %>">
-                  <button type="submit" class="btn btn-danger" data-toggle="popover" data-trigger="hover" data-content="Ambiente Inativo" data-placement="top">
-                    <i class="bi bi-x-lg"></i>
-                  </button>
+          <% if (ambiente.empresaId == sessao.empresaId) { %>
+            <tr>
+              <td> <%= ambiente.descricao %> </td>
+            
+              <td>
+                <% if (ambiente.ativo == 1) { %>
+                  <form method="POST" action="/ambiente/desativar" style="display: inline;" onsubmit="confirmaDesativar(event, this)">
+                    <input type="hidden" name="id" value="<%= ambiente.id %>">
+                    <button type="submit" class="btn btn-success" data-toggle="popover" data-trigger="hover" data-content="Ambiente Ativo" data-placement="top">
+                      <i class="bi bi-check2"></i>
+                    </button>
                   </form>
-              <% } %>
-              
-              <a href="/admin/ambiente/<%=ambiente.id%>" style="text-decoration: none;">
-                <button type="button" class="btn btn-info"><i class="bi bi-eye"></i></button>
-              </a>                
-            </td>
-          </tr>
+
+                  <div class="custom-alert" id="confirmationAlert">
+                    <div class="alert-content">
+                      <p>Deseja realmente alterar o status deste ambiente?</p>
+                    </div>
+                    <div class="alert-buttons">
+                      <button class="btn btn-secondary" id="cancelButton">Cancelar</button>
+                      <button class="btn btn-danger" id="confirmButton">Confirmar</button>
+                    </div>
+                  </div>
+
+                <% } else if (ambiente.ativo == 0) { %>
+                  <form method="POST" action="/ambiente/ativar" style="display: inline;" onsubmit="confirmaAtivar(event, this)">
+                    <input type="hidden" name="id" value="<%= ambiente.id %>">
+                    <button type="submit" class="btn btn-danger" data-toggle="popover" data-trigger="hover" data-content="Ambiente Inativo" data-placement="top">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                    </form>
+                <% } %>
+                
+                <a href="/admin/ambiente/<%=ambiente.id%>" style="text-decoration: none;">
+                  <button type="button" class="btn btn-info"><i class="bi bi-eye"></i></button>
+                </a>                
+              </td>
+            </tr>
+          <% } %>
         <% }) %>
       </tbody>
     </table>
@@ -91,6 +101,11 @@
                 <input type="text" class="form-control" name="descricao" id="descricao" placeholder="SALA, COZINHA, QUARTO, ETC..." required>
               </div>
             </div>
+            <% empresas.forEach(empresa => { %>
+              <% if (empresa.id == sessao.empresaId) { %>
+                <input type="hidden" class="form-control" name="empresa" id="empresa" value="<%=empresa.id%>" readonly>
+              <% } %>
+            <% }) %>
             <button class="btn btn-secondary">Salvar</button>
           </form>
         </div>

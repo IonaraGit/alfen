@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const connection = require('../database/database');
+const Empresa = require('./Empresa')
 
 const Btu = connection.define('btus', {
   descricao:{
@@ -11,6 +12,10 @@ const Btu = connection.define('btus', {
     allowNull: false
   }
 });
+
+Empresa.hasMany(Btu) 
+Btu.belongsTo(Empresa)
+
 Btu.sync({force: false})
 
 module.exports = Btu

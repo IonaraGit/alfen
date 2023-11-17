@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const connection = require('../database/database')
+const Empresa = require('./Empresa')
 
 const Modelo = connection.define('modelos', {
   descricao: {
@@ -11,6 +12,9 @@ const Modelo = connection.define('modelos', {
     allowNull: false
   }
 });
+
+Empresa.hasMany(Modelo) 
+Modelo.belongsTo(Empresa)
 
 Modelo.sync({force: false})
 

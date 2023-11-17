@@ -46,8 +46,8 @@ const Colaborador = connection.define('colaboradores', {
 Permissao.hasMany(Colaborador) 
 Colaborador.belongsTo(Permissao) 
 
-Empresa.hasMany(Colaborador) // UMA ORIGEM TEM VARIOS CLIENTES
-Colaborador.belongsTo(Empresa) // UM CLIENTE PERTENCE A UMA ORIGEM
+Empresa.hasMany(Colaborador) 
+Colaborador.belongsTo(Empresa)
 
 Colaborador.sync({force: false})
 

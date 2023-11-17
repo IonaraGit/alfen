@@ -16,9 +16,8 @@ router.post ('/colaborador/salvar', (req,res) => {
   var resposta = 'SEM ACESSO'
   var email = req.body.email
   var contato = req.body.contato
-  var permissoId = req.body.permisao
-  var empresaId = sessao.empresaId
-
+  var permissoId = req.body.permissao
+  var empresaId = req.body.empresa
   if (nome != undefined) {
     Colaborador.create({
       nome: nome.toUpperCase(),
@@ -72,9 +71,6 @@ router.post ('/colaborador/ativar', (req, res) => {
     console.send ('Erro, entre em contato com o suporte!')
   })
 })
-
-
-
 
 
 module.exports = router

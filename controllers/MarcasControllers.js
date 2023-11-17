@@ -8,11 +8,13 @@ const Marca = require ('../models/Marca')
 router.post ('/marca/salvar', (req,res) => {
   var descricao = req.body.descricao
   var ativo = 1
+  var empresaId = req.body.empresa
 
   if (descricao != undefined) {
     Marca.create({
       descricao: descricao.toUpperCase(),
-      ativo: ativo
+      ativo: ativo,
+      empresaId: empresaId
     }).then(() => {
       res.redirect('/acesso/adm/marcas')
     })

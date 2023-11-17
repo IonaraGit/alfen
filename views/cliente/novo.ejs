@@ -2,6 +2,16 @@
 <%- include ('../../partials/header_sistema.ejs') %>
 
 <body>
+  Id Empresa => <%=sessao.empresaId%>
+  <br>
+  <% empresas.forEach (empresa => { %>
+    <% if (empresa.id == sessao.empresaId) { %>
+      Nome empresa => <%=empresa.descricao%>
+    <% } %>
+  <% })%>
+  <br>
+  Colaborador => <%=sessao.nome%>
+
   <div class="container" style="height: 100vh; text-transform: uppercase;">
     <form class="mt-5" method="POST" action="/clientes/salvar">
       <div class="form-row">
@@ -68,8 +78,14 @@
       </div>
 
       <div>
-        <p id="alert-message" style="display: none" class="alert alert-success show text-center" role="alert"></p>
+        <p id="alert-message" style="display: none" class="alert alert-danger show text-center" role="alert"></p>
       </div>
+
+      <% empresas.forEach(empresa => { %>
+        <% if (empresa.id == sessao.empresaId) { %>
+          <input type="hidden" class="form-control" name="empresa" id="empresa" value="<%=empresa.id%>" readonly>
+        <% } %>
+      <% }) %>
       
       <button class="btn btn-primary" style="width: 100%;">SALVAR</button>
       </div>

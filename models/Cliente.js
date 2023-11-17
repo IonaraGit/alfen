@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize')
 const connection = require('../database/database');
 const Origem = require('./Origem');
+const Empresa = require ('./Empresa')
 
 const Cliente = connection.define('clientes', {
   cpf: {
@@ -35,6 +36,9 @@ const Cliente = connection.define('clientes', {
 
 Origem.hasMany(Cliente) // UMA ORIGEM TEM VARIOS CLIENTES
 Cliente.belongsTo(Origem) // UM CLIENTE PERTENCE A UMA ORIGEM
+
+Empresa.hasMany(Cliente) 
+Cliente.belongsTo(Empresa)
 
 Cliente.sync({force: false})
 

@@ -1,7 +1,6 @@
 const Sequelize = require ('sequelize')
 const connection = require ('../database/database');
 
-
 const Permissao = connection.define('permissoes', {
   descricao : {
     type: Sequelize.STRING,

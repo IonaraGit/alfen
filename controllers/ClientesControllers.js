@@ -22,6 +22,8 @@ router.post ('/clientes/salvar', (req,res) => {
   var cidade = req.body.cidade.toUpperCase();
   var cep = req.body.cep;
 
+  var empresaId = req.body.empresa
+
   var msg = ''; // Defina a mensagem desejada
   
 
@@ -55,7 +57,8 @@ router.post ('/clientes/salvar', (req,res) => {
         email: email,
         rg: rg,
         telefone: telefone,
-        origenId: origem
+        origenId: origem,
+        empresaId: empresaId
       }).then((cliente) => {
 
         Endereco.create({
@@ -64,7 +67,8 @@ router.post ('/clientes/salvar', (req,res) => {
           complemento: complemento,
           cidade: cidade,
           cep: cep,
-          clienteId: cliente.id
+          clienteId: cliente.id,
+          empresaId: empresaId
         })
 
         msg = 'CLIENTE CADASTRADO COM SUCESSO!!'
@@ -82,6 +86,5 @@ router.post ('/clientes/salvar', (req,res) => {
   });
   
 })
-
 
 module.exports = router

@@ -2,10 +2,14 @@ const Sequelize = require('sequelize')
 const connection = require('../database/database');
 
 const Empresa = connection.define('empresas', {
-  descricao : {
+  descricao: {
     type: Sequelize.STRING,
     allowNull: false
   }, 
+  identificacao: {
+    type: Sequelize.STRING,
+    allowNull: false
+  }
 });
 
 Empresa.sync ({force: false})

@@ -12,7 +12,7 @@ const Prestacao = require('../models/Prestacao');
 const Empresa = require ('../models/Empresa')
 const Btu = require('../models/Btu');
 
-
+const expirar = require ('../middlewares/expirar')
 
 /* INICIO BASICOS */
 router.get('/faleconosco', (req, res) => {
@@ -34,13 +34,15 @@ router.get('/acesso', (req, res) => {
 })
 
 router.get('/acesso/adm', (req, res) =>{
-  res.render('sistema/admin')
+  sessao = req.session.colaborador
+  res.render('sistema/admin', {sessao})
 })
 
 router.get('/acesso/adm/clientes', (req, res) =>{
+  sessao = req.session.colaborador
   Cliente.findAll().then(clientes => {
     Empresa.findAll().then(empresas => {
-      res.render('sistema/clientes', {clientes:clientes, empresas: empresas})
+      res.render('sistema/clientes', {clientes:clientes, empresas: empresas, sessao})
     })
   })
 })
@@ -53,10 +55,13 @@ router.get('/acesso/cliente/orcamento', (req, res) => {
 /* CLIENTES */
 router.get('/admin/cliente/novo', (req, res) => {
   var msg = req.query.msg;
+  sessao = req.session.colaborador
   Cliente.findAll().then(clientes => {
     Endereco.findAll().then(enderecos => {
       Origem.findAll().then(origens => {
-        res.render('cliente/novo', {clientes:clientes, enderecos:enderecos, origens:origens, msg:msg})
+        Empresa.findAll().then(empresas => {
+          res.render('cliente/novo', {clientes:clientes, enderecos:enderecos, origens:origens, msg:msg, empresas:empresas, sessao})
+        })
       })
     })
   })
@@ -242,9 +247,13 @@ router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
 /*** FIM ORCAMENTOS */
 
 /* INICIO COLABORADORES */
-router.get('/acesso/adm/colaboradores/:empresa', (req, res) =>{
+router.get('/acesso/adm/colaboradores', expirar, (req, res) =>{
+  sessao = req.session.colaborador
   Colaborador.findAll().then(colaboradores => {
-    res.render('colaborador/index', {colaboradores:colaboradores})
+    Empresa.findAll().then (empresas => {
+      res.render('colaborador/index', {colaboradores:colaboradores, empresas:empresas, sessao})
+    })
+    
   })
 })
 
@@ -257,9 +266,13 @@ router.get('/admin/colaborador/:id', (req, res) => {
 /*** FIM COLABORADORES */
 
 /* INICIO AMBIENTE */
-router.get('/acesso/adm/ambientes', (req, res) =>{
+
+router.get('/acesso/adm/ambientes', expirar, (req, res) =>{
+  sessao = req.session.colaborador
   Ambiente.findAll().then(ambientes => {
-    res.render('ambiente/index', {ambientes:ambientes})
+    Empresa.findAll().then (empresas => {
+      res.render('ambiente/index', {ambientes:ambientes, empresas: empresas, sessao})
+    })
   })
 })
 
@@ -272,9 +285,12 @@ router.get('/admin/ambiente/:id', (req, res) => {
 /*** FIM AMBIENTE */
 
 /* INICIO MODELO */
-router.get('/acesso/adm/modelos', (req, res) =>{
+router.get('/acesso/adm/modelos', expirar, (req, res) =>{
+  sessao = req.session.colaborador
   Modelo.findAll().then(modelos => {
-    res.render('modelo/index', {modelos:modelos})
+    Empresa.findAll().then (empresas => {
+      res.render('modelo/index', {modelos:modelos, empresas: empresas, sessao})
+    })
   })
 })
 
@@ -287,9 +303,12 @@ router.get('/admin/modelo/:id', (req, res) => {
 /*** FIM MODELO */
 
 /* INICIO MODELO */
-router.get('/acesso/adm/marcas', (req, res) =>{
+router.get('/acesso/adm/marcas', expirar, (req, res) =>{
   Marca.findAll().then(marcas => {
-    res.render('marca/index', {marcas:marcas})
+    sessao = req.session.colaborador
+    Empresa.findAll().then (empresas => {
+      res.render('marca/index', {marcas:marcas, empresas: empresas, sessao})
+    })
   })
 })
 
@@ -302,9 +321,12 @@ router.get('/admin/marca/:id', (req, res) => {
 /*** FIM MODELO */
 
 /* INICIO PRESTACAO */
-router.get('/acesso/adm/prestacoes', (req, res) =>{
+router.get('/acesso/adm/prestacoes', expirar, (req, res) =>{
+  sessao = req.session.colaborador
   Prestacao.findAll().then(prestacoes => {
-    res.render('prestacao/index', {prestacoes:prestacoes})
+    Empresa.findAll().then (empresas => {
+      res.render('prestacao/index', {prestacoes:prestacoes, empresas:empresas, sessao})
+    })
   })
 })
 
@@ -317,9 +339,12 @@ router.get('/admin/prestacao/:id', (req, res) => {
 /*** FIM PRESTACAO */
 
 /* INICIO ORIGEM */
-router.get('/acesso/adm/origens', (req, res) =>{
+router.get('/acesso/adm/origens', expirar, (req, res) =>{
+  sessao = req.session.colaborador
   Origem.findAll().then(origens => {
-    res.render('origem/index', {origens:origens})
+    Empresa.findAll().then (empresas => {
+      res.render('origem/index', {origens:origens, empresas:empresas, sessao})
+    })
   })
 })
 
@@ -332,9 +357,12 @@ router.get('/admin/origem/:id', (req, res) => {
 /*** FIM ORIGEM */
 
 /* INICIO BTU */
-router.get('/acesso/adm/btus', (req, res) =>{
+router.get('/acesso/adm/btus', expirar, (req, res) =>{
+  sessao = req.session.colaborador
   Btu.findAll().then(btus => {
-    res.render('btu/index', {btus:btus})
+    Empresa.findAll().then (empresas => {
+      res.render('btu/index', {btus:btus, empresas:empresas, sessao})
+    })
   })
 })
 

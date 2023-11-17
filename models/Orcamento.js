@@ -6,6 +6,7 @@ const Marca = require('./Marca')
 const Modelo = require('./Modelo')
 const Prestacao = require('./Prestacao');
 const Ambiente = require('./Ambiente');
+const Empresa = require('./Empresa')
 const Btu = require ('./Btu')
 
 const Orcamento = connection.define('orcamentos', {
@@ -52,6 +53,8 @@ Orcamento.belongsTo(Ambiente)
 Btu.hasMany(Orcamento)
 Orcamento.belongsTo(Btu)
 
+Empresa.hasMany(Orcamento) 
+Orcamento.belongsTo(Empresa)
 
 Orcamento.sync({force: false})
 

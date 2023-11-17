@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize')
 const connection = require('../database/database')
 const Cliente = require('./Cliente')
+const Empresa = require ('./Empresa')
 
 const Endereco = connection.define('enderecos', {
   logadouro: {
@@ -27,6 +28,9 @@ const Endereco = connection.define('enderecos', {
 
 Cliente.hasMany(Endereco) // UM CLIENTE TEM VARIOS ENDEREÇOS
 Endereco.belongsTo(Cliente) // UM ENDEREÇO PERTENCE A UM CLIENTE
+
+Empresa.hasMany(Endereco) 
+Endereco.belongsTo(Empresa)
 
 Endereco.sync({ force: false })
 

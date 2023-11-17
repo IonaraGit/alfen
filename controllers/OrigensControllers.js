@@ -8,11 +8,13 @@ const Origem = require ('../models/Origem')
 router.post ('/origem/salvar', (req,res) => {
   var descricao = req.body.descricao
   var ativo = 1
+  var empresaId = req.body.empresa
 
   if (descricao != undefined) {
     Origem.create({
       descricao: descricao.toUpperCase(),
-      ativo: ativo
+      ativo: ativo,
+      empresaId: empresaId
     }).then(() => {
       res.redirect('/acesso/adm/origens')
     })

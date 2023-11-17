@@ -20,25 +20,34 @@ const BtusControllers = require ('./controllers/BtusControllers')
 const LoginsControllers = require ('./controllers/LoginsControllers')
 
 //Models
-const Cliente = require ('./models/Cliente')
-const Colaborador = require ('./models/Colaborador')
-const Endereco = require ('./models/Endereco')
-const Orcamento = require ('./models/Orcamento')
+const Empresa = require ('./models/Empresa')
+const Permissao = require ('./models/Permissao')
+const Btu = require ('./models/Btu')
+const Ambiente = require ('./models/Ambiente')
+const Prestacao = require ('./models/Prestacao')
 const Origem = require ('./models/Origem')
 const Marca = require ('./models/Marca')
 const Modelo = require ('./models/Modelo')
-const Prestacao = require ('./models/Prestacao')
-const Ambiente = require ('./models/Ambiente')
-const Btu = require ('./models/Btu')
-const Permissao = require ('./models/Permissao')
-const Empresa = require ('./models/Empresa')
+const Colaborador = require ('./models/Colaborador')
+const Endereco = require ('./models/Endereco')
+const Cliente = require ('./models/Cliente')
+const Orcamento = require ('./models/Orcamento')
+
+
+
+
+
+
 
 //Sessions
 app.use(session({
   secret: 'sua_chave_secreta_aqui', // Troque por uma chave segura
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Em produção, defina como true se estiver usando HTTPS
+  cookie: {
+    secure: false, // Em produção, defina como true se estiver usando HTTPS
+    maxAge: 30 * 60 * 1000 // 30 minutos em milissegundos
+  }
 }));
 
 

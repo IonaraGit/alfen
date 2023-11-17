@@ -38,7 +38,7 @@ router.post('/autenticacao', (req, res) => {
       }
 
       if (colaborador.permissoId == 1) {
-        res.send ('permissao = 1' + sessao)
+        res.redirect ('/acesso/adm')
       }
       if (colaborador.permissoId == 2 ) {
         res.send ('permissao =2' + sessao)
