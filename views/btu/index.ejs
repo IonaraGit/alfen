@@ -43,7 +43,7 @@
           <tr>
             <td> <%= btu.descricao %> </td>
           
-            <td>
+            <td class="d-flex justify-content-around">
               <% if (btu.ativo == 1) { %>
                 <form method="POST" action="/btu/desativar" style="display: inline;" onsubmit="confirmaDesativar(event, this)">
                   <input type="hidden" name="id" value="<%= btu.id %>">

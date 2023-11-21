@@ -21,10 +21,10 @@
           </a>
         </li>
         <li class="lateral-li">
-          <a href="">
-            Orçamentos Finalizados
+          <a href="/admin/orcamentos/prosseguir/<%= cliente.id %>">
+            Agendamentos
           </a>
-        </li class="lateral-li">
+        </li>
       </ul>
     </div>
     <div class="col-md-10">
@@ -61,13 +61,74 @@
         
         <nav>
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-em-aberto-tab" data-toggle="tab" href="#nav-em-aberto" role="tab" aria-controls="nav-em-aberto" aria-selected="true">Em aberto</a>
+            <a class="nav-item nav-link active" id="nav-todos-tab" data-toggle="tab" href="#nav-todos" role="tab" aria-controls="nav-todos" aria-selected="false">Todos</a>
+            <a class="nav-item nav-link" id="nav-em-aberto-tab" data-toggle="tab" href="#nav-em-aberto" role="tab" aria-controls="nav-em-aberto" aria-selected="true">Em aberto</a>
             <a class="nav-item nav-link" id="nav-finalizado-tab" data-toggle="tab" href="#nav-finalizado" role="tab" aria-controls="nav-finalizado" aria-selected="false">Finalizados</a>
-            <a class="nav-item nav-link" id="nav-todos-tab" data-toggle="tab" href="#nav-todos" role="tab" aria-controls="nav-todos" aria-selected="false">Todos</a>
           </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-          <div class="tab-pane fade show active" id="nav-em-aberto" role="tabpanel" aria-labelledby="nav-em-aberto-tab">
+          <div class="tab-pane fade show active" id="nav-todos" role="tabpanel" aria-labelledby="nav-todos-tanav-todos">
+            <div>
+              <table class="table table-bordered mt-2">
+                <thead>
+                  <tr>
+                    <th>Quantidade</th>
+                    <th>Serviço Prestado</th>
+                    <th>BTUS</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Ambiente</th>
+                    <th>Observações</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% orcamentos.forEach((orcamento) => { %>
+                    <% if (cliente.id == orcamento.clienteId)  { %>
+                      <tr>
+                        <td><%= orcamento.qtd %></td>
+                        <% prestacoes.forEach((prestacao) => { %>
+                          <% if (prestacao.id == orcamento.prestacoId) { %>
+                            <td><%= prestacao.descricao %></td>
+                          <% } %>
+                        <% }) %>
+                        <% btus.forEach((btu) => { %>
+                          <% if (btu.id == orcamento.btuId) { %>
+                            <td><%= btu.descricao %></td>
+                          <% } %>
+                        <% }) %>
+                        <% marcas.forEach((marca) => { %>
+                          <% if (marca.id == orcamento.marcaId) { %>
+                            <td><%= marca.descricao %></td>
+                          <% } %>
+                        <% }) %>
+                        <% modelos.forEach((modelo) => { %>
+                          <% if (modelo.id == orcamento.modeloId) { %>
+                            <td><%= modelo.descricao %></td>
+                          <% } %>
+                        <% }) %>
+                        <% ambientes.forEach((ambiente) => { %>
+                          <% if (ambiente.id == orcamento.ambienteId) { %>
+                            <td><%= ambiente.descricao %></td>
+                          <% } %>
+                        <% }) %>
+                        <td><%= orcamento.observacao %></td>
+                        <% if (orcamento.contratado == 0) { %>
+                          <td>Não contratado</td>
+                        <% } else if (orcamento.contratado == 1) { %>
+                          <td>Contratado</td>
+                        <% } %>
+                        
+                      </tr>
+                    <% } %>
+                  <% }) %>
+                </tbody>
+              </table>
+              
+    
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-em-aberto" role="tabpanel" aria-labelledby="nav-em-aberto-tab">
             565
           </div>
           <div class="tab-pane fade" id="nav-finalizado" role="tabpanel" aria-labelledby="nav-finalizado-tab">
@@ -132,67 +193,7 @@
     
             </div>
           </div>
-          <div class="tab-pane fade" id="nav-todos" role="tabpanel" aria-labelledby="nav-todos-tanav-todos">
-            <div>
-              <table class="table table-bordered mt-2">
-                <thead>
-                  <tr>
-                    <th>Quantidade</th>
-                    <th>Serviço Prestado</th>
-                    <th>BTUS</th>
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Ambiente</th>
-                    <th>Observações</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% orcamentos.forEach((orcamento) => { %>
-                    <% if (cliente.id == orcamento.clienteId)  { %>
-                      <tr>
-                        <td><%= orcamento.qtd %></td>
-                        <% prestacoes.forEach((prestacao) => { %>
-                          <% if (prestacao.id == orcamento.prestacoId) { %>
-                            <td><%= prestacao.descricao %></td>
-                          <% } %>
-                        <% }) %>
-                        <% btus.forEach((btu) => { %>
-                          <% if (btu.id == orcamento.btuId) { %>
-                            <td><%= btu.descricao %></td>
-                          <% } %>
-                        <% }) %>
-                        <% marcas.forEach((marca) => { %>
-                          <% if (marca.id == orcamento.marcaId) { %>
-                            <td><%= marca.descricao %></td>
-                          <% } %>
-                        <% }) %>
-                        <% modelos.forEach((modelo) => { %>
-                          <% if (modelo.id == orcamento.modeloId) { %>
-                            <td><%= modelo.descricao %></td>
-                          <% } %>
-                        <% }) %>
-                        <% ambientes.forEach((ambiente) => { %>
-                          <% if (ambiente.id == orcamento.ambienteId) { %>
-                            <td><%= ambiente.descricao %></td>
-                          <% } %>
-                        <% }) %>
-                        <td><%= orcamento.observacao %></td>
-                        <% if (orcamento.contratado == 0) { %>
-                          <td>Não contratado</td>
-                        <% } else if (orcamento.contratado == 1) { %>
-                          <td>Contratado</td>
-                        <% } %>
-                        
-                      </tr>
-                    <% } %>
-                  <% }) %>
-                </tbody>
-              </table>
-              
-    
-            </div>
-          </div>
+         
         </div>
         </div>
         
@@ -213,9 +214,11 @@
             </button>
           </div>
           <div class="col-md-3 mt-1">
-            <button class="btn btn-info btn-block">
-              Prosseguir agendamento
-            </button>
+            <a href="/admin/orcamentos/prosseguir/<%= cliente.id %>">
+              <button class="btn btn-info btn-block">
+                Prosseguir agendamento
+              </button>
+            </a>
           </div>
         </div>
       </div>

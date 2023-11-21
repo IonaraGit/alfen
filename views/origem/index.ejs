@@ -43,7 +43,7 @@
           <tr>
             <td> <%= origem.descricao %> </td>
           
-            <td>
+            <td class="d-flex justify-content-around">
               <% if (origem.ativo == 1) { %>
                 <form method="POST" action="/origem/desativar" style="display: inline;" onsubmit="confirmaDesativar(event, this)">
                   <input type="hidden" name="id" value="<%= origem.id %>">

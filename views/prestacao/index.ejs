@@ -43,7 +43,7 @@
           <tr>
             <td> <%= prestacao.descricao %> </td>
           
-            <td>
+            <td class="d-flex justify-content-around">
               <% if (prestacao.ativo == 1) { %>
                 <form method="POST" action="/prestacao/desativar" style="display: inline;" onsubmit="confirmaDesativar(event, this)">
                   <input type="hidden" name="id" value="<%= prestacao.id %>">

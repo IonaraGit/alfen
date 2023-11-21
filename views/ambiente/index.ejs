@@ -44,7 +44,7 @@
             <tr>
               <td> <%= ambiente.descricao %> </td>
             
-              <td>
+              <td class="d-flex justify-content-around">
                 <% if (ambiente.ativo == 1) { %>
                   <form method="POST" action="/ambiente/desativar" style="display: inline;" onsubmit="confirmaDesativar(event, this)">
                     <input type="hidden" name="id" value="<%= ambiente.id %>">
@@ -66,9 +66,9 @@
                 <% } else if (ambiente.ativo == 0) { %>
                   <form method="POST" action="/ambiente/ativar" style="display: inline;" onsubmit="confirmaAtivar(event, this)">
                     <input type="hidden" name="id" value="<%= ambiente.id %>">
-                    <button type="submit" class="btn btn-danger" data-toggle="popover" data-trigger="hover" data-content="Ambiente Inativo" data-placement="top">
-                      <i class="bi bi-x-lg"></i>
-                    </button>
+                      <button type="submit" class="btn btn-danger" data-toggle="popover" data-trigger="hover" data-content="Ambiente Inativo" data-placement="top">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
                     </form>
                 <% } %>
                 

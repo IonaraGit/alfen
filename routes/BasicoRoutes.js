@@ -105,7 +105,7 @@ router.get('/admin/cliente/detalhes/:id', (req, res) => {
 /* ORCAMENTOS */
 router.get('/admin/orcamento/novo/:id', (req, res) => {
   var id = req.params.id
-
+  sessao = req.session.colaborador
   Cliente.findByPk(id).then (cliente => {
     if (cliente != undefined) {
       Endereco.findAll().then(enderecos => {
@@ -115,7 +115,7 @@ router.get('/admin/orcamento/novo/:id', (req, res) => {
               Ambiente.findAll().then(ambientes => {
                 Prestacao.findAll().then(prestacoes => {
                   Btu.findAll().then(btus => {
-                    res.render('orcamento/novo', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, ambientes: ambientes, prestacoes:prestacoes, btus:btus})
+                    res.render('orcamento/novo', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, ambientes: ambientes, prestacoes:prestacoes, btus:btus, sessao})
                   })
                 })
               })
@@ -131,6 +131,7 @@ router.get('/admin/orcamento/novo/:id', (req, res) => {
 
 router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
   var id = req.params.id
+  
 
   Cliente.findByPk(id).then (cliente => {
     if (cliente != undefined) {
@@ -140,7 +141,16 @@ router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
             Modelo.findAll().then(modelos => {
               Orcamento.findAll().then(orcamentos => {
                 Colaborador.findAll().then(colaboradores => {
-                  res.render('orcamento/prosseguir', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos: orcamentos, colaboradores: colaboradores})
+                  Prestacao.findAll().then(prestacoes => {
+                    Btu.findAll().then(btus => {
+                      Ambiente.findAll().then(ambientes => {
+                        res.render('orcamento/prosseguir', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos: orcamentos, colaboradores: colaboradores, prestacoes:prestacoes, btus: btus, ambientes:ambientes})
+                      })
+                     
+                    })
+                    
+                  })
+                  
                 })
               })
               

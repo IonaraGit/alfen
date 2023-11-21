@@ -1,79 +1,161 @@
 <%- include ('../../partials/conf_header.ejs') %>
 <%- include ('../../partials/header_sistema.ejs') %>
 <body>
-  <div class="principal" style="height: 100vh;">
-    <form method="post" action="/orcamento/agendamento/salvar">
-      <div class="mt-3">
-      
-        <div class="form-row">
-          <div class="form-group col-md-12">
-            <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
-            <input type="text" class="form-control" name="nome" id="nome" value="<%= cliente.nome%>" readonly>
-          </div>
-        </div>
+  <div class="row">
     
-        <% enderecos.forEach (endereco => { %>
-          <% if (endereco.clienteId === cliente.id) { %>
+    <div class="col-md-2 lateral">
+      <ul class="lateral-ul">
+        <li class="lateral-li">
+          <a href="/admin/cliente/detalhes/<%= cliente.id %>">
+            Dados Pessoais
+          </a>
+        </li>
+        <li class="lateral-li">
+          <a href="/admin/orcamento/novo/<%= cliente.id %>">
+            Novo Orçamento
+          </a>
+        </li>
+        <li class="lateral-li">
+          <a href="/admin/orcamentos/decisao2/<%= cliente.id %>">
+            Orçamentos Cadastrados
+          </a>
+        </li>
+        <li class="lateral-li" style="background-color: #b8b8c0">
+          <a href="/admin/orcamentos/prosseguir/<%= cliente.id %>">
+            Agendamentos
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-10">
+      <div class="principal">
+        <form method="post" action="/orcamento/agendamento/salvar">
+          <div class="mt-3">
+          
             <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="logadouro" class="label-novo">Logadouro <span style="color: crimson;">*</span></label>
-                <input type="text" class="form-control" name="logadouro" id="logadouro" value="<%= endereco.logadouro %>" readonly>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="numero" class="label-novo">N° <span style="color: crimson;">*</span></label>
-                <input type="text" class="form-control" name="numero" id="numero" value="<%= endereco.numero %>" readonly>
+              <div class="form-group col-md-12">
+                <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
+                <input type="text" class="form-control" name="nome" id="nome" value="<%= cliente.nome%>" readonly>
               </div>
             </div>
-          <% } %> 
-        <% }) %>   
         
-        <hr>
-        <div class="row">
-          <% orcamentos.forEach((orcamento) => { %>
-            <% if((orcamento.clienteId == cliente.id) && (orcamento.contratado == false)) { %>
+            <% enderecos.forEach (endereco => { %>
+              <% if (endereco.clienteId === cliente.id) { %>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="logadouro" class="label-novo">Logadouro <span style="color: crimson;">*</span></label>
+                    <input type="text" class="form-control" name="logadouro" id="logadouro" value="<%= endereco.logadouro %>" readonly>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="numero" class="label-novo">N° <span style="color: crimson;">*</span></label>
+                    <input type="text" class="form-control" name="numero" id="numero" value="<%= endereco.numero %>" readonly>
+                  </div>
+                </div>
+              <% } %> 
+            <% }) %>   
             
-              <div class="col-lg-6 mt-1 justify-content-center align-items-center" style="background-color: aqua;">
-                <h6><b>Descrição do serviço:</b></h6>
-                <p><b> Instalação</b>
-                <p><b> <%= orcamento.btus %> </b>btus</p>
-                <h6><b>Ambiente: </b> <%= orcamento.ambiente %></h6>
-              </div>
-              <div class="col-lg-6 mt-1 d-flex justify-content-center align-items-center">
-                <button type="button" class="btn-light agendar-button vermelho-icon" data-target="date<%= orcamento.id %> date2<%= orcamento.id %> coladorador<%= orcamento.id %> horario<%= orcamento.id %>" style="cursor: pointer;"> 
-                  <i class="bi bi-calendar2-x"></i>
-                </button>
-                <input class="data-margin" id="date<%= orcamento.id %>" type="date" name="data1" disabled/>
-                <input id="date2<%= orcamento.id %>" name="data2" type="date" disabled/>
+            <hr>
+            <div class="row">
+              <% orcamentos.forEach((orcamento) => { %>
+                <% if((orcamento.clienteId == cliente.id) && (orcamento.contratado == false)) { %>
+
+                  <table class="table table-bordered mt-2">
+                    <thead>
+                      <tr>
+                        <th>Quantidade</th>
+                        <th>Serviço Prestado</th>
+                        <th>BTUS</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Ambiente</th>
+                        <th>Observações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><%= orcamento.qtd %></td>
+                        <% prestacoes.forEach ((prestacao) => { %>
+                          <% if (prestacao.id == orcamento.prestacoId) { %> 
+                            <td><%= prestacao.descricao %></td>
+                          <% } %>
+                        <% }) %>
+                        <% btus.forEach ((btu) => { %>
+                          <% if (btu.id == orcamento.btuId) { %> 
+                            <td><%= btu.descricao %></td>
+                          <% } %>
+                        <% }) %>
+                        <% marcas.forEach ((marca) => { %>
+                          <% if (marca.id == orcamento.btuId) { %> 
+                            <td><%= marca.descricao %></td>
+                          <% } %>
+                        <% }) %>
+                        <% modelos.forEach ((modelo) => { %>
+                          <% if (modelo.id == orcamento.btuId) { %> 
+                            <td><%= modelo.descricao %></td>
+                          <% } %>
+                        <% }) %>
+                        <% ambientes.forEach ((ambiente) => { %>
+                          <% if (ambiente.id == orcamento.btuId) { %> 
+                            <td><%= ambiente.descricao %></td>
+                          <% } %>
+                        <% }) %>
+                        <td><%= orcamento.observacao %></td>
+                        
+                      </tr>
+                      <tr>
+                        <td colspan="7">
+                          <div>
+                            <button type="button" class="btn-light agendar-button vermelho-icon" data-target="date<%= orcamento.id %> date2<%= orcamento.id %> coladorador<%= orcamento.id %> horario<%= orcamento.id %>" style="cursor: pointer;"> 
+                              <i class="bi bi-calendar2-x"></i>
+                            </button>
+                            <input class="data-margin" id="date<%= orcamento.id %>" type="date" name="data1" disabled required/>
+                            <input id="date2<%= orcamento.id %>" name="data2" type="date" disabled required/>
+                            
+                            <select id="coladorador<%= orcamento.id %>" class="data-margin" id="colaborador" name="colaborador" disabled required>
+                              <option value="" disabled selected>Escolha um funcionário</option>
+                              <% colaboradores.forEach (colaborador => { %>
+                                <option value="<%= colaborador.id %>"><%= colaborador.nome %></option>
+                              <% }) %>
+                            </select>
+                            
+                            <input id="horario<%= orcamento.id %>" type="time" min="09:00" max="18:00" name="horario" required disabled/>
+                          </div>
+                        </td>
+                      </tr>
+                       
+                    </tbody>
+                  </table>
                 
-                <select id="coladorador<%= orcamento.id %>" class="data-margin" id="colaborador" name="colaborador" disabled>
-                  <% colaboradores.forEach (colaborador => { %>
-                    <option value="<%= colaborador.id %>"><%= colaborador.nome %></option>
-                  <% }) %>
-                </select>
-                <input id="horario<%= orcamento.id %>" type="time" min="09:00" max="18:00" required disabled/>
-              </div>
-              
-            <% }%>
-          <% }) %>
-        </div> 
-
-      </div>
-
-      <div>
-
-      </div>
-
-  
-      <div>
-        <div class="row text-center">
-          <div class="col-lg-3 mt-1">
-            <button type="submit" class="btn bg-warning">Enviar orçamento por e-mail</button>
+                
+                  
+                  
+                <% }%>
+              <% }) %>
+            </div> 
+    
           </div>
-        </div>
+    
+          <div>
+    
+          </div>
+    
       
+          <div>
+            <input name="empresa" value="<%=cliente.empresaId%>" />
+
+            <div class="row text-center justify-content-center">
+              
+                <button type="submit" class="btn bg-warning">Salvar e enviar cópia por e-mail</button>
+     
+            </div>
+          
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
+
   </div>
+ 
 </body>
 
 <script>
@@ -82,22 +164,50 @@
 
     agendarButtons.forEach(function (button) {
       button.addEventListener('click', function () {
-        const targets = button.getAttribute('data-target').split(' '); // Separa os alvos em um array
+        const targets = button.getAttribute('data-target').split(' ');
         targets.forEach(function (targetId) {
           const dateInput = document.getElementById(targetId);
 
           if (dateInput.disabled) {
             dateInput.disabled = false;
+            dateInput.min = getCurrentDate();
             button.innerHTML = '<i class="bi bi-calendar-check verde-icon"></i>';
           } else {
             dateInput.disabled = true;
+            dateInput.removeAttribute('min');
             button.innerHTML = '<i class="bi bi-calendar2-x vermelho-icon"></i>';
+          }
+
+          // Adiciona ouvinte de eventos para atualizar min de data2 ao alterar data1
+          if (targetId.startsWith('date')) {
+            const correspondingDate2Id = 'date2' + targetId.substring(4);
+            const date2Input = document.getElementById(correspondingDate2Id);
+
+            dateInput.addEventListener('input', function () {
+              date2Input.min = dateInput.value;
+            });
           }
         });
       });
     });
+
+    function getCurrentDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      let month = today.getMonth() + 1;
+      let day = today.getDate();
+
+      // Adiciona um zero à esquerda para meses/dias menores que 10
+      month = month < 10 ? '0' + month : month;
+      day = day < 10 ? '0' + day : day;
+
+      return `${year}-${month}-${day}`;
+    }
   });
 </script>
+
+
+
 
 
 

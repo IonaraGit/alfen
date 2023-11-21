@@ -31,10 +31,12 @@
         </div>
       </div>
       <div class="form-row">
+
         <div class="form-group col-md-6">
           <label for="celular" class="label-novo">Celular <span style="color: crimson;">*</span></label>
           <input type="text" class="form-control" name="celular" id="celular" placeholder="(35) 9 0000-0000" onkeypress="$(this).mask('(00) 0 0000-0000');" required>
         </div>
+        
         <div class="form-group col-md-6">
           <label for="telefone" class="label-novo">Telefone</label>
           <input type="text" class="form-control" name="telefone" id="telefone" onkeypress="$(this).mask('(00) 0000-0000');" placeholder="(35) 0000-0000">
@@ -104,5 +106,251 @@
     alertMessage.style.display = "block";
   }
 </script>
+<style>
+  .campo-invalido {
+    border-color: red;
+  }
+
+  .campo-valido {
+    border-color: green;
+  }
+
+  .campo-neutro {
+    border-color: aqua;
+  }
+</style>
+
+<!-- Inclua o link da biblioteca SweetAlert2 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const nomeInput = document.getElementById("nome")
+    const rgInput = document.getElementById("rg")
+    const cpfInput = document.getElementById("cpf");
+    const emailInput = document.getElementById("email");
+    const celularInput = document.getElementById("celular");
+    const telefoneInput = document.getElementById("telefone");
+    const logadouroInput = document.getElementById("logadouro")
+    const numeroInput = document.getElementById("numero")
+    const complementoInput = document.getElementById("complemento")
+    const cepInput = document.getElementById("cep");
+    const cidadeInput = document.getElementById("cidade");
+
+    nomeInput.addEventListener("input", function() {
+      const nomeValue = nomeInput.value
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (nomeValue.length < 3) {
+        nomeInput.classList.remove("campo-valido");
+        nomeInput.classList.add("campo-invalido");
+      } else {
+        nomeInput.classList.remove("campo-invalido");
+        nomeInput.classList.add("campo-valido");
+      }
+    });
+
+    cidadeInput.addEventListener("input", function() {
+      const cidadeValue = cidadeInput.value
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (cidadeValue.length < 2) {
+        cidadeInput.classList.remove("campo-valido");
+        cidadeInput.classList.add("campo-invalido");
+      } else {
+        cidadeInput.classList.remove("campo-invalido");
+        cidadeInput.classList.add("campo-valido");
+      }
+    });
+
+
+    numeroInput.addEventListener("input", function() {
+      const numeroValue = numeroInput.value
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (numeroValue.length < 1) {
+        numeroInput.classList.remove("campo-valido");
+        numeroInput.classList.add("campo-invalido");
+      } else {
+        numeroInput.classList.remove("campo-invalido");
+        numeroInput.classList.add("campo-valido");
+      }
+    });
+
+    complementoInput.addEventListener("input", function() {
+      const complementoValue = complementoInput.value
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (complementoValue.length < 1) {
+        complementoInput.classList.remove("campo-valido");
+        complementoInput.classList.add("campo-invalido");
+      } else {
+        complementoInput.classList.remove("campo-invalido");
+        complementoInput.classList.add("campo-valido");
+      }
+    });
+
+    logadouroInput.addEventListener("input", function() {
+      const logadouroValue = logadouroInput.value
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (logadouroValue.length < 3) {
+        logadouroInput.classList.remove("campo-valido");
+        logadouroInput.classList.add("campo-invalido");
+      } else {
+        logadouroInput.classList.remove("campo-invalido");
+        logadouroInput.classList.add("campo-valido");
+      }
+    });
+
+    rgInput.addEventListener("input", function() {
+      const rgValue = rgInput.value
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (rgValue.length < 3) {
+        rgInput.classList.remove("campo-valido");
+        rgInput.classList.add("campo-invalido");
+      } else {
+        rgInput.classList.remove("campo-invalido");
+        rgInput.classList.add("campo-valido");
+      }
+    });
+
+    emailInput.addEventListener("input", function() {
+    const emailValue = emailInput.value;
+
+    // Adiciona ou remove as classes de acordo com a validação
+    if (validarEmail(emailValue)) {
+      emailInput.classList.remove("campo-invalido");
+      emailInput.classList.add("campo-valido");
+    } else {
+      emailInput.classList.remove("campo-valido");
+      emailInput.classList.add("campo-invalido");
+    }
+  });
+    
+    cpfInput.addEventListener("input", function() {
+      const cpfValue = cpfInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (validarCPF(cpfValue)) {
+        cpfInput.classList.remove("campo-invalido");
+        cpfInput.classList.add("campo-valido");
+      } else {
+        cpfInput.classList.remove("campo-valido");
+        cpfInput.classList.add("campo-invalido");
+      }
+    });
+
+    celularInput.addEventListener("input", function() {
+      const celularValue = celularInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (celularValue.length < 11) {
+        celularInput.classList.remove("campo-valido");
+        celularInput.classList.add("campo-invalido");
+      } else {
+        celularInput.classList.remove("campo-invalido");
+        celularInput.classList.add("campo-valido");
+      }
+    });
+
+    telefoneInput.addEventListener("input", function() {
+      const telefoneValue = telefoneInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (telefoneValue.length < 10) {
+        telefoneInput.classList.remove("campo-valido");
+        telefoneInput.classList.add("campo-invalido");
+      } else {
+        telefoneInput.classList.remove("campo-invalido");
+        telefoneInput.classList.add("campo-valido");
+      }
+    });
+
+    cepInput.addEventListener("input", function() {
+      const cepValue = cepInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (cepValue.length < 8) {
+        cepInput.classList.remove("campo-valido");
+        cepInput.classList.add("campo-invalido");
+      } else {
+        cepInput.classList.remove("campo-invalido");
+        cepInput.classList.add("campo-valido");
+      }
+    });
+    
+    document.querySelector("form").addEventListener("submit", function(event) {
+      const cpfValue = cpfInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+      const celularValue = celularInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+      // Verifica se todos os campos estão corretos
+      if (!validarCPF(cpfValue) || celularValue.length < 11) {
+        event.preventDefault();
+
+        // Utiliza SweetAlert2 para exibir um alerta mais bonito
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Confira os campos digitados.',
+        });
+      }
+    });
+
+  function validarEmail(email) {
+    // Utilizando uma expressão regular para validar o formato do e-mail
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regexEmail.test(email);
+  }
+
+
+  function validarCPF(cpf) {
+  // Remove caracteres não numéricos
+  cpf = cpf.replace(/\D/g, '');
+
+  // Verifica se o CPF tem 11 dígitos
+  if (cpf.length !== 11) {
+    return false;
+  }
+
+  // Verifica se todos os dígitos são iguais (caso contrário, é um CPF inválido)
+  if (/^(\d)\1+$/.test(cpf)) {
+    return false;
+  }
+
+  // Calcula o primeiro dígito verificador
+  let sum = 0;
+  for (let i = 10; i > 1; i--) {
+    sum += parseInt(cpf.charAt(10 - i)) * i;
+  }
+  let mod = (sum * 10) % 11;
+  let digit1 = mod === 10 || mod === 11 ? 0 : mod;
+
+  // Verifica se o primeiro dígito verificador é igual ao fornecido no CPF
+  if (parseInt(cpf.charAt(9)) !== digit1) {
+    return false;
+  }
+
+  // Calcula o segundo dígito verificador
+  sum = 0;
+  for (let i = 11; i > 1; i--) {
+    sum += parseInt(cpf.charAt(11 - i)) * i;
+  }
+  mod = (sum * 10) % 11;
+  let digit2 = mod === 10 || mod === 11 ? 0 : mod;
+
+  // Verifica se o segundo dígito verificador é igual ao fornecido no CPF
+  if (parseInt(cpf.charAt(10)) !== digit2) {
+    return false;
+  }
+
+  // Se passou por todas as verificações, o CPF é válido
+  return true;
+}
+
+  });
+</script>
+
 <%- include ('../../partials/footer.ejs') %>
 <%- include ('../../partials/conf_footer.ejs') %>

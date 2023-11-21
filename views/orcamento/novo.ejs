@@ -3,7 +3,9 @@
 
 <body>
   <div class="row">
+    
     <div class="col-md-2 lateral">
+      
       <ul class="lateral-ul">
         <li class="lateral-li">
           <a href="/admin/cliente/detalhes/<%= cliente.id %>">
@@ -21,16 +23,16 @@
           </a>
         </li>
         <li class="lateral-li">
-          <a href="">
-            Orçamentos Finalizados
+          <a href="/admin/orcamentos/prosseguir/<%= cliente.id %>">
+            Agendamentos
           </a>
-        </li class="lateral-li">
+        </li>
       </ul>
     </div>
     <div class="col-md-10">
       <div class="principal">
 
-        <input type="hidden" value="<%= cliente.id %>" name="id"/>
+        
       
         <div class="mt-3">
         
@@ -59,7 +61,12 @@
           <hr>
               
           <!--INICIO ABRIR NOVOS SERVICOS-->
+         
           <div id="modeloCamposServico" style="display: none;">
+            <input value="<%= sessao.id %>" name="colaboradoreId"/>
+            <input value="<%= cliente.id %>" name="clienteId"/>
+            <input value="<%= cliente.id %>" name="id"/>
+            <input value="<%= cliente.empresaId %>" name="empresaId"/>
             <hr>
             <div class="row">
               <div class="col-md-12">
@@ -139,8 +146,10 @@
           <!--FIM ABRIR NOVOS SERVICOS-->
          
           <form method="POST" action="/orcamento/salvar" >
-            <input type="hidden" value="<%= cliente.id %>" name="id"/>
-    
+            <input value="<%= sessao.id %>" name="colaboradoreId"/>
+            <input value="<%= cliente.id %>" name="clienteId"/>
+            <input value="<%= cliente.id %>" name="id"/>
+            <input value="<%= cliente.empresaId %>" name="empresaId"/>
             
            
             <div class="row">

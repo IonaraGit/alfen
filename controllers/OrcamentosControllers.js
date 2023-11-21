@@ -4,10 +4,12 @@ const router = express.Router();
 const chalk = require('chalk')
 
 const Orcamento = require ('../models/Orcamento')
+const Agenda = require ('../models/Agenda')
 
 router.post('/orcamento/salvar', (req, res) => {
   const inicio = 1;
 
+  console.log('veeeem no id: ', id)
   var id = req.body.id;
   var observacao = Array.isArray(req.body.observacao) ? req.body.observacao : [req.body.observacao];
   var valor = Array.isArray(req.body.valor) ? req.body.valor : [req.body.valor];
@@ -17,6 +19,9 @@ router.post('/orcamento/salvar', (req, res) => {
   var btus = Array.isArray(req.body.btus) ? req.body.btus : [req.body.btus];
   var prestacao = Array.isArray(req.body.prestacao) ? req.body.prestacao : [req.body.prestacao];
   var quantidade = Array.isArray(req.body.quantidade) ? req.body.quantidade : [req.body.quantidade];
+  var colaboradoreId = Array.isArray(req.body.colaboradoreId) ? req.body.colaboradoreId : [req.body.colaboradoreId];
+  var clienteId = Array.isArray(req.body.clienteId) ? req.body.clienteId : [req.body.clienteId];
+  var empresaId = Array.isArray(req.body.empresaId) ? req.body.empresaId : [req.body.empresaId];
   var contratado = false;
   var finalizado = false;
 
@@ -41,9 +46,10 @@ router.post('/orcamento/salvar', (req, res) => {
         ambienteId: ambiente[i],
         prestacoId: prestacao[i],
         contratado: contratado,
-        finalizado: finalizado[i],
-        colaboradoreId: id,
-        clienteId: id,
+        finalizado: finalizado,
+        colaboradoreId: colaboradoreId[i],
+        clienteId: clienteId[i],
+        empresaId: empresaId[i]
       })
     );
   }
@@ -63,10 +69,16 @@ router.post('/orcamento/salvar', (req, res) => {
 router.post ('/orcamento/agendamento/salvar', (req, res) => {
   var data1 = req.body.data1
   var data2 = req.body.data2
+  var horario = req.body.horario
+  var colaborador = req.body.colaborador
   
-  
+  var empresaId = req.body.empresaId
+
+
   console.log(chalk.blue.bold('data 1 ' + data1));
   console.log(chalk.blue.bold('data 2 ' + data2))
+  console.log(chalk.blue.bold('Horario ' + horario))
+  console.log(chalk.blue.bold('Colaborador ' + colaborador))
   res.send('passo')
 })
 

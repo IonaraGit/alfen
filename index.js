@@ -32,6 +32,7 @@ const Colaborador = require ('./models/Colaborador')
 const Endereco = require ('./models/Endereco')
 const Cliente = require ('./models/Cliente')
 const Orcamento = require ('./models/Orcamento')
+const Agenda = require ('./models/Agenda')
 
 
 
