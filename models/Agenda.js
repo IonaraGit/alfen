@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize')
 const connection = require('../database/database');
 const Empresa = require('./Empresa')
-const Colaborador = require ('./Colaborador')
+const Colaborador = require ('./Colaborador');
+const Cliente = require('./Cliente');
+const Orcamento = require('./Orcamento');
 
 const Agenda = connection.define('agendas', {
   previsao_inicio:{
@@ -23,6 +25,14 @@ Agenda.belongsTo(Empresa)
 
 Colaborador.hasMany(Agenda) 
 Agenda.belongsTo(Colaborador)
+
+Cliente.hasMany(Agenda) 
+Agenda.belongsTo(Cliente)
+
+
+Orcamento.hasMany(Agenda) 
+Agenda.belongsTo(Orcamento)
+
 
 Agenda.sync ({force: false})
 

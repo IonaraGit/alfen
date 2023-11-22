@@ -67,19 +67,63 @@ router.post('/orcamento/salvar', (req, res) => {
 
 
 router.post ('/orcamento/agendamento/salvar', (req, res) => {
-  var data1 = req.body.data1
-  var data2 = req.body.data2
-  var horario = req.body.horario
-  var colaborador = req.body.colaborador
-  
-  var empresaId = req.body.empresaId
-
+  var data1 = Array.isArray(req.body.data1) ? req.body.data1 : [req.body.data1];
+  var data2 = Array.isArray(req.body.data2) ? req.body.data2 : [req.body.data2];
+  var horario = Array.isArray(req.body.horario) ? req.body.horario : [req.body.horario];
+  var colaboradorId = Array.isArray(req.body.colaborador) ? req.body.colaborador : [req.body.colaborador];
+  var empresaId = req.body.empresa
+  var clienteId =  req.body.id
+  var orcamentoId =  req.body.orcamento
 
   console.log(chalk.blue.bold('data 1 ' + data1));
   console.log(chalk.blue.bold('data 2 ' + data2))
   console.log(chalk.blue.bold('Horario ' + horario))
-  console.log(chalk.blue.bold('Colaborador ' + colaborador))
-  res.send('passo')
+  console.log(chalk.blue.bold('Colaborador ' + colaboradorId))
+  console.log(chalk.blue.bold('Empresa ' + empresaId))
+  console.log(chalk.blue.bold('Orcamento ' + orcamentoId))
+
+  const conta = horario.length
+
+  const agenda = []
+  for (let i = 0; i < conta; i++) {
+    agenda.push (
+      Agenda.create ({
+        previsao_inicio: data1 [i],
+        previsao_fim: data2 [i],
+        horario: horario [i],
+        colaboradoreId: colaboradorId [i],
+        empresaId: empresaId,
+        clienteId: clienteId, 
+        orcamentoId: orcamentoId
+
+      })
+    )
+  }
+
+  Promise.all (agenda)
+    .then((ag) => {
+      const orcamento = []
+
+      for (let i = 0; i < ag.length; i++) {
+        orcamento.push (
+          Orcamento.update (
+            {contratado: true},
+            {where: { id: orcamentoId}}
+          )
+        )
+      }
+      return Promise.all (orcamento)
+      
+    })
+    .then(() => {
+      console.log ('ok, feitos')
+      res.redirect ('/admin/orcamentos/prosseguir/' + clienteId)
+    })
+    .catch((error) => {
+      console.log ('erro', error)
+      res.send('erro')
+    })
+
 })
 
 module.exports = router

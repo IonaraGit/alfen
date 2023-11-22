@@ -11,6 +11,7 @@ const Ambiente = require('../models/Ambiente');
 const Prestacao = require('../models/Prestacao');
 const Empresa = require ('../models/Empresa')
 const Btu = require('../models/Btu');
+const Agenda = require ('../models/Agenda')
 
 const expirar = require ('../middlewares/expirar')
 
@@ -144,7 +145,10 @@ router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
                   Prestacao.findAll().then(prestacoes => {
                     Btu.findAll().then(btus => {
                       Ambiente.findAll().then(ambientes => {
-                        res.render('orcamento/prosseguir', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos: orcamentos, colaboradores: colaboradores, prestacoes:prestacoes, btus: btus, ambientes:ambientes})
+                        Agenda.findAll().then(agendas => {
+                          res.render('orcamento/prosseguir', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos: orcamentos, colaboradores: colaboradores, prestacoes:prestacoes, btus: btus, ambientes:ambientes, agendas: agendas})
+                        })
+                        
                       })
                      
                     })

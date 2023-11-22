@@ -29,134 +29,216 @@
     </div>
     <div class="col-md-10">
       <div class="principal">
-        <form method="post" action="/orcamento/agendamento/salvar">
-          <div class="mt-3">
-          
-            <div class="form-row">
-              <div class="form-group col-md-12">
-                <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
-                <input type="text" class="form-control" name="nome" id="nome" value="<%= cliente.nome%>" readonly>
+        <div class="mt-3">
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
+              <input type="text" class="form-control" name="nome" id="nome" value="<%= cliente.nome%>" readonly>
+            </div>
+          </div>
+      
+          <% enderecos.forEach (endereco => { %>
+            <% if (endereco.clienteId === cliente.id) { %>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="logadouro" class="label-novo">Logadouro <span style="color: crimson;">*</span></label>
+                  <input type="text" class="form-control" name="logadouro" id="logadouro" value="<%= endereco.logadouro %>" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="numero" class="label-novo">N° <span style="color: crimson;">*</span></label>
+                  <input type="text" class="form-control" name="numero" id="numero" value="<%= endereco.numero %>" readonly>
+                </div>
+              </div>
+            <% } %> 
+          <% }) %>   
+        </div>  
+        
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-agendados-tab" data-toggle="tab" href="#nav-agendados" role="tab" aria-controls="nav-agendados" aria-selected="false">Agendados</a>
+            <a class="nav-item nav-link" id="nav-nao-agendados-tab" data-toggle="tab" href="#nav-nao-agendados" role="tab" aria-controls="nav-nao-agendados" aria-selected="true">Não agendados</a>                
+          </div>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane show active" id="nav-agendados" role="tabpanel" aria-labelledby="nav-agendados-tab">
+              <div class="row">
+                <% orcamentos.forEach((orcamento) => { %>
+                  <% if((orcamento.clienteId == cliente.id) && (orcamento.contratado == true)) { %>
+  
+                    <table class="table table-bordered mt-2">
+                      <thead>
+                        <tr>
+                          <th>Quantidade</th>
+                          <th>Serviço Prestado</th>
+                          <th>BTUS</th>
+                          <th>Marca</th>
+                          <th>Modelo</th>
+                          <th>Ambiente</th>
+                          <th>Observações</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <input type="hidden" class="form-control" name="orcamento" value="<%= orcamento.id%>" readonly>
+                          <td><%= orcamento.qtd %> </td>
+                          <% prestacoes.forEach ((prestacao) => { %>
+                            <% if (prestacao.id == orcamento.prestacoId) { %> 
+                              <td><%= prestacao.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% btus.forEach ((btu) => { %>
+                            <% if (btu.id == orcamento.btuId) { %> 
+                              <td><%= btu.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% marcas.forEach ((marca) => { %>
+                            <% if (marca.id == orcamento.btuId) { %> 
+                              <td><%= marca.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% modelos.forEach ((modelo) => { %>
+                            <% if (modelo.id == orcamento.btuId) { %> 
+                              <td><%= modelo.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% ambientes.forEach ((ambiente) => { %>
+                            <% if (ambiente.id == orcamento.btuId) { %> 
+                              <td><%= ambiente.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <td><%= orcamento.observacao %></td>
+                          
+                        </tr>
+                        <tr>
+                          <td colspan="7">
+                            <div>
+                              <% agendas.forEach((agenda) => { %>
+                                <% if ((agenda.clienteId == orcamento.clienteId) && (agenda.orcamentoId == orcamento.id))  { %>
+                                  
+                                  <input class="data-margin" type="text" id="previsao_inicio" value="<%= new Date(agenda.previsao_inicio).toLocaleDateString('pt-BR') %>" readonly />
+                                  <input class="data-margin" type="text" id="previsao_inicio" value="<%= new Date(agenda.previsao_fim).toLocaleDateString('pt-BR') %>" readonly />
+                                  <% colaboradores.forEach (colaborador => { %>
+                                    <% if ((colaborador.id == agenda.colaboradoreId) && (agenda.clienteId == orcamento.clienteId) ) { %>
+                                      <input type="text" value="<%= colaborador.nome %>" readonly />
+                                    <% } %>
+                                  <% }) %>
+                                  <input type="text" value="<%= new Date('2023-11-11T18:00:00').toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) %>" readonly/>
+
+                                <% } %>
+                              <% }) %>
+                              
+                                              
+                            </div>
+                          </td>
+                        </tr>
+                          
+                      </tbody>
+                    </table>
+  
+                    
+                  <% }%>
+                <% }) %>
               </div>
             </div>
-        
-            <% enderecos.forEach (endereco => { %>
-              <% if (endereco.clienteId === cliente.id) { %>
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="logadouro" class="label-novo">Logadouro <span style="color: crimson;">*</span></label>
-                    <input type="text" class="form-control" name="logadouro" id="logadouro" value="<%= endereco.logadouro %>" readonly>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="numero" class="label-novo">N° <span style="color: crimson;">*</span></label>
-                    <input type="text" class="form-control" name="numero" id="numero" value="<%= endereco.numero %>" readonly>
-                  </div>
-                </div>
-              <% } %> 
-            <% }) %>   
-            
-            <hr>
-            <div class="row">
-              <% orcamentos.forEach((orcamento) => { %>
-                <% if((orcamento.clienteId == cliente.id) && (orcamento.contratado == false)) { %>
-
-                  <table class="table table-bordered mt-2">
-                    <thead>
-                      <tr>
-                        <th>Quantidade</th>
-                        <th>Serviço Prestado</th>
-                        <th>BTUS</th>
-                        <th>Marca</th>
-                        <th>Modelo</th>
-                        <th>Ambiente</th>
-                        <th>Observações</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><%= orcamento.qtd %></td>
-                        <% prestacoes.forEach ((prestacao) => { %>
-                          <% if (prestacao.id == orcamento.prestacoId) { %> 
-                            <td><%= prestacao.descricao %></td>
-                          <% } %>
-                        <% }) %>
-                        <% btus.forEach ((btu) => { %>
-                          <% if (btu.id == orcamento.btuId) { %> 
-                            <td><%= btu.descricao %></td>
-                          <% } %>
-                        <% }) %>
-                        <% marcas.forEach ((marca) => { %>
-                          <% if (marca.id == orcamento.btuId) { %> 
-                            <td><%= marca.descricao %></td>
-                          <% } %>
-                        <% }) %>
-                        <% modelos.forEach ((modelo) => { %>
-                          <% if (modelo.id == orcamento.btuId) { %> 
-                            <td><%= modelo.descricao %></td>
-                          <% } %>
-                        <% }) %>
-                        <% ambientes.forEach ((ambiente) => { %>
-                          <% if (ambiente.id == orcamento.btuId) { %> 
-                            <td><%= ambiente.descricao %></td>
-                          <% } %>
-                        <% }) %>
-                        <td><%= orcamento.observacao %></td>
-                        
-                      </tr>
-                      <tr>
-                        <td colspan="7">
-                          <div>
-                            <button type="button" class="btn-light agendar-button vermelho-icon" data-target="date<%= orcamento.id %> date2<%= orcamento.id %> coladorador<%= orcamento.id %> horario<%= orcamento.id %>" style="cursor: pointer;"> 
-                              <i class="bi bi-calendar2-x"></i>
-                            </button>
-                            <input class="data-margin" id="date<%= orcamento.id %>" type="date" name="data1" disabled required/>
-                            <input id="date2<%= orcamento.id %>" name="data2" type="date" disabled required/>
-                            
-                            <select id="coladorador<%= orcamento.id %>" class="data-margin" id="colaborador" name="colaborador" disabled required>
-                              <option value="" disabled selected>Escolha um funcionário</option>
-                              <% colaboradores.forEach (colaborador => { %>
-                                <option value="<%= colaborador.id %>"><%= colaborador.nome %></option>
+            <div class="tab-pane" id="nav-nao-agendados" role="tabpanel" aria-labelledby="nav-nao-agendados-tab">
+              <div class="row">
+                
+                  
+                  <% orcamentos.forEach((orcamento) => { %>
+                    <% if((orcamento.clienteId == cliente.id) && (orcamento.contratado == false)) { %>
+                      <form method="post" action="/orcamento/agendamento/salvar" style="width: 100vw;">
+                        <input type="hidden" class="form-control" name="id" id="id" value="<%= cliente.id%>" readonly>
+                        <input type="hidden" class="form-control" name="empresa" id="empresa" value="<%= cliente.empresaId %>" readonly>
+                        <table class="table table-bordered mt-2">
+                          <thead>
+                            <tr>
+                              <th>Quantidade</th>
+                              <th>Serviço Prestado</th>
+                              <th>BTUS</th>
+                              <th>Marca</th>
+                              <th>Modelo</th>
+                              <th>Ambiente</th>
+                              <th>Observações</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <input type="hidden" class="form-control" name="orcamento" value="<%= orcamento.id%>" readonly>
+                              <td><%= orcamento.qtd %> </td>
+                              <% prestacoes.forEach ((prestacao) => { %>
+                                <% if (prestacao.id == orcamento.prestacoId) { %> 
+                                  <td><%= prestacao.descricao %></td>
+                                <% } %>
                               <% }) %>
-                            </select>
+                              <% btus.forEach ((btu) => { %>
+                                <% if (btu.id == orcamento.btuId) { %> 
+                                  <td><%= btu.descricao %></td>
+                                <% } %>
+                              <% }) %>
+                              <% marcas.forEach ((marca) => { %>
+                                <% if (marca.id == orcamento.btuId) { %> 
+                                  <td><%= marca.descricao %></td>
+                                <% } %>
+                              <% }) %>
+                              <% modelos.forEach ((modelo) => { %>
+                                <% if (modelo.id == orcamento.btuId) { %> 
+                                  <td><%= modelo.descricao %></td>
+                                <% } %>
+                              <% }) %>
+                              <% ambientes.forEach ((ambiente) => { %>
+                                <% if (ambiente.id == orcamento.btuId) { %> 
+                                  <td><%= ambiente.descricao %></td>
+                                <% } %>
+                              <% }) %>
+                              <td><%= orcamento.observacao %></td>
+                              
+                            </tr>
+                            <tr>
+                              <td colspan="7">
+                                <div style="display: flex; align-items: center; justify-content: center;">
+                                  <button type="button" class="btn-light agendar-button verde-icon ajuste-input" data-target="date<%= orcamento.id %> date2<%= orcamento.id %> coladorador<%= orcamento.id %> horario<%= orcamento.id %>" style="cursor: pointer;"> 
+                                    <i class="bi bi-calendar-check"></i>
+                                  </button>
+                                  <input class="data-margin ajuste-input" id="date<%= orcamento.id %>" type="date" name="data1" disabled required/>
+                                  <input class="ajuste-input" id="date2<%= orcamento.id %>" name="data2" type="date" disabled required/>
+                                  
+                                  <select id="coladorador<%= orcamento.id %>" class="data-margin ajuste-input" id="colaborador" name="colaborador" disabled required>
+                                    <option value="" disabled selected>Escolha um funcionário</option>
+                                    <% colaboradores.forEach (colaborador => { %>
+                                      <option value="<%= colaborador.id %>"><%= colaborador.nome %></option>
+                                    <% }) %>
+                                  </select>
+                                  
+                                  <input class="ajuste-input" id="horario<%= orcamento.id %>" type="time" min="09:00" max="18:00" name="horario" required disabled/>
+                                  
+                                  <button type="submit" id="btn-agendar<%= orcamento.id %>" class="btn-agendar-verde ajuste-input" style="cursor: pointer; display: none;"> 
+                                    Agendar
+                                  </button>
+                                </div>
+                              </td>
+                              
+                            </tr>
                             
-                            <input id="horario<%= orcamento.id %>" type="time" min="09:00" max="18:00" name="horario" required disabled/>
-                          </div>
-                        </td>
-                      </tr>
-                       
-                    </tbody>
-                  </table>
-                
-                
+                          </tbody>
+                        </table>
+  
+                    </form>
+                    <% }%>
+                  <% }) %>
                   
-                  
-                <% }%>
-              <% }) %>
-            </div> 
-    
-          </div>
-    
-          <div>
-    
-          </div>
-    
-      
-          <div>
-            <input name="empresa" value="<%=cliente.empresaId%>" />
-
-            <div class="row text-center justify-content-center">
-              
-                <button type="submit" class="btn bg-warning">Salvar e enviar cópia por e-mail</button>
-     
+              </div> 
             </div>
-          
           </div>
-        </form>
+        </nav>
+      
       </div>
     </div>
 
   </div>
  
 </body>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script> <!-- Adicione esta linha para o arquivo de tradução -->
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -171,11 +253,37 @@
           if (dateInput.disabled) {
             dateInput.disabled = false;
             dateInput.min = getCurrentDate();
-            button.innerHTML = '<i class="bi bi-calendar-check verde-icon"></i>';
+            button.innerHTML = '<i class="bi bi-calendar2-x vermelho-icon"></i>';
+
+            // Exibe o segundo botão
+            const secondButtonId = 'btn-agendar' + targetId.substring(4);
+            const secondButton = document.getElementById(secondButtonId);
+            secondButton.style.display = 'block';
+
+            // Habilita o campo de colaborador
+            const collaboratorId = 'coladorador' + targetId.substring(4);
+            document.getElementById(collaboratorId).disabled = false;
+
+            // Habilita o campo de horário
+            const horarioId = 'horario' + targetId.substring(4);
+            document.getElementById(horarioId).disabled = false;
           } else {
             dateInput.disabled = true;
             dateInput.removeAttribute('min');
-            button.innerHTML = '<i class="bi bi-calendar2-x vermelho-icon"></i>';
+            button.innerHTML = '<i class="bi bi-calendar-check verde-icon"></i>';
+
+            // Oculta o segundo botão
+            const secondButtonId = 'btn-agendar' + targetId.substring(4);
+            const secondButton = document.getElementById(secondButtonId);
+            secondButton.style.display = 'none';
+
+            // Desabilita o campo de colaborador
+            const collaboratorId = 'coladorador' + targetId.substring(4);
+            document.getElementById(collaboratorId).disabled = true;
+
+            // Desabilita o campo de horário
+            const horarioId = 'horario' + targetId.substring(4);
+            document.getElementById(horarioId).disabled = true;
           }
 
           // Adiciona ouvinte de eventos para atualizar min de data2 ao alterar data1
@@ -203,6 +311,24 @@
 
       return `${year}-${month}-${day}`;
     }
+  });
+</script>
+
+<script>
+  const previsaoInicio = flatpickr('#previsao_inicio', {
+    dateFormat: 'd/m/Y',
+    enableTime: false,
+    locale: 'pt',
+    minDate: 'today', // Impede a seleção de datas anteriores à data atual
+    // Adicione outras opções conforme necessário
+  });
+
+  const previsaoFim = flatpickr('#previsao_fim', {
+    dateFormat: 'd/m/Y',
+    enableTime: false,
+    locale: 'pt',
+    minDate: previsaoInicio.selectedDates[0], // Impede datas anteriores à previsão de início
+    // Adicione outras opções conforme necessário
   });
 </script>
 

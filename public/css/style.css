@@ -21,7 +21,7 @@ input {
   text-transform: uppercase;
 }
 .principal {
-  margin: 15px;
+  margin: 10px 30px;
 }
 
 .img-square {
@@ -383,4 +383,18 @@ a {
 /* Estilo para campo inválido */
 .is-invalid {
   border-color: crimson;
+}
+
+.btn-agendar-verde {
+  cursor: pointer;
+  display: block;
+  background: #197315;
+  color: #FFf;
+  padding: 4px;
+  margin-left: 6px;
+}
+
+.ajuste-input {
+  height: 29px;
+  border-radius: 6px;
 }
