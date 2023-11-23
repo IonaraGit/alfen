@@ -63,10 +63,10 @@
           <!--INICIO ABRIR NOVOS SERVICOS-->
          
           <div id="modeloCamposServico" style="display: none;">
-            <input value="<%= sessao.id %>" name="colaboradoreId"/>
-            <input value="<%= cliente.id %>" name="clienteId"/>
-            <input value="<%= cliente.id %>" name="id"/>
-            <input value="<%= cliente.empresaId %>" name="empresaId"/>
+            <input type="hidden" value="<%= sessao.id %>" name="colaboradoreId"/>
+            <input type="hidden" value="<%= cliente.id %>" name="clienteId"/>
+            <input type="hidden" value="<%= cliente.id %>" name="id"/>
+            <input type="hidden" value="<%= cliente.empresaId %>" name="empresaId"/>
             <hr>
             <div class="row">
               <div class="col-md-12">
@@ -138,18 +138,16 @@
               </div>       
             </div>
             
-            
-            
           
           </div>
          
           <!--FIM ABRIR NOVOS SERVICOS-->
          
           <form method="POST" action="/orcamento/salvar" >
-            <input value="<%= sessao.id %>" name="colaboradoreId"/>
-            <input value="<%= cliente.id %>" name="clienteId"/>
-            <input value="<%= cliente.id %>" name="id"/>
-            <input value="<%= cliente.empresaId %>" name="empresaId"/>
+            <input type="hidden" value="<%= sessao.id %>" name="colaboradoreId"/>
+            <input type="hidden" value="<%= cliente.id %>" name="clienteId"/>
+            <input type="hidden" value="<%= cliente.id %>" name="id"/>
+            <input type="hidden" value="<%= cliente.empresaId %>" name="empresaId"/>
             
            
             <div class="row">

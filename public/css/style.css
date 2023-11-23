@@ -398,3 +398,51 @@ a {
   height: 29px;
   border-radius: 6px;
 }
+
+.input-data {
+  width: 95px;
+  text-align: center;
+}
+
+.rtable {
+  border-collapse: collapse;
+}
+
+.rtable th, .rtable td {
+  border: 2px solid #000;
+}
+
+.rtable tbody tr {
+  border-bottom: 2px solid #000; /* Adiciona borda inferior em todas as linhas */
+}
+
+.rtable tbody tr:last-child {
+  border-bottom: none; /* Remove a borda inferior da última linha */
+}
+
+/* INICIO AJUSTES TABELA RESPONSE */
+@media screen and (max-width: 1092px) {
+  .rtable thead {
+    display: none;
+  }
+
+  .rtable tbody td {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    position: relative;
+  }
+
+  .rtable tbody td::before {
+    content: attr(data-title);
+    position: absolute;
+    left: 5px;
+    display: block;
+  }
+
+  .rtable tbody tr {
+    position: relative;
+    margin-bottom: 10px;
+  }
+}
+/* FIM AJUSTES TABELA RESPONSE */

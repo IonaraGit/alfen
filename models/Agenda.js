@@ -15,7 +15,7 @@ const Agenda = connection.define('agendas', {
     allowNull: false
   },
   horario: {
-    type: Sequelize.TIME,
+    type: Sequelize.STRING,
     allowNull: false
   }
 });

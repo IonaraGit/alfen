@@ -113,16 +113,108 @@
                             <div>
                               <% agendas.forEach((agenda) => { %>
                                 <% if ((agenda.clienteId == orcamento.clienteId) && (agenda.orcamentoId == orcamento.id))  { %>
-                                  
-                                  <input class="data-margin" type="text" id="previsao_inicio" value="<%= new Date(agenda.previsao_inicio).toLocaleDateString('pt-BR') %>" readonly />
-                                  <input class="data-margin" type="text" id="previsao_inicio" value="<%= new Date(agenda.previsao_fim).toLocaleDateString('pt-BR') %>" readonly />
-                                  <% colaboradores.forEach (colaborador => { %>
-                                    <% if ((colaborador.id == agenda.colaboradoreId) && (agenda.clienteId == orcamento.clienteId) ) { %>
-                                      <input type="text" value="<%= colaborador.nome %>" readonly />
-                                    <% } %>
-                                  <% }) %>
-                                  <input type="text" value="<%= new Date('2023-11-11T18:00:00').toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) %>" readonly/>
+                                  <div class="agenda-item" id="agenda-item-<%= orcamento.id %>" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+                                    <i class="bi bi-calendar2-week"></i>
+                                    <span>
+                                      &nbsp;<%= new Date(agenda.previsao_inicio).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) %> -
+                                      <%= new Date(agenda.previsao_fim).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) %>
+                                    </span>
+                                    
+                                    <% colaboradores.forEach (colaborador => { %>
+                                      <% if ((colaborador.id == agenda.colaboradoreId) && (agenda.clienteId == orcamento.clienteId) ) { %>
+                                        <i class="bi bi-person ml-2"></i><span>&nbsp<%= colaborador.nome %></span>
+                                      <% } %>
+                                    <% }) %>
+                                    <i class="bi bi-clock ml-2"></i><span>&nbsp<%= agenda.horario %></span>
+                                    
 
+                                    <button type="button" id="btn-editar<%= orcamento.id %>" class="btn-agendar-verde ajuste-input" style="cursor: pointer;" onclick="toggleEditarCampos('<%= orcamento.id %>')">
+                                      Editar
+                                    </button>
+
+                               
+                                  </div>
+                                  <!-- Campos de Edição (inicialmente ocultos) -->
+                                  <div id="campos-edicao<%= orcamento.id %>" style="display: none; align-items: center;" class="mt-1">
+                                    <form action="/orcamento/agendamento/editar/salvar" method="post">
+                                      <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+                                        
+                                
+                                        <input class="data-margin ajuste-input" id="date1Edicao<%= orcamento.id %>" type="date" name="data1Edicao" required/>
+                                        <input class="ajuste-input" id="date2Edicao<%= orcamento.id %>" name="data2Edicao" type="date" required/>
+                                        <select id="coladoradorEdicao<%= orcamento.id %>" class="data-margin ajuste-input" id="colaboradorEdicao" name="colaboradorEdicao"  required>
+                                          <option value="" disabled selected>Escolha um funcionário</option>
+                                          <% colaboradores.forEach (colaborador => { %>
+                                            <option value="<%= colaborador.id %>"><%= colaborador.nome %></option>
+                                          <% }) %>
+                                        </select>
+                                        
+                                        <input class="ajuste-input" id="horarioEdicao<%= orcamento.id %>" type="time" min="09:00" max="18:00" name="horarioEdicao" required />
+
+                                        <input type="hidden" class="ajuste-input" i name="orcamentoId" value="<%= orcamento.id%>"  />
+                                        <input type="hidden" class="ajuste-input" i name="id" value="<%= orcamento.clienteId%>"  />
+                                       
+  
+                                        <button type="submit" id="" class="btn-agendar-verde ajuste-input" style="cursor: pointer;">
+                                          Salvar
+                                        </button>
+                                        <script>
+                                          document.addEventListener('DOMContentLoaded', function () {
+                                            const dateInput1 = document.getElementById('date1Edicao<%= orcamento.id %>');
+                                            const dateInput2 = document.getElementById('date2Edicao<%= orcamento.id %>');
+                                        
+                                            // Adiciona um ouvinte de evento para garantir que a data selecionada seja sempre igual ou após a data atual
+                                            dateInput1.addEventListener('input', function () {
+                                              const selectedDate1 = new Date(dateInput1.value);
+                                              const currentDate = new Date();
+                                        
+                                              // Garante que date1Edicao não seja anterior à data atual
+                                              if (selectedDate1 < currentDate) {
+                                                dateInput1.value = getCurrentDate();
+                                              }
+                                        
+                                              // Atualiza a data mínima para date2Edicao como a data selecionada em date1Edicao
+                                              dateInput2.min = dateInput1.value;
+                                            });
+                                        
+                                            // Adiciona um ouvinte de evento para garantir que a data selecionada seja sempre igual ou após a data atual
+                                            dateInput2.addEventListener('input', function () {
+                                              const selectedDate1 = new Date(dateInput1.value);
+                                              const selectedDate2 = new Date(dateInput2.value);
+                                        
+                                              // Garante que date2Edicao não seja anterior a date1Edicao
+                                              if (selectedDate2 < selectedDate1) {
+                                                dateInput2.value = dateInput1.value;
+                                              }
+                                            });
+                                        
+                                            // Define a data mínima como a data atual para date1Edicao
+                                            dateInput1.min = getCurrentDate();
+                                            // Define a data mínima como a data de date1Edicao para date2Edicao
+                                            dateInput2.min = dateInput1.value;
+                                          });
+                                        
+                                          function getCurrentDate() {
+                                            const today = new Date();
+                                            const year = today.getFullYear();
+                                            let month = today.getMonth() + 1;
+                                            let day = today.getDate();
+                                        
+                                            // Adiciona um zero à esquerda para meses/dias menores que 10
+                                            month = month < 10 ? '0' + month : month;
+                                            day = day < 10 ? '0' + day : day;
+                                        
+                                            return `${year}-${month}-${day}`;
+                                          }
+                                        </script>
+                                        
+                                      </div>
+                                    </form>
+                                        
+                                    
+                                    </div>
+                                    
+                                  
                                 <% } %>
                               <% }) %>
                               
@@ -195,7 +287,7 @@
                             <tr>
                               <td colspan="7">
                                 <div style="display: flex; align-items: center; justify-content: center;">
-                                  <button type="button" class="btn-light agendar-button verde-icon ajuste-input" data-target="date<%= orcamento.id %> date2<%= orcamento.id %> coladorador<%= orcamento.id %> horario<%= orcamento.id %>" style="cursor: pointer;"> 
+                                  <button type="button" class="btn-light agendar-button verde-icon ajuste-input" data-target="date<%= orcamento.id %> date2<%= orcamento.id %> coladorador<%= orcamento.id %> horario<%= orcamento.id %>" style="cursor: pointer;">
                                     <i class="bi bi-calendar-check"></i>
                                   </button>
                                   <input class="data-margin ajuste-input" id="date<%= orcamento.id %>" type="date" name="data1" disabled required/>
@@ -332,10 +424,24 @@
   });
 </script>
 
-
-
-
-
+<!-- Script JavaScript para exibir/ocultar campos -->
+<script>
+  function toggleEditarCampos(orcamentoId) {
+    const botaoEditar = document.getElementById(`btn-editar${orcamentoId}`);
+    const camposEdicao = document.getElementById(`campos-edicao${orcamentoId}`);
+    
+    // Alternar a visibilidade dos campos de edição
+    if (camposEdicao.style.display === 'none') {
+      camposEdicao.style.display = 'block';
+      botaoEditar.innerHTML = 'Cancelar';
+      botaoEditar.style.backgroundColor = 'red'; // Adicione esta linha
+    } else {
+      camposEdicao.style.display = 'none';
+      botaoEditar.innerHTML = 'Editar';
+      botaoEditar.style.backgroundColor = ''; // Limpa o estilo para usar a classe do CSS
+    }
+  }
+</script>
 
 
 

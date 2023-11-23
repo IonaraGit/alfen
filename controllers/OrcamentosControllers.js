@@ -126,4 +126,33 @@ router.post ('/orcamento/agendamento/salvar', (req, res) => {
 
 })
 
+router.post ('/orcamento/agendamento/editar/salvar', (req, res) => {
+  var data1Edicao = req.body.data1Edicao;
+  var data2Edicao = req.body.data2Edicao;
+  var colaboradorEdicao = req.body.colaboradorEdicao
+  var horarioEdicao = req.body.horarioEdicao
+  var orcamentoId = req.body.orcamentoId
+  var id = req.body.id
+
+  console.log(chalk.red.bold(`horario ${horarioEdicao}`));
+  
+  Agenda.update ({
+    
+    previsao_inicio: new Date(data1Edicao + 'T00:00:00Z'),
+    previsao_fim: new Date(data2Edicao + 'T00:00:00Z'),
+    horario: horarioEdicao,
+    colaboradoreId: colaboradorEdicao
+  }, {
+    where: {
+      orcamentoId: orcamentoId
+    }
+  }).then(() => {
+    res.redirect ('/admin/orcamentos/prosseguir/' + id)
+  }).catch ((error) => {
+    res.send ('erro')
+  })
+
+})
+
+
 module.exports = router

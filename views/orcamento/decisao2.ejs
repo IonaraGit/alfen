@@ -63,11 +63,11 @@
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" id="nav-todos" role="tabpanel" aria-labelledby="nav-todos-tanav-todos">
-            <div>
-              <table class="table table-bordered mt-2">
+            <div class="table">
+              <table class="rtable table table-bordered mt-2">
                 <thead>
-                  <tr>
-                    <th>Quantidade</th>
+                  <tr class="ajuste-tr">
+                    <th >Quantidade</th>
                     <th>Serviço Prestado</th>
                     <th>BTUS</th>
                     <th>Marca</th>
@@ -80,38 +80,38 @@
                 <tbody>
                   <% orcamentos.forEach((orcamento) => { %>
                     <% if (cliente.id == orcamento.clienteId)  { %>
-                      <tr>
-                        <td><%= orcamento.qtd %></td>
+                      <tr class="ajuste-tr">
+                        <td data-title="QTD:"><%= orcamento.qtd %></td>
                         <% prestacoes.forEach((prestacao) => { %>
                           <% if (prestacao.id == orcamento.prestacoId) { %>
-                            <td><%= prestacao.descricao %></td>
+                            <td data-title="SERVIÇO"><%= prestacao.descricao %></td>
                           <% } %>
                         <% }) %>
                         <% btus.forEach((btu) => { %>
                           <% if (btu.id == orcamento.btuId) { %>
-                            <td><%= btu.descricao %></td>
+                            <td data-title="BTUS"><%= btu.descricao %></td>
                           <% } %>
                         <% }) %>
                         <% marcas.forEach((marca) => { %>
                           <% if (marca.id == orcamento.marcaId) { %>
-                            <td><%= marca.descricao %></td>
+                            <td data-title="MARCA"><%= marca.descricao %></td>
                           <% } %>
                         <% }) %>
                         <% modelos.forEach((modelo) => { %>
                           <% if (modelo.id == orcamento.modeloId) { %>
-                            <td><%= modelo.descricao %></td>
+                            <td data-title="MODELO"><%= modelo.descricao %></td>
                           <% } %>
                         <% }) %>
                         <% ambientes.forEach((ambiente) => { %>
                           <% if (ambiente.id == orcamento.ambienteId) { %>
-                            <td><%= ambiente.descricao %></td>
+                            <td data-title="AMBIENTE"><%= ambiente.descricao %></td>
                           <% } %>
                         <% }) %>
-                        <td><%= orcamento.observacao %></td>
+                        <td data-title="OBS:"><%= orcamento.observacao %></td>
                         <% if (orcamento.contratado == 0) { %>
-                          <td>Não contratado</td>
+                          <td data-title="STATUS">Não contratado</td>
                         <% } else if (orcamento.contratado == 1) { %>
-                          <td>Contratado</td>
+                          <td data-title="STATUS">Contratado</td>
                         <% } %>
                         
                       </tr>
