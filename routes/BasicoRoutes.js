@@ -13,7 +13,8 @@ const Empresa = require ('../models/Empresa')
 const Btu = require('../models/Btu');
 const Agenda = require ('../models/Agenda')
 
-const expirar = require ('../middlewares/expirar')
+const expirar = require ('../middlewares/expirar');
+
 
 /* INICIO BASICOS */
 router.get('/faleconosco', (req, res) => {
@@ -34,9 +35,23 @@ router.get('/acesso', (req, res) => {
   res.render('sistema/login')
 })
 
-router.get('/acesso/adm', (req, res) =>{
+router.get('/acesso/adm', expirar, (req, res) =>{
   sessao = req.session.colaborador
-  res.render('sistema/admin', {sessao})
+  Agenda.findAll().then(agendas =>{
+    Cliente.findAll().then(clientes => {
+      Prestacao.findAll().then(prestacoes => {
+        Colaborador.findAll().then(colaboradores => {
+          Orcamento.findAll().then(orcamentos => {
+            res.render('sistema/admin', {agendas: agendas, clientes: clientes, prestacoes: prestacoes, colaboradores: colaboradores, orcamentos: orcamentos, sessao})
+          })
+          
+        })
+        
+      })
+      
+    })
+  })
+  
 })
 
 router.get('/acesso/adm/clientes', (req, res) =>{
@@ -104,7 +119,7 @@ router.get('/admin/cliente/detalhes/:id', (req, res) => {
 
 
 /* ORCAMENTOS */
-router.get('/admin/orcamento/novo/:id', (req, res) => {
+router.get('/admin/orcamento/novo/:id', expirar, (req, res) => {
   var id = req.params.id
   sessao = req.session.colaborador
   Cliente.findByPk(id).then (cliente => {
@@ -171,7 +186,7 @@ router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
 
 router.get ('/admin/orcamentos/decisao/:id', (req, res) => {
   var id = req.params.id
-
+  sessao = req.session.colaborador
   Cliente.findByPk(id).then (cliente => {
     if (cliente != undefined) {
       Endereco.findAll().then(enderecos => {
@@ -183,7 +198,7 @@ router.get ('/admin/orcamentos/decisao/:id', (req, res) => {
                   Prestacao.findAll().then(prestacoes => {
                     Btu.findAll().then(btus => {
                       Ambiente.findAll().then(ambientes => {
-                        res.render('orcamento/decisao', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id})
+                        res.render('orcamento/decisao', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id, sessao})
                       })
                     })
                   })
@@ -203,7 +218,7 @@ router.get ('/admin/orcamentos/decisao/:id', (req, res) => {
 
 router.get ('/admin/orcamentos/decisao2/:id', (req, res) => {
   var id = req.params.id
-
+  sessao = req.session.colaborador
   Cliente.findByPk(id).then (cliente => {
     if (cliente != undefined) {
       Endereco.findAll().then(enderecos => {
@@ -215,7 +230,7 @@ router.get ('/admin/orcamentos/decisao2/:id', (req, res) => {
                   Prestacao.findAll().then(prestacoes => {
                     Btu.findAll().then(btus => {
                       Ambiente.findAll().then(ambientes => {
-                        res.render('orcamento/decisao2', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id})
+                        res.render('orcamento/decisao2', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id,sessao})
                       })
                     })
                   })

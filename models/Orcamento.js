@@ -15,7 +15,7 @@ const Orcamento = connection.define('orcamentos', {
     allowNull: true
   },
   valor: {
-    type: Sequelize.FLOAT,
+    type: Sequelize.DOUBLE,
     allowNull: true
   },
   observacao: {

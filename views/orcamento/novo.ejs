@@ -74,7 +74,9 @@
       
                   <div class="form-group col-lg-1">
                     <label for="quantidade" class="label-novo">Qtd <span style="color: crimson;">*</span></label>
-                    <input type="number" class="form-control" name="quantidade" id="quantidade" required>
+                    <input type="text" inputmode="numeric" class="form-control" name="quantidade" id="quantidade" required pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    
+                    
                   </div>
                   <div class="form-group col-lg-1">
                     <label for="marca" class="label-novo">PRESTAÇÃO<span style="color: crimson;">*</span></label>
@@ -122,7 +124,7 @@
           
                   <div class="form-group col-lg-1">
                     <label for="valor" class="label-novo">Valor <span style="color: crimson;">*</span></label>
-                    <input type="number" class="form-control" name="valor" id="valor" required>
+                    <input type="text" class="form-control" name="valor" id="valor" onkeypress="$(this).mask(' ###.###.##0,00', {reverse: true});" placeholder="0,00" required>
                   </div>
                 
                 
@@ -155,7 +157,10 @@
                 <div class="form-row">
                   <div class="form-group col-lg-1">
                     <label for="quantidade" class="label-novo">Qtd <span style="color: crimson;">*</span></label>
-                    <input type="number" class="form-control" name="quantidade" id="quantidade" required>
+                    <input type="text" inputmode="numeric" class="form-control" name="quantidade" id="quantidade" required pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    
+                    
+
                   </div>
       
                   <div class="form-group col-lg-1">
@@ -168,7 +173,7 @@
                   </div>
     
                   <div class="form-group col-lg-1">
-                    <label for="btus" class="label-novo">Btus<span style="color: crimson;">*</span></label>
+                    <label for="btus" class="label-novo">BTUS<span style="color: crimson;">*</span></label>
                     <select id="selecaoBtus" class="form-control" name="btus">
                       <% btus.forEach ((btu) => { %>
                         <option value="<%=btu.id%>"><%=btu.descricao%></option>
@@ -177,7 +182,7 @@
                   </div>
       
                   <div class="form-group col-lg-1">
-                    <label for="marca" class="label-novo">Marca<span style="color: crimson;">*</span></label>
+                    <label for="marca" class="label-novo">MARCA<span style="color: crimson;">*</span></label>
                     <select id="marcaSelect" class="form-control" name="marca">
                       <% marcas.forEach ((marca) => { %>
                       <option value="<%=marca.id%>"><%=marca.descricao%></option>
@@ -203,8 +208,11 @@
                   </div>
       
                   <div class="form-group col-lg-1">
-                    <label for="valor" class="label-novo">Valor <span style="color: crimson;">*</span></label>
-                    <input type="number" class="form-control" name="valor" id="valor" required>
+                    <label for="valor" class="label-novo">VALOR <span style="color: crimson;">*</span></label>
+                    <input type="text" class="form-control" name="valor" id="valor" onkeypress="$(this).mask(' ###.###.##0,00', {reverse: true});" placeholder="0,00" required>
+                  
+
+
                   </div>
                 
                   <div class="form-group col-lg-4">
@@ -266,6 +274,18 @@ botaoAdicionarServico.addEventListener('click', function () {
 
 </script>
 
-<!-- Seu código HTML posterior... -->
+<!-- Inclua as bibliotecas necessárias -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.maskmoney/3.0.2/jquery.maskmoney.min.js"></script>
+
+
+
+
+
+</html>
+
+
+
+
 
 <%- include ('../../partials/conf_footer.ejs') %>

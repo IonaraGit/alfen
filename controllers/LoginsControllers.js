@@ -12,42 +12,55 @@ const Empresa = require ('../models/Empresa')
 router.post('/autenticacao', (req, res) => {
   var cpf = req.body.cpf;
   var senha = req.body.senha;
+  var empresa = req.body.empresa;
+  
+ 
   var msg = 'Verifique os dados e tente novamente';
 
-  Colaborador.findOne ({
+  Colaborador.findOne({
     where: {
       cpf: cpf
     }
-  }).then (colaborador => {
-    //se existe
+  }).then(colaborador => {
     if (colaborador != undefined) {
-      //validar a senha
-      if (colaborador.primeiro_acesso == 0) {
-        sessao = req.session.colaborador = {
-          cpf: colaborador.cpf,
-          resposta: colaborador.resposta
+      // Agora, encontre a empresa com base na identificação
+      Empresa.findOne({
+        where: {
+          identificacao: empresa
         }
-      }
-      
-      sessao = req.session.colaborador = {
-        id: colaborador.id,
-        cpf: colaborador.cpf,
-        nome: colaborador.nome,
-        empresaId: colaborador.empresaId,
-        permissoId: colaborador.permmissoId
-      }
+      }).then(empresaEncontrada => {
+        if (empresaEncontrada != undefined) {
+          // Agora, você tem o colaborador e a empresa
+          if (colaborador.primeiro_acesso == 0) {
+            sessao = req.session.colaborador = {
+              cpf: colaborador.cpf,
+              resposta: colaborador.resposta,
+              id: colaborador.id,
+              empresaId: colaborador.empresaId
+            }
+          }
 
-      if (colaborador.permissoId == 1) {
-        res.redirect ('/acesso/adm')
-      }
-      if (colaborador.permissoId == 2 ) {
-        res.send ('permissao =2' + sessao)
-      } 
-
+          sessao = req.session.colaborador = {
+            id: colaborador.id,
+            cpf: colaborador.cpf,
+            nome: colaborador.nome,
+            empresaId: colaborador.empresaId,
+            permissoId: colaborador.permissoId // Corrigi um possível erro de digitação
+          }
+          if ((colaborador.permissoId == 1) && (colaborador.ativo == 0)) {
+            res.redirect('/acesso/adm');
+          } else if (colaborador.permissoId == 2) {
+            res.send('Página a ser definida');
+          }
+        } else {
+          res.send('Empresa não encontrada');
+        }
+      });
+    } else {
+      res.send('Colaborador não encontrado');
     }
-  })
-
-})
+  });
+});
 
 
 

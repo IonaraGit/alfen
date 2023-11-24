@@ -7,9 +7,9 @@ const Orcamento = require ('../models/Orcamento')
 const Agenda = require ('../models/Agenda')
 
 router.post('/orcamento/salvar', (req, res) => {
-  const inicio = 1;
 
-  console.log('veeeem no id: ', id)
+
+
   var id = req.body.id;
   var observacao = Array.isArray(req.body.observacao) ? req.body.observacao : [req.body.observacao];
   var valor = Array.isArray(req.body.valor) ? req.body.valor : [req.body.valor];
@@ -27,19 +27,22 @@ router.post('/orcamento/salvar', (req, res) => {
 
   const conta = quantidade.length;
   const para = observacao.length;
+ 
 
-  console.log(chalk.red.bold(`tamanho tamanho conta ${conta}`));
-  console.log(chalk.red.bold(`tamanho tamanho para ${para}`));
 
-  console.log(chalk.red.bold(`tamanho tamanho OBSERVACAO ${observacao}`));
+  console.log(chalk.red.bold(`VALOR ${valor}`));
+  
+ const convete = []
   const orcamento = [];
   for (let i = 0; i < conta; i++) {
+    converte = valor[i].replace (',', '.')
+    console.log(chalk.red.bold(`VALOR convertido ${converte}`));
     console.log(chalk.green.bold(`VEZES DO I ${i}`));
     orcamento.push(
       Orcamento.create({
         observacao: observacao[i],
         qtd: quantidade[i],
-        valor: valor[i],
+        valor: converte,
         btuId: btus[i],
         marcaId: marca[i],
         modeloId: modelo[i],

@@ -9,7 +9,7 @@ router.post ('/ambiente/salvar', (req,res) => {
   var descricao = req.body.descricao
   var empresaId = req.body.empresa
   var ativo = 1
-  
+
 
   if (descricao != undefined) {
     Ambiente.create({

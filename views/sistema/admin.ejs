@@ -1,94 +1,111 @@
-<%- include ('../../partials/conf_header.ejs') %>
-<%- include ('../../partials/header_sistema.ejs') %>
+<%- include ('../../partials/conf_header.ejs') %> <%- include
+('../../partials/header_sistema.ejs') %>
 <body>
   <div class="principal">
     <div class="row">
       <div class="col-12 col-lg-4">
         <%=sessao.empresaId%>
-        <h5 class="text-center mt-3 bg-info text-white">AGENDAMENTOS DE HOJE</h5>
-       
-        <div class="p-3 mt-2" style="max-height: 605px; overflow-y: auto;">
-          <div class="p-3 mt-2" style="background-color: rgb(215 241 241);">
-            <h6><b>Cliente: </b>Maria Madalena Mirage</h6>
-            <h6><b>Descrição do serviço:</b></h6>
-            <p><b>1° </b>Manutenção de ar condicionado 9.000bts</p>
-            <p><b>2° </b>Instalação de ar condicionado 12.000bts</p>
-            <h6><b>Agendado para iniciar as: </b>09hrs</h6>
-            <h6><b>Tempo médio sugerido: </b>5 hrs de serviço</h6>
-            <h6><b>Funcionário responsável: </b>João</h6>
-            <h6><b>Status: </b>Iniciado, por Jõao, as 09h35m</h6>
-            <div class="text-right">
-              <button type="button" class="btn btn-primary rounded-circle">+</button>
-            </div>
-          </div>  
-  
+        <h5 class="text-center mt-3 bg-info text-white">
+          AGENDAMENTOS DE HOJE
+        </h5>
+        <div class="p-3 mt-2" style="max-height: 605px; overflow-y: auto">
           <div class="p-3 mt-2" style="background-color: rgb(215 241 241)">
-            <h6><b>Cliente: </b>Pedro Paulo Alex</h6>
-            <h6><b>Descrição do serviço:</b></h6>
-            <p><b>1° </b>Desistação ar piso e teto</p>
-            <p><b>2° </b>Reinstalação ar piso e teto</p>
-            <h6><b>Agendado para iniciar as: </b>09hrs</h6>
-            <h6><b>Tempo médio sugerido: </b>9 hrs de serviço</h6>
-            <h6><b>Funcionário responsável: </b>Marcos</h6>
-            <h6><b>Status: </b>Não iniciado</h6>
-            <div class="text-right">
-              <button type="button" class="btn btn-primary rounded-circle">+</button>
+            <div class="row">
+              <div class="col-10">
+                <% agendas.forEach(agenda => { %> <% const dataAgenda = new
+                Date(agenda.previsao_inicio); %> <% const dataAtual = new
+                Date(); %> <% if ( dataAgenda.getDate() === dataAtual.getDate()
+                && dataAgenda.getMonth() === dataAtual.getMonth() &&
+                dataAgenda.getFullYear() === dataAtual.getFullYear() ) { %>
+                <!-- A data da agenda é do dia atual -->
+
+                <% clientes.forEach(cliente => { %> <% if (cliente.id ==
+                agenda.clienteId) { %>
+                <h6><b>Cliente: </b><%=cliente.nome%></h6>
+
+                <% prestacoes.forEach (prestacao => { %> <% orcamentos.forEach
+                (orcamento => { %> <% if ((orcamento.id == agenda.orcamentoId)
+                && (prestacao.id == orcamento.prestacoId)) { %>
+                <h6><b>Prestação do serviço:</b> <%= prestacao.descricao %></h6>
+                <% } %> <% }) %>
+
+                <h6>
+                  <b>Agendado para iniciar às: </b><%=
+                  formatarHorario(agenda.horario) %>
+                </h6>
+
+                <% function formatarHorario(horario) { %> <% const [hora,
+                minutos] = horario.split(':'); %> <%= `${hora}h${minutos}m` %>
+                <% } %> <% colaboradores.forEach(colaborador => { %> <% if
+                (colaborador.id == agenda.colaboradoreId) { %>
+                <h6><b>Funcionário responsável: </b><%= colaborador.nome %></h6>
+                <% } %> <% }) %> <% }) %> <% } %> <% }) %>
+                <h6><b>Status: </b>verifcar</h6>
+              </div>
+              <div class="col-2 m-auto">
+                <% clientes.forEach(cliente => { %> <% if (cliente.id ==
+                agenda.clienteId) { %>
+                <a href="/admin/orcamentos/prosseguir/<%=cliente.id%>">
+                  <button type="button" class="btn btn-primary rounded-circle">
+                    <i class="bi bi-arrow-right-short"></i>
+                  </button>
+                  <% }})%>
+                </a>
+              </div>
             </div>
-          </div>   
-  
-          <div class="p-3 mt-2" style="background-color: rgb(215 241 241)">
-            <h6><b>Cliente: </b>Marcela Pereira Leão</h6>
-            <h6><b>Descrição do serviço:</b></h6>
-            <p><b>1° </b>Limpeza 9.000bts</p>
-            <h6><b>Agendado para iniciar as: </b>07hrs</h6>
-            <h6><b>Tempo médio sugerido: </b>1 hrs de serviço</h6>
-            <h6><b>Funcionário responsável: </b>Marcos</h6>
-            <h6><b>Status: </b>Finalizado</h6>
-            <div class="text-right">
-              <button type="button" class="btn btn-primary rounded-circle">+</button>
-            </div>
-          </div>   
-  
+            <% } %>
+            <!-- A data da agenda não é do dia atual -->
+
+            <% }) %>
+          </div>
         </div>
+
         <div class="p-3 mt-2">
-          <i class="bi bi-wrench-adjustable-circle" style="color: rgb(252, 3, 23);"></i><span> Não iniciado: <b>1</b></span>
-          <br>
-          <br>
-          <i class="bi bi-wrench-adjustable-circle" style="color: rgb(4, 114, 4);"></i><span> Iniciado: <b>1</b></span>
-          <br>
-          <br>
-          <i class="bi bi-wrench-adjustable-circle" style="color: rgb(238, 158, 11);"></i><span> Em andamento: <b>1</b></span>
-          <br>
+          <i
+            class="bi bi-wrench-adjustable-circle"
+            style="color: rgb(252, 3, 23)"
+          ></i
+          ><span> Não iniciado: <b>1</b></span>
+          <br />
+          <br />
+          <i
+            class="bi bi-wrench-adjustable-circle"
+            style="color: rgb(4, 114, 4)"
+          ></i
+          ><span> Iniciado: <b>1</b></span>
+          <br />
+          <br />
+          <i
+            class="bi bi-wrench-adjustable-circle"
+            style="color: rgb(238, 158, 11)"
+          ></i
+          ><span> Em andamento: <b>1</b></span>
+          <br />
         </div>
       </div>
-       <div class="col-12 col-lg-8">
-          <div class="row text-center">
-            <div class="col p-3 m-2" style="background-color: rgb(215 241 241);">
-              <h6 style="color: rgb(1, 136, 23);">
-                <b>Entrada</b>
-                <br>
-                <b>R$ 3500,00</b>
-              </h6>
-            </div>
-            <div class="col p-3 m-2" style="background-color: rgb(215 241 241);">
-              <h6 style="color: rgb(255, 0, 0);">
-                <b>Saída</b>
-                <br>
-                <b>R$ 500,00</b>
-              </h6>
-           
-            </div>
-
+      <div class="col-12 col-lg-8">
+        <div class="row text-center">
+          <div class="col p-3 m-2" style="background-color: rgb(215 241 241)">
+            <h6 style="color: rgb(1, 136, 23)">
+              <b>Entrada</b>
+              <br />
+              <b>R$ 3500,00</b>
+            </h6>
           </div>
-
-          <div class="row text center">
-            Cálculo rápido
+          <div class="col p-3 m-2" style="background-color: rgb(215 241 241)">
+            <h6 style="color: rgb(255, 0, 0)">
+              <b>Saída</b>
+              <br />
+              <b>R$ 500,00</b>
+            </h6>
           </div>
-       </div>
+        </div>
 
+        <div class="row text center">Cálculo rápido</div>
+      </div>
     </div>
   </div>
 </body>
 
-<%- include ('../../partials/footer.ejs') %>
-<%- include ('../../partials/conf_footer.ejs') %>
+<%- include ('../../partials/footer.ejs') %> <%- include
+('../../partials/conf_footer.ejs') %>

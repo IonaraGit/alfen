@@ -408,13 +408,7 @@ a {
   border-collapse: collapse;
 }
 
-.rtable th, .rtable td {
-  border: 2px solid #000;
-}
 
-.rtable tbody tr {
-  border-bottom: 2px solid #000; /* Adiciona borda inferior em todas as linhas */
-}
 
 .rtable tbody tr:last-child {
   border-bottom: none; /* Remove a borda inferior da última linha */
@@ -444,5 +438,19 @@ a {
     position: relative;
     margin-bottom: 10px;
   }
+
+  .rtable tbody tr {
+    border-bottom: 16px solid #0000; /* Adiciona borda inferior em todas as linhas */
+  }
+  /* Adiciona estilos de zebra à tabela */
+  
+  tr:nth-child(even) {
+    background-color: rgb(162, 190, 226); /* Cor de fundo para as linhas pares */
+  }
+
+  tr:nth-child(odd) {
+    background-color: #ffffff; /* Cor de fundo para as linhas ímpares */
+  }
+
 }
 /* FIM AJUSTES TABELA RESPONSE */
