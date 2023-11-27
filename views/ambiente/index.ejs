@@ -121,43 +121,41 @@
   
 </body>
 <script>
- function confirmaDesativar(event, form) {
-  event.preventDefault();
-  var confirmationAlert = document.getElementById('confirmationAlert');
-  var confirmButton = document.getElementById('confirmButton');
-  var cancelButton = document.getElementById('cancelButton');
+  document.addEventListener('DOMContentLoaded', function () {
+    var confirmationAlert = document.getElementById('confirmationAlert');
+    var confirmButton = document.getElementById('confirmButton');
+    var cancelButton = document.getElementById('cancelButton');
+    var currentForm;
 
-  confirmationAlert.classList.add('show');
+    function showConfirmationAlert(form) {
+      currentForm = form;
+      confirmationAlert.classList.add('show');
+    }
 
-  confirmButton.onclick = function () {
-    confirmationAlert.classList.remove('show');
-    form.submit();
-  };
+    confirmButton.onclick = function () {
+      confirmationAlert.classList.remove('show');
+      if (currentForm) {
+        currentForm.submit();
+      }
+    };
 
-  cancelButton.onclick = function () {
-    confirmationAlert.classList.remove('show');
-  };
-}
+    cancelButton.onclick = function () {
+      confirmationAlert.classList.remove('show');
+      currentForm = null;
+    };
 
-function confirmaAtivar(event, form) {
-  event.preventDefault();
-  var confirmationAlert = document.getElementById('confirmationAlert');
-  var confirmButton = document.getElementById('confirmButton');
-  var cancelButton = document.getElementById('cancelButton');
+    function confirmaDesativar(event, form) {
+      event.preventDefault();
+      showConfirmationAlert(form);
+    }
 
-  confirmationAlert.classList.add('show');
-
-  confirmButton.onclick = function () {
-    confirmationAlert.classList.remove('show');
-    form.submit();
-  };
-
-  cancelButton.onclick = function () {
-    confirmationAlert.classList.remove('show');
-  };
-}
-
+    function confirmaAtivar(event, form) {
+      event.preventDefault();
+      showConfirmationAlert(form);
+    }
+  });
 </script>
+
 
 
 

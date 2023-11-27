@@ -287,13 +287,13 @@
                             <tr>
                               <td colspan="7">
                                 <div style="display: flex; align-items: center; justify-content: center;">
-                                  <button type="button" class="btn-light agendar-button verde-icon ajuste-input" data-target="date<%= orcamento.id %> date2<%= orcamento.id %> coladorador<%= orcamento.id %> horario<%= orcamento.id %>" style="cursor: pointer;">
+                                  <button type="button" class="btn-light agendar-button verde-icon ajuste-input" data-target="date<%= orcamento.id %> date2<%= orcamento.id %> colaborador<%= orcamento.id %> horario<%= orcamento.id %>" style="cursor: pointer;">
                                     <i class="bi bi-calendar-check"></i>
                                   </button>
                                   <input class="data-margin ajuste-input" id="date<%= orcamento.id %>" type="date" name="data1" disabled required/>
                                   <input class="ajuste-input" id="date2<%= orcamento.id %>" name="data2" type="date" disabled required/>
                                   
-                                  <select id="coladorador<%= orcamento.id %>" class="data-margin ajuste-input" id="colaborador" name="colaborador" disabled required>
+                                  <select id="colaborador<%= orcamento.id %>" class="data-margin ajuste-input" name="colaborador" disabled required>
                                     <option value="" disabled selected>Escolha um funcionário</option>
                                     <% colaboradores.forEach (colaborador => { %>
                                       <option value="<%= colaborador.id %>"><%= colaborador.nome %></option>
@@ -353,7 +353,7 @@
             secondButton.style.display = 'block';
 
             // Habilita o campo de colaborador
-            const collaboratorId = 'coladorador' + targetId.substring(4);
+            const collaboratorId = 'colaborador' + targetId.substring(4);
             document.getElementById(collaboratorId).disabled = false;
 
             // Habilita o campo de horário
@@ -370,7 +370,7 @@
             secondButton.style.display = 'none';
 
             // Desabilita o campo de colaborador
-            const collaboratorId = 'coladorador' + targetId.substring(4);
+            const collaboratorId = 'colaborador' + targetId.substring(4);
             document.getElementById(collaboratorId).disabled = true;
 
             // Desabilita o campo de horário

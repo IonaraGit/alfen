@@ -7,19 +7,19 @@ const chalk = require('chalk')
 
 const Colaborador = require ('../models/Colaborador')
 const Cliente = require ('../models/Cliente')
-const Empresa = require ('../models/Empresa')
+const Empresa = require ('../models/Empresa');
+
 
 router.post('/autenticacao', (req, res) => {
   var cpf = req.body.cpf;
   var senha = req.body.senha;
   var empresa = req.body.empresa;
-  
  
   var msg = 'Verifique os dados e tente novamente';
-
   Colaborador.findOne({
     where: {
-      cpf: cpf
+      cpf: cpf,
+      ativo: 1
     }
   }).then(colaborador => {
     if (colaborador != undefined) {
@@ -39,7 +39,7 @@ router.post('/autenticacao', (req, res) => {
               empresaId: colaborador.empresaId
             }
           }
-
+          
           sessao = req.session.colaborador = {
             id: colaborador.id,
             cpf: colaborador.cpf,
@@ -47,10 +47,16 @@ router.post('/autenticacao', (req, res) => {
             empresaId: colaborador.empresaId,
             permissoId: colaborador.permissoId // Corrigi um possível erro de digitação
           }
-          if ((colaborador.permissoId == 1) && (colaborador.ativo == 0)) {
-            res.redirect('/acesso/adm');
-          } else if (colaborador.permissoId == 2) {
-            res.send('Página a ser definida');
+          if ((colaborador.permissoId == 1) && (colaborador.ativo == 1) && (colaborador.primeiro_acesso == 1)) {
+            res.redirect('/acesso/adm')
+          } else if ((colaborador.permissoId == 2) && (colaborador.ativo == 1) && (colaborador.primeiro_acesso == 1)) {
+            res.send ('É do geral, crirar uma pagina para ele')
+          } else if ((colaborador.permissoId == 1) && (colaborador.ativo == 1) && (colaborador.primeiro_acesso == 0)) {
+            res.redirect('/alterarsenha')
+          } else if ((colaborador.permissoId == 2) && (colaborador.ativo == 1) && (colaborador.primeiro_acesso == 0)) {
+            res.redirect('/alterarsenha')
+          } else if (colaborador.ativo == 0){
+            res.send ('você não tem acesso a esse sistema!')
           }
         } else {
           res.send('Empresa não encontrada');

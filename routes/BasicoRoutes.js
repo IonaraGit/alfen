@@ -273,6 +273,60 @@ router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
     } 
   })
 })
+
+
+
+router.get('/admin/orcamentos/editar/:id/:orcamento_id', (req, res) => {
+  var id = req.params.id;
+  var orcamento_id = req.params.orcamento_id; // Corrigi o typo aqui (de oid para orcamento_id)
+  sessao = req.session.colaborador;
+
+  Cliente.findByPk(id).then(cliente => {
+    if (cliente != undefined) {
+      // Buscar o orcamento pelo ID
+      Orcamento.findByPk(orcamento_id).then(orcamento => {
+        if (orcamento != undefined) {
+          Endereco.findAll().then(enderecos => {
+            Origem.findAll().then(origens => {
+              Marca.findAll().then(marcas => {
+                Modelo.findAll().then(modelos => {
+                  Colaborador.findAll().then(colaboradores => {
+                    Prestacao.findAll().then(prestacoes => {
+                      Btu.findAll().then(btus => {
+                        Ambiente.findAll().then(ambientes => {
+                          res.render('orcamento/editar', {
+                            cliente: cliente,
+                            enderecos: enderecos,
+                            origens: origens,
+                            marcas: marcas,
+                            modelos: modelos,
+                            orcamento: orcamento, 
+                            colaboradores: colaboradores,
+                            prestacoes: prestacoes,
+                            btus: btus,
+                            ambientes: ambientes,
+                            id: id,
+                            sessao: sessao,
+                            orcamento_id: orcamento_id
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        } else {
+          res.send('Orcamento não encontrado');
+        }
+      });
+    } else {
+      res.send('Cliente não encontrado');
+    }
+  });
+});
+
 /*** FIM ORCAMENTOS */
 
 /* INICIO COLABORADORES */
@@ -402,6 +456,14 @@ router.get('/admin/btu/:id', (req, res) => {
   })
 })
 /*** FIM BTU */
+
+/* INICIO LOGIN */
+
+router.get('/alterarsenha', (req, res) => {
+  res.render('senha/index')
+})
+
+/*** FIM LOGIN */
 
 
 module.exports = router

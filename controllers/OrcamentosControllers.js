@@ -24,6 +24,7 @@ router.post('/orcamento/salvar', (req, res) => {
   var empresaId = Array.isArray(req.body.empresaId) ? req.body.empresaId : [req.body.empresaId];
   var contratado = false;
   var finalizado = false;
+  var valor_recebido = 0;
 
   const conta = quantidade.length;
   const para = observacao.length;
@@ -32,10 +33,10 @@ router.post('/orcamento/salvar', (req, res) => {
 
   console.log(chalk.red.bold(`VALOR ${valor}`));
   
- const convete = []
+ var converte = []
   const orcamento = [];
   for (let i = 0; i < conta; i++) {
-    converte = valor[i].replace (',', '.')
+    converte = valor[i].replace(/\./g, '').replace (',', '.')
     console.log(chalk.red.bold(`VALOR convertido ${converte}`));
     console.log(chalk.green.bold(`VEZES DO I ${i}`));
     orcamento.push(
@@ -52,7 +53,8 @@ router.post('/orcamento/salvar', (req, res) => {
         finalizado: finalizado,
         colaboradoreId: colaboradoreId[i],
         clienteId: clienteId[i],
-        empresaId: empresaId[i]
+        empresaId: empresaId[i],
+        valor_recebido: valor_recebido
       })
     );
   }

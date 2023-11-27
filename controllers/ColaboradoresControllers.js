@@ -44,7 +44,8 @@ router.post ('/colaborador/desativar', (req, res) => {
   var id = req.body.id
 
   Colaborador.update ({
-    ativo: false
+    ativo: false,
+    primeiro_acesso: 2
   }, {
     where: {
       id: id
@@ -58,9 +59,11 @@ router.post ('/colaborador/desativar', (req, res) => {
 
 router.post ('/colaborador/ativar', (req, res) => {
   var id = req.body.id
-
+  
   Colaborador.update ({
-    ativo: true
+    ativo: true,
+    primeiro_acesso: 0
+
   }, {
     where: {
       id: id

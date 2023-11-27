@@ -18,6 +18,10 @@ const Orcamento = connection.define('orcamentos', {
     type: Sequelize.DOUBLE,
     allowNull: true
   },
+  valor_recebido: {
+    type: Sequelize.DOUBLE,
+    allowNull: true
+  },
   observacao: {
     type: Sequelize.STRING,
     allowNull: false

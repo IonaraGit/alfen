@@ -1,0 +1,88 @@
+<%- include ('../../partials/conf_header.ejs') %> 
+<%- include ('../../partials/header.ejs') %>
+
+<div class="container" style="height: 70vh">
+  <form class="form-login" method="post" action="/autenticacao">
+    <div style="text-align: center">
+      <img src="img/logologin.png" alt="logo" style="width: 130px" />
+    </div>
+    <br />
+    <div class="form-group row">
+      <div class="col-sm-12">
+        <label for="usuario">ID SISTEC</label>
+        <input type="text" class="form-control" id="empresa" name="empresa" value="" placeholder="vem preenchido"/>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-12">
+        <label for="usuario">CPF</label>
+        <input type="text" class="form-control" id="CPF" name="cpf" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-12">
+        <label for="nova-senha">Nova senha</label>
+        <input type="password" class="form-control" id="nova-senha" name="nova-senha" />
+        <span toggle="#nova-senha" class="fa fa-fw fa-eye field-icon toggle-nova-senha">
+          <i class="bi bi-eye"></i>
+        </span>
+      </div>
+    </div>
+    
+    <div class="form-group row">
+      <div class="col-sm-12">
+        <label for="confirmacao-senha">Confirme nova senha</label>
+        <input type="password" class="form-control" id="confirmacao-senha" name="confirmacao-senha" />
+        <span toggle="#confirmacao-senha" class="fa fa-fw fa-eye field-icon toggle-confirmacao-senha">
+          <i class="bi bi-eye"></i>
+        </span>
+      </div>
+    </div>
+
+
+
+    <div class="form-group row">
+      <div class="col text-center">
+        <button
+          type="submit"
+          class="btn btn-outline-primary"
+          style="width: 80%"
+        >
+          Salvar
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<%- include ('../../partials/footer.ejs') %> 
+<%- include ('../../partials/conf_footer.ejs') %>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Configuração para o campo de nova senha
+    const novaSenhaField = document.getElementById('nova-senha');
+    const toggleNovaSenha = document.querySelector('.toggle-nova-senha');
+
+    toggleNovaSenha.addEventListener('click', function () {
+      const type =
+        novaSenhaField.getAttribute('type') === 'password' ? 'text' : 'password';
+      novaSenhaField.setAttribute('type', type);
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+
+    // Configuração para o campo de confirmação de senha
+    const confirmacaoSenhaField = document.getElementById('confirmacao-senha');
+    const toggleConfirmacaoSenha = document.querySelector('.toggle-confirmacao-senha');
+
+    toggleConfirmacaoSenha.addEventListener('click', function () {
+      const type =
+        confirmacaoSenhaField.getAttribute('type') === 'password' ? 'text' : 'password';
+      confirmacaoSenhaField.setAttribute('type', type);
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+  });
+</script>

@@ -75,10 +75,13 @@
                     <th>Ambiente</th>
                     <th>Observações</th>
                     <th>Valor</th>
-                    <th>Status</th>
+                    <th>Valor recebido</th>
+                    <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <% var soma = 0%>
+                  <% var somaVr = 0%>
                   <% orcamentos.forEach((orcamento) => { %>
                     <% if (cliente.id == orcamento.clienteId)  { %>
                       <tr class="ajuste-tr">
@@ -109,20 +112,26 @@
                           <% } %>
                         <% }) %>
                         <td data-title="OBS:"><%= orcamento.observacao %></td>
-                        <td data-title="VALOR:"><%= orcamento.valor %></td>
-                        <% if (orcamento.contratado == 0) { %>
-                          <td data-title="STATUS:">Não contratado</td>
-                        <% } else if (orcamento.contratado == 1) { %>
-                          <td data-title="STATUS">Contratado</td>
-                        <% } %>
-                        
+                        <td data-title="VALOR:">R$: <%= orcamento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                        <% soma += parseFloat(orcamento.valor.toString().replace(',', '.')) || 0 %> 
+                        <td data-title="VALOR RECEBIDO:">R$: <%= orcamento.valor_recebido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                        <% somaVr += parseFloat(orcamento.valor_recebido.toString().replace(',', '.')) || 0 %> 
+                        <td data-title="AÇÕES:">
+                          <a href="/admin/orcamentos/editar/<%= orcamento.clienteId %>/<%= orcamento.id %>" style="text-decoration: none;">
+                            <i class="bi bi-eye"></i>
+                          </a>
+                        </td>
+                         
                       </tr>
                     <% } %>
                   <% }) %>
                 </tbody>
               </table>
-              
-    
+              Valor total em orçamentos: R$ <%= soma.toFixed(2).replace('.', ',') %>
+              <br>
+              Valor total em recebimentos: R$ <%= somaVr.toFixed(2).replace('.', ',') %>
+             
+          
             </div>
           </div>
           <div class="tab-pane fade" id="nav-em-aberto" role="tabpanel" aria-labelledby="nav-em-aberto-tab">
