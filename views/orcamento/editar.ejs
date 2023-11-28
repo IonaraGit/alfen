@@ -29,16 +29,13 @@
         </li>
       </ul>
     </div>
+
     <div class="col-md-10">
       <div class="principal">
-
-        
-      
         <div class="mt-3">
         
           <div class="form-row">
             <div class="form-group col-md-12">
-             
               <br>
               <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
               <input type="text" class="form-control" name="nome" id="nome" value="<%= cliente.nome%>" readonly>
@@ -62,7 +59,8 @@
           
           <hr>
          
-          <form method="POST" action="/orcamento/salvar" >
+
+          <form method="POST" action="/recebimento/salvar" >
             <input type="hidden" value="<%= sessao.id %>" name="colaboradoreId"/>
             <input type="hidden" value="<%= cliente.id %>" name="clienteId"/>
             <input type="hidden" value="<%= cliente.id %>" name="id"/>
@@ -70,109 +68,162 @@
             
            
             <div class="row">
-              <div class="col-md-12">
-                <div class="form-row">
-                  <div class="form-group col-lg-1">
-                    <label for="quantidade" class="label-novo">Qtd <span style="color: crimson;">*</span></label>
-                    <input type="text" inputmode="numeric" class="form-control" name="quantidade" id="quantidade" required pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="<%=orcamento.qtd%>">
-                    
-                    
-
-                  </div>
-      
-                  <div class="form-group col-lg-1">
-                    <label for="marca" class="label-novo">PRESTAÇÃO<span style="color: crimson;">*</span></label>
-                    <select id="prestacaoSelect" class="form-control" name="prestacao">
-                      <% prestacoes.forEach ((prestacao) => { %>
-                        <% if (prestacao.id === orcamento.prestacoId) { %>
-                          <option value="<%=prestacao.id%>"><%=prestacao.descricao%> selected</option>
-                        <% } else { %>
-                          <option value="<%=prestacao.id%>"><%=prestacao.descricao%> </option>
-                        <% }%>
-                      
-                      <% }) %>
-                    </select>
-                  </div>
-    
-                  <div class="form-group col-lg-1">
-                    <label for="btus" class="label-novo">BTUS<span style="color: crimson;">*</span></label>
-                    <select id="selecaoBtus" class="form-control" name="btus">
-                      <% btus.forEach ((btu) => { %>
-                        <option value="<%=btu.id%>"><%=btu.descricao%></option>
-                      <% }) %>
-                    </select>
-                  </div>
-      
-                  <div class="form-group col-lg-1">
-                    <label for="marca" class="label-novo">MARCA<span style="color: crimson;">*</span></label>
-                    <select id="marcaSelect" class="form-control" name="marca">
-                      <% marcas.forEach(marca => { %>
-                        <% if (marca.id === orcamento.marcaId) { %>
-                          <option value="<%= marca.id %>" selected><%= marca.descricao %></option>
-                        <% } else { %>
-                          <option value="<%= marca.id %>"><%= marca.descricao %></option>
-                        <% } %>
-                      <% }) %>
-                    </select>
-                    
-                  </div>
-                  <div class="form-group col-lg-1">
-                    <label for="modelo" class="label-novo">MODELO<span style="color: crimson;">*</span></label>
-                    <select id="modeloSelect" class="form-control" name="modelo">
-                      <% modelos.forEach ((modelo) => { %>
-                        <option value="<%=modelo.id%>"><%=modelo.descricao%></option>
-                      <% }) %>
-                    </select>
-                  </div>
-      
-                  <div class="form-group col-lg-1">
-                    <label for="ambiente" class="label-novo">AMBIENTE<span style="color: crimson;">*</span></label>
-                    <select id="ambiente" class="form-control" name="ambiente">
-                      <% ambientes.forEach ((ambiente) => { %>
-                        <option value="<%=ambiente.id%>"><%=ambiente.descricao%></option>
-                      <% }) %> 
-                    </select>
-                  </div>
-      
-                  <div class="form-group col-lg-1">
-                    <label for="valor" class="label-novo">VALOR <span style="color: crimson;">*</span></label>
-                    <input type="text" class="form-control" name="valor" id="valor" onkeypress="$(this).mask(' ###.###.##0,00', {reverse: true});" placeholder="0,00" required value="<%= orcamento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>">
-                  
-
-
-                  </div>
-                
-                  <div class="form-group col-lg-4">
-                    <label for="observacoes" class="label-novo">Observações <span style="color: crimson;">*</span></label>
-                    <input class="form-control" rows="1" name="observacao" value="<%= orcamento.observacao %>"></input>
-                  </div>
-                  
-                  
-                </div>
-                <div id="campoServicoContainer">
-                </div>
+              
+              <div class="form-group col-lg-4">
+                <label for="quantidade" class="label-novo">Qtd <span style="color: crimson;">*</span></label>
+                <input type="text" inputmode="numeric" class="form-control" name="quantidade" id="quantidade" required pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="<%=orcamento.qtd%>">
               </div>
+      
+              <div class="form-group col-lg-4">
+                <label for="marca" class="label-novo">PRESTAÇÃO<span style="color: crimson;">*</span></label>
+                <select id="prestacaoSelect" class="form-control" name="prestacao">
+                  <% prestacoes.forEach (prestacao => { %>
+                    <% if (prestacao.id === orcamento.prestacoId) { %>
+                      <option value="<%= prestacao.id %>" selected><%= prestacao.descricao %></option>
+                    <% } else { %>
+                      <option value="<%= prestacao.id %>"><%= prestacao.descricao %> </option>
+                    <% } %>
+                  
+                  <% }) %>
+                </select>
+              </div>
+    
+              <div class="form-group col-lg-4">
+                <label for="btus" class="label-novo">BTUS<span style="color: crimson;">*</span></label>
+                <select id="selecaoBtus" class="form-control" name="btus">
+                  <% btus.forEach (btu => { %>
+                    <% if (btu.id === orcamento.btuId) { %>
+                      <option value="<%= btu.id %>" selected><%= btu.descricao %></option>
+                    <% } else { %>
+                      <option value="<%= btu.id %>"><%= btu.descricao %></option>
+                    <% } %>
+                  <% }) %>
+                </select>
+              </div>
+      
+              <div class="form-group col-lg-4">
+                <label for="marca" class="label-novo">MARCA<span style="color: crimson;">*</span></label>
+                <select id="marcaSelect" class="form-control" name="marca">
+                  <% marcas.forEach(marca => { %>
+                    <% if (marca.id === orcamento.marcaId) { %>
+                      <option value="<%= marca.id %>" selected><%= marca.descricao %></option>
+                    <% } else { %>
+                      <option value="<%= marca.id %>"><%= marca.descricao %></option>
+                    <% } %>
+                  <% }) %>
+                </select>
+              </div>
+
+              <div class="form-group col-lg-4">
+                <label for="modelo" class="label-novo">MODELO<span style="color: crimson;">*</span></label>
+                <select id="modeloSelect" class="form-control" name="modelo">
+                  <% modelos.forEach (modelo => { %>
+                    <% if (modelo.id === orcamento.modeloId) { %>
+                      <option value="<%= modelo.id %>" selected><%= modelo.descricao %></option>
+                    <% } else { %>
+                      <option value="<%= modelo.id %>"><%= modelo.descricao %></option>
+                    <% } %>
+                    
+                  <% }) %>
+                </select>
+              </div>
+      
+              <div class="form-group col-lg-4">
+                <label for="ambiente" class="label-novo">AMBIENTE<span style="color: crimson;">*</span></label>
+                <select id="ambiente" class="form-control" name="ambiente">
+                  <% ambientes.forEach (ambiente => { %>
+                    <% if (ambiente.id === orcamento.ambienteId) { %>
+                      <option value="<%= ambiente.id %>" selected><%= ambiente.descricao %></option>
+                    <% } else { %>
+                      <option value="<%= ambiente.id %>"><%= ambiente.descricao %></option>
+                    <% } %> 
+                  <% }) %> 
+                </select>
+              </div>
+      
+              <div class="form-group col-lg-4">
+                <label for="valor" class="label-novo">VALOR COBRADO<span style="color: crimson;">*</span></label>
+                <input type="text" class="form-control" name="valor" id="valor" onkeypress="$(this).mask(' ###.###.##0,00', {reverse: true});" placeholder="0,00" required value="<%= orcamento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>">
+              </div>
+
+              <div class="form-group col-lg-8">
+                <label for="observacoes" class="label-novo">OBSERVAÇÕES <span style="color: crimson;">*</span></label>
+                <input class="form-control" rows="1" name="observacao" value="<%= orcamento.observacao %>"></input>
+              </div>
+               
+                  
+              <br>
             </div>
+            <hr>
+           
+            <div id="campoServicoContainer">
+            </div>
+
             <div class="mt-3">
               <div class="form-row">
-                
                 <div class="form-group col text-center">
-                  <button type="submit" class="btn btn-success float-right">Salvar 
+                  <button type="button" id="adicionarServicoButton" class="btn btn-primary float-left">Adicionar pagamentos <i class="bi bi-coin"></i></button>
+                </div>
+                <div class="form-group col text-center">
+                  <button class="btn btn-success float-right">Salvar 
                     <i class="bi bi-check2-circle"></i></button>
                 </div>
               </div>
             </div>
           </form>
-         
+
+          <div id="modeloCamposServico" style="display: none;">
+            <input type="hidden" value="<%= sessao.id %>" name="colaboradoreId"/>
+            <input type="hidden" value="<%= cliente.id %>" name="clienteId"/>
+            <input type="hidden" value="<%= cliente.id %>" name="id"/>
+            <input type="hidden" value="<%= cliente.empresaId %>" name="empresaId"/>
+            <hr>
+           
+            <div class="row">
+              <div class="form-group col-lg-4">
+                <label for="valor" class="label-novo">VALOR RECEBIDO</label>
+                <input type="text" class="form-control" name="valor_recebido" id="valor_recebido" onkeypress="$(this).mask(' ###.###.##0,00', {reverse: true});" placeholder="0,00">
+              </div>              
+            
+              <div class="form-group col-lg-3">
+                <label for="valor" class="label-novo">FORMA DE PAGAMENTO</label>
+                <select id="pagamento" class="form-control" name="pagamento" onchange="atualizarCampos()" required>
+                  <option value="" data-parcelado="" disabled selected hidden>Selecione uma opção</option>
+                  <% var verifica = false %>
+                  <% pagamentos.forEach(pagamento => { %>
+                    <option value="<%= pagamento.id %>" data-parcelado="<%= pagamento.parcelado %>"><%= pagamento.descricao %></option>
+                  <% }) %>
+                </select>
+              </div>
+
+              <div class="form-group col-lg-4" id="campoAVista" style="display: none;">
+                <label for="a_vista" class="label-novo">PARCELAMENTO <span style="color: crimson;">*</span></label>
+                <input type="text" class="form-control"  id="a_vista" readonly value="1">
+              </div>
+
+              <div class="form-group col-lg-4" id="campoParcelamento" style="display: none;">
+                <label for="qtd_parcelas" class="label-novo">PARCELAMENTO: <span style="color: crimson;">*</span></label>
+                <input type="text" inputmode="numeric" class="form-control" name="parcelamento" id="qtd_parcelas" required pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+              </div>
+            
+
+              <!-- Campo de preenchimento desabilitado -->
+              <div class="form-group col-lg-4" id="campoPreenchimento" style="display: block;">
+                <label for="a_vista" class="label-novo">PARCELAMENTO <span style="color: crimson;">*</span></label>
+                <input type="text" class="form-control" readonly disabled>
+              </div>
+          
+              <div class=" form-group col-lg-1 m-auto text-center">
+                <button class="btn-danger botao-remover-servico rounded-circle"><i class="bi bi-x-lg"></i></button>
+              </div>
+            </div>
+          </div>
+
+
         </div>
       </div>
-
     </div>
-
   </div>
-
-  
-
 </body>
 
 
@@ -182,12 +233,46 @@
 <script src="https://cdn.jsdelivr.net/jquery.maskmoney/3.0.2/jquery.maskmoney.min.js"></script>
 
 
+<script>
+  var botaoAdicionarServico = document.getElementById('adicionarServicoButton');
+  var camposServicoContainer = document.getElementById('campoServicoContainer');
 
+  botaoAdicionarServico.addEventListener('click', function () {
+    var novoCampoServico = document.getElementById('modeloCamposServico').cloneNode(true);
+    novoCampoServico.style.display = 'block';
 
+    var botaoRemover = novoCampoServico.querySelector('.botao-remover-servico');
+    botaoRemover.addEventListener('click', function () {
+      camposServicoContainer.removeChild(novoCampoServico);
+    });
 
+    camposServicoContainer.appendChild(novoCampoServico);
 
+    // Adiciona o ouvinte de evento para o novo campo
+    var novoCampoPagamento = novoCampoServico.querySelector('#pagamento');
+    novoCampoPagamento.addEventListener('change', function () {
+      atualizarCampos(novoCampoServico);
+    });
+  });
 
+  function atualizarCampos(campoServico) {
+    var select = campoServico.querySelector('#pagamento');
+    var selectedOption = select.options[select.selectedIndex];
+    var verifica = selectedOption.getAttribute('data-parcelado');
 
+    var campoParcelamento = campoServico.querySelector('#campoParcelamento');
+    var campoAVista = campoServico.querySelector('#campoAVista');
+    var campoPreenchimento = campoServico.querySelector('#campoPreenchimento');
+
+    campoParcelamento.style.display = verifica === 'true' ? 'block' : 'none';
+    campoAVista.style.display = verifica === 'false' ? 'block' : 'none';
+    campoPreenchimento.style.display = 'none';
+
+    var qtdParcelas = campoServico.querySelector('#qtd_parcelas');
+    qtdParcelas.disabled = verifica === 'true' ? false : true;
+    qtdParcelas.value = verifica === 'true' ? '' : '1';
+  }
+</script>
 
 
 

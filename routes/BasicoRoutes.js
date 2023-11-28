@@ -12,6 +12,7 @@ const Prestacao = require('../models/Prestacao');
 const Empresa = require ('../models/Empresa')
 const Btu = require('../models/Btu');
 const Agenda = require ('../models/Agenda')
+const Pagamento = require ('../models/Pagamento')
 
 const expirar = require ('../middlewares/expirar');
 
@@ -276,7 +277,7 @@ router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
 
 
 
-router.get('/admin/orcamentos/editar/:id/:orcamento_id', (req, res) => {
+router.get('/admin/orcamentos/editar/:id/:orcamento_id', expirar, (req, res) => {
   var id = req.params.id;
   var orcamento_id = req.params.orcamento_id; // Corrigi o typo aqui (de oid para orcamento_id)
   sessao = req.session.colaborador;
@@ -294,21 +295,24 @@ router.get('/admin/orcamentos/editar/:id/:orcamento_id', (req, res) => {
                     Prestacao.findAll().then(prestacoes => {
                       Btu.findAll().then(btus => {
                         Ambiente.findAll().then(ambientes => {
-                          res.render('orcamento/editar', {
-                            cliente: cliente,
-                            enderecos: enderecos,
-                            origens: origens,
-                            marcas: marcas,
-                            modelos: modelos,
-                            orcamento: orcamento, 
-                            colaboradores: colaboradores,
-                            prestacoes: prestacoes,
-                            btus: btus,
-                            ambientes: ambientes,
-                            id: id,
-                            sessao: sessao,
-                            orcamento_id: orcamento_id
-                          });
+                          Pagamento.findAll().then (pagamentos => {
+                            res.render('orcamento/editar', {
+                              cliente: cliente,
+                              enderecos: enderecos,
+                              origens: origens,
+                              marcas: marcas,
+                              modelos: modelos,
+                              orcamento: orcamento, 
+                              colaboradores: colaboradores,
+                              prestacoes: prestacoes,
+                              btus: btus,
+                              ambientes: ambientes,
+                              id: id,
+                              sessao: sessao,
+                              orcamento_id: orcamento_id,
+                              pagamentos: pagamentos
+                            });
+                          })
                         });
                       });
                     });
@@ -456,6 +460,24 @@ router.get('/admin/btu/:id', (req, res) => {
   })
 })
 /*** FIM BTU */
+
+/* INICIO PAGAMENTO */
+router.get('/acesso/adm/pagamentos', expirar, (req, res) =>{
+  sessao = req.session.colaborador
+  Pagamento.findAll().then(pagamentos => {
+    Empresa.findAll().then (empresas => {
+      res.render('pagamento/index', {pagamentos:pagamentos, empresas:empresas, sessao})
+    })
+  })
+})
+
+router.get('/admin/pagamento/:id', (req, res) => {
+  var id = req.params.id
+  Pagamento.findByPk(id).then (pagamento => {
+  res.render('pagamento/detalhes', {pagamento: pagamento})
+  })
+})
+/*** FIM PAGAMENTO */
 
 /* INICIO LOGIN */
 

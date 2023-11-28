@@ -17,12 +17,15 @@ const AmbientesControllers = require ('./controllers/AmbientesControllers')
 const PrestacoesControllers = require ('./controllers/PrestacoesControllers')
 const OrigensControllers = require ('./controllers/OrigensControllers')
 const BtusControllers = require ('./controllers/BtusControllers')
+const PagamentosControllers = require ('./controllers/PagamentosControllers')
 const LoginsControllers = require ('./controllers/LoginsControllers')
+const RecebimentosControllers = require ('./controllers/RecebimentosControllers')
 
 //Models
 const Empresa = require ('./models/Empresa')
 const Permissao = require ('./models/Permissao')
 const Btu = require ('./models/Btu')
+const Pagamento = require ('./models/Pagamento')
 const Ambiente = require ('./models/Ambiente')
 const Prestacao = require ('./models/Prestacao')
 const Origem = require ('./models/Origem')
@@ -33,7 +36,7 @@ const Endereco = require ('./models/Endereco')
 const Cliente = require ('./models/Cliente')
 const Orcamento = require ('./models/Orcamento')
 const Agenda = require ('./models/Agenda')
-
+const Recebimento = require ('./models/Recebimento')
 
 
 
@@ -83,6 +86,8 @@ app.use('/', PrestacoesControllers)
 app.use('/', OrcamentosControllers)
 app.use('/', OrigensControllers)
 app.use('/', BtusControllers)
+app.use('/', PagamentosControllers)
+app.use('/', RecebimentosControllers)
 app.use('/', LoginsControllers)
 
 app.get ('/', (req, res) => {

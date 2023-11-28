@@ -67,13 +67,16 @@
                     <table class="table table-bordered mt-2">
                       <thead>
                         <tr>
-                          <th>Quantidade</th>
-                          <th>Serviço Prestado</th>
+                          <th>QUANTIDADE</th>
+                          <th>SERVIÇO PRESTADO</th>
                           <th>BTUS</th>
-                          <th>Marca</th>
-                          <th>Modelo</th>
-                          <th>Ambiente</th>
-                          <th>Observações</th>
+                          <th>MARCA</th>
+                          <th>MODELO</th>
+                          <th>AMBIENTE</th>
+                          <th>OBSEVAÇÕES</th>
+                          <th>VALOR</th>
+                          <th>VALOR RECEBIDO</th>
+                          <th>AÇÕES</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -106,10 +109,18 @@
                             <% } %>
                           <% }) %>
                           <td><%= orcamento.observacao %></td>
+                          <td>R$: <%= orcamento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                          <td>R$: <%= orcamento.valor_recebido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                          <td>
+                            <a href="/admin/orcamentos/editar/<%= orcamento.clienteId %>/<%= orcamento.id %>" style="text-decoration: none;">
+                              <i class="bi bi-eye"></i>
+                            </a>
+                          </td>
+                          
                           
                         </tr>
                         <tr>
-                          <td colspan="7">
+                          <td colspan="10">
                             <div>
                               <% agendas.forEach((agenda) => { %>
                                 <% if ((agenda.clienteId == orcamento.clienteId) && (agenda.orcamentoId == orcamento.id))  { %>
@@ -243,13 +254,16 @@
                         <table class="table table-bordered mt-2">
                           <thead>
                             <tr>
-                              <th>Quantidade</th>
-                              <th>Serviço Prestado</th>
+                              <th>QUANTIDADE</th>
+                              <th>SERVIÇO PRESTADO</th>
                               <th>BTUS</th>
-                              <th>Marca</th>
-                              <th>Modelo</th>
-                              <th>Ambiente</th>
-                              <th>Observações</th>
+                              <th>MARCA</th>
+                              <th>MODELO</th>
+                              <th>AMBIENTE</th>
+                              <th>OBSEVAÇÕES</th>
+                              <th>VALOR</th>
+                              <th>VALOR RECEBIDO</th>
+                              <th>AÇÕES</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -282,10 +296,18 @@
                                 <% } %>
                               <% }) %>
                               <td><%= orcamento.observacao %></td>
+                              <td>R$: <%= orcamento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                              <td>R$: <%= orcamento.valor_recebido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                              <td>
+                                <a href="/admin/orcamentos/editar/<%= orcamento.clienteId %>/<%= orcamento.id %>" style="text-decoration: none;">
+                                  <i class="bi bi-eye"></i>
+                                </a>
+                              </td>
+                     
                               
                             </tr>
                             <tr>
-                              <td colspan="7">
+                              <td colspan="10">
                                 <div style="display: flex; align-items: center; justify-content: center;">
                                   <button type="button" class="btn-light agendar-button verde-icon ajuste-input" data-target="date<%= orcamento.id %> date2<%= orcamento.id %> colaborador<%= orcamento.id %> horario<%= orcamento.id %>" style="cursor: pointer;">
                                     <i class="bi bi-calendar-check"></i>
