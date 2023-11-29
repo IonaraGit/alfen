@@ -8,8 +8,6 @@ const Agenda = require ('../models/Agenda')
 
 router.post('/orcamento/salvar', (req, res) => {
 
-
-
   var id = req.body.id;
   var observacao = Array.isArray(req.body.observacao) ? req.body.observacao : [req.body.observacao];
   var valor = Array.isArray(req.body.valor) ? req.body.valor : [req.body.valor];

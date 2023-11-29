@@ -8,6 +8,10 @@ const Recebimento = connection.define('recebimentos', {
   valor:{
     type: Sequelize.DOUBLE,
     allowNull: false
+  },
+  prestacoes: {
+    type: Sequelize.INTEGER,
+    allowNull: false
   }
 });
 

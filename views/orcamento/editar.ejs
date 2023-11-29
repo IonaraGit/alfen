@@ -64,7 +64,7 @@
             <input type="hidden" value="<%= sessao.id %>" name="colaboradoreId"/>
             <input type="hidden" value="<%= cliente.id %>" name="clienteId"/>
             <input type="hidden" value="<%= cliente.id %>" name="id"/>
-            <input type="hidden" value="<%= cliente.empresaId %>" name="empresaId"/>
+            
             
            
             <div class="row">
@@ -177,6 +177,7 @@
             <input type="hidden" value="<%= cliente.id %>" name="clienteId"/>
             <input type="hidden" value="<%= cliente.id %>" name="id"/>
             <input type="hidden" value="<%= cliente.empresaId %>" name="empresaId"/>
+            <input type="hidden" value="<%= orcamento.id %>" name="orcamentoId"/>
             <hr>
            
             <div class="row">
@@ -196,16 +197,12 @@
                 </select>
               </div>
 
-              <div class="form-group col-lg-4" id="campoAVista" style="display: none;">
-                <label for="a_vista" class="label-novo">PARCELAMENTO <span style="color: crimson;">*</span></label>
-                <input type="text" class="form-control"  id="a_vista" readonly value="1">
-              </div>
-
+         
               <div class="form-group col-lg-4" id="campoParcelamento" style="display: none;">
-                <label for="qtd_parcelas" class="label-novo">PARCELAMENTO: <span style="color: crimson;">*</span></label>
-                <input type="text" inputmode="numeric" class="form-control" name="parcelamento" id="qtd_parcelas" required pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <label for="parcelamento" class="label-novo">PARCELAMENTO <span style="color: crimson;">*</span></label>
+                <input type="text" inputmode="numeric" class="form-control" name="parcelamento" id="parcelamento" required pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');" readonly>
               </div>
-            
+              
 
               <!-- Campo de preenchimento desabilitado -->
               <div class="form-group col-lg-4" id="campoPreenchimento" style="display: block;">
@@ -231,7 +228,6 @@
 <!-- Inclua as bibliotecas necessárias -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.maskmoney/3.0.2/jquery.maskmoney.min.js"></script>
-
 
 <script>
   var botaoAdicionarServico = document.getElementById('adicionarServicoButton');
@@ -259,20 +255,28 @@
     var select = campoServico.querySelector('#pagamento');
     var selectedOption = select.options[select.selectedIndex];
     var verifica = selectedOption.getAttribute('data-parcelado');
-
-    var campoParcelamento = campoServico.querySelector('#campoParcelamento');
-    var campoAVista = campoServico.querySelector('#campoAVista');
     var campoPreenchimento = campoServico.querySelector('#campoPreenchimento');
+    var campoParcelamento = campoServico.querySelector('#campoParcelamento');
+    var qtdParcelas = campoServico.querySelector('#parcelamento');
 
-    campoParcelamento.style.display = verifica === 'true' ? 'block' : 'none';
-    campoAVista.style.display = verifica === 'false' ? 'block' : 'none';
+    campoParcelamento.style.display = 'block';
     campoPreenchimento.style.display = 'none';
 
-    var qtdParcelas = campoServico.querySelector('#qtd_parcelas');
-    qtdParcelas.disabled = verifica === 'true' ? false : true;
-    qtdParcelas.value = verifica === 'true' ? '' : '1';
+    // Define o campo como editável apenas se a forma de pagamento permitir parcelamento
+    if (verifica === 'true') {
+      qtdParcelas.readOnly = false;
+    } else {
+      qtdParcelas.readOnly = true;
+      qtdParcelas.value = '1';
+
+      // Defina o valor '1' se débito for selecionado
+      if (selectedOption.value === 'debito') {
+        qtdParcelas.value = '1';
+      }
+    }
   }
 </script>
+
 
 
 
