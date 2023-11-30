@@ -13,6 +13,7 @@ const Empresa = require ('../models/Empresa')
 const Btu = require('../models/Btu');
 const Agenda = require ('../models/Agenda')
 const Pagamento = require ('../models/Pagamento')
+const Recebimento = require ('../models/Recebimento')
 
 const expirar = require ('../middlewares/expirar');
 
@@ -276,7 +277,6 @@ router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
 })
 
 
-
 router.get('/admin/orcamentos/editar/:id/:orcamento_id', expirar, (req, res) => {
   var id = req.params.id;
   var orcamento_id = req.params.orcamento_id; // Corrigi o typo aqui (de oid para orcamento_id)
@@ -296,22 +296,84 @@ router.get('/admin/orcamentos/editar/:id/:orcamento_id', expirar, (req, res) => 
                       Btu.findAll().then(btus => {
                         Ambiente.findAll().then(ambientes => {
                           Pagamento.findAll().then (pagamentos => {
-                            res.render('orcamento/editar', {
-                              cliente: cliente,
-                              enderecos: enderecos,
-                              origens: origens,
-                              marcas: marcas,
-                              modelos: modelos,
-                              orcamento: orcamento, 
-                              colaboradores: colaboradores,
-                              prestacoes: prestacoes,
-                              btus: btus,
-                              ambientes: ambientes,
-                              id: id,
-                              sessao: sessao,
-                              orcamento_id: orcamento_id,
-                              pagamentos: pagamentos
-                            });
+                            Recebimento.findAll().then (recebimentos => {
+                              res.render('orcamento/editar', {
+                                cliente: cliente,
+                                enderecos: enderecos,
+                                origens: origens,
+                                marcas: marcas,
+                                modelos: modelos,
+                                orcamento: orcamento, 
+                                colaboradores: colaboradores,
+                                prestacoes: prestacoes,
+                                btus: btus,
+                                ambientes: ambientes,
+                                id: id,
+                                sessao: sessao,
+                                orcamento_id: orcamento_id,
+                                pagamentos: pagamentos,
+                                recebimentos: recebimentos
+                              });
+                            })
+                            
+                          })
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        } else {
+          res.send('Orcamento não encontrado');
+        }
+      });
+    } else {
+      res.send('Cliente não encontrado');
+    }
+  });
+});
+
+router.get('/admin/orcamentos/pagamento/:id/:orcamento_id', expirar, (req, res) => {
+  var id = req.params.id;
+  var orcamento_id = req.params.orcamento_id; // Corrigi o typo aqui (de oid para orcamento_id)
+  sessao = req.session.colaborador;
+
+  Cliente.findByPk(id).then(cliente => {
+    if (cliente != undefined) {
+      // Buscar o orcamento pelo ID
+      Orcamento.findByPk(orcamento_id).then(orcamento => {
+        if (orcamento != undefined) {
+          Endereco.findAll().then(enderecos => {
+            Origem.findAll().then(origens => {
+              Marca.findAll().then(marcas => {
+                Modelo.findAll().then(modelos => {
+                  Colaborador.findAll().then(colaboradores => {
+                    Prestacao.findAll().then(prestacoes => {
+                      Btu.findAll().then(btus => {
+                        Ambiente.findAll().then(ambientes => {
+                          Pagamento.findAll().then (pagamentos => {
+                            Recebimento.findAll().then (recebimentos => {
+                              res.render('orcamento/pagamento', {
+                                cliente: cliente,
+                                enderecos: enderecos,
+                                origens: origens,
+                                marcas: marcas,
+                                modelos: modelos,
+                                orcamento: orcamento, 
+                                colaboradores: colaboradores,
+                                prestacoes: prestacoes,
+                                btus: btus,
+                                ambientes: ambientes,
+                                id: id,
+                                sessao: sessao,
+                                orcamento_id: orcamento_id,
+                                pagamentos: pagamentos,
+                                recebimentos: recebimentos
+                              });
+                            })
+                            
                           })
                         });
                       });

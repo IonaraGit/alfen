@@ -6,7 +6,7 @@ const chalk = require('chalk')
 const Orcamento = require ('../models/Orcamento')
 const Pagamento = require ('../models/Pagamento');
 const Recebimento = require('../models/Recebimento');
-const { or } = require('sequelize');
+const Sequelize = require('sequelize');
 
 router.post('/recebimento/salvar', (req, res) => {
   var id = req.body.id;
@@ -51,13 +51,13 @@ router.post('/recebimento/salvar', (req, res) => {
  Promise.all (recebimento)
  .then((rec) => {
   const orcamento = []
-  
-
+  var converte2 = []
   for (let i=0; i < rec.length; i++){
+    converte2 = valor[i].replace(/\./g, '').replace (',', '.')
     orcamento.push (
       Orcamento.update (
-        {contratado: true},
-        {valor_recebido: valor_recebido + valor},
+        {contratado: true,
+        valor_recebido: Sequelize.literal(`valor_recebido + ${converte2}`)},
         {where: {id: orcamentoId}}
       )
     )
@@ -70,10 +70,18 @@ router.post('/recebimento/salvar', (req, res) => {
 })
 .catch((error) => {
   console.log ('erro', error)
-  res.send('erro')
+  res.send('erro no salvar')
 })
 
  
+})
+
+router.post ('/recebimento/excluir/:id_orcamento', (req, res) => {
+  const recebimentoId = req.params.id_orcamento;
+
+  console.log(chalk.red.bold(`recebimento vindo do front ${recebimentoId}`));
+
+  res.send ('proximo')
 })
 
 

@@ -244,8 +244,7 @@
             </div>
             <div class="tab-pane" id="nav-nao-agendados" role="tabpanel" aria-labelledby="nav-nao-agendados-tab">
               <div class="row">
-                
-                  
+
                   <% orcamentos.forEach((orcamento) => { %>
                     <% if((orcamento.clienteId == cliente.id) && (orcamento.contratado == false)) { %>
                       <form method="post" action="/orcamento/agendamento/salvar" style="width: 100vw;">
