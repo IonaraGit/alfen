@@ -414,6 +414,16 @@ a {
   border-bottom: none; /* Remove a borda inferior da última linha */
 }
 
+
+.recebidos {
+  display: flex;
+  width: 100vw;
+  background: #c5ccca;
+  padding-top: 15px;
+}
+
+
+
 /* INICIO AJUSTES TABELA RESPONSE */
 @media screen and (max-width: 1092px) {
   .rtable thead {
@@ -451,6 +461,23 @@ a {
   tr:nth-child(odd) {
     background-color: #ffffff; /* Cor de fundo para as linhas ímpares */
   }
-
+  .recebidos {
+    display: block;
+    padding-bottom: 15px;
+    margin-top: 15px;
+  }
 }
 /* FIM AJUSTES TABELA RESPONSE */
+.background-form {
+  background-color: #f0f0f0; /* Substitua pela cor desejada */
+  padding: 10px; /* Ajuste o preenchimento conforme necessário */
+  margin-bottom: 10px; /* Adicione um espaçamento inferior entre os formulários */
+}
+
+.label-recebidos {
+  color: #e3001e;
+  font-weight: 700;
+  margin-top: 15px;
+ }
+
+ 

@@ -11,31 +11,52 @@ const Sequelize = require('sequelize');
 router.post('/recebimento/salvar', (req, res) => {
   var id = req.body.id;
 
+  const idCliente = req.body.id_cliente;
+
   var valor = Array.isArray(req.body.valor_recebido) ? req.body.valor_recebido : [req.body.valor_recebido];
   
   var empresaId = Array.isArray(req.body.empresaId) ? req.body.empresaId : [req.body.empresaId];
   var orcamentoId = Array.isArray(req.body.orcamentoId) ? req.body.orcamentoId : [req.body.orcamentoId];
   var pagamentoId = Array.isArray(req.body.pagamento) ? req.body.pagamento : [req.body.pagamento];
   var parcelamento = Array.isArray(req.body.parcelamento) ? req.body.parcelamento : [req.body.parcelamento];
- 
+  var em_aberto = Array.isArray(req.body.em_aberto) ? req.body.em_aberto : [req.body.em_aberto]; 
 
+  
   console.log(chalk.red.bold(`VALOR ${valor}`));
   console.log(chalk.red.bold(`EMPRESA ID  ${empresaId}`));
   console.log(chalk.red.bold(`Orçamento ID  ${orcamentoId}`));
   console.log(chalk.red.bold(`Forma de pagamento ${pagamentoId}`));
+  
 
   console.log(chalk.red.bold(`Parcelado em ${parcelamento} vezes`));
  
+ 
 
  const conta = pagamentoId.length;
+ const conta2 = em_aberto.length
 
- var converte = []
+ var resultadoC = []
+ 
  const recebimento = []
 
+
+ var resultadoC = 0
+
+ for (let i = 0; i < conta2; i ++) {
+  resultadoC += parseFloat(em_aberto[i].replace(/\./g, '').replace(',', '.'));
+ }
+
+ let recebea = 0;
+
  for (let i = 0; i <  conta; i++) {
-  converte = valor[i].replace(/\./g, '').replace (',', '.')
+  let converte = parseFloat(valor[i].replace(/\./g, '').replace(',', '.'));
+ 
   console.log(chalk.red.bold(`VALOR convertido ${converte}`));
   console.log(chalk.green.bold(`VEZES DO I ${i}`));
+
+  recebea += converte;
+
+ console.log(chalk.green.bold(`testando rs ${recebea}`))
 
     recebimento.push (
       Recebimento.create ({
@@ -47,6 +68,9 @@ router.post('/recebimento/salvar', (req, res) => {
       })
     )
   }
+  let resultadoFinal = resultadoC - recebea;
+
+  console.log(chalk.green.bold(`Resultado final: ${resultadoFinal}`));
 
  Promise.all (recebimento)
  .then((rec) => {
@@ -56,8 +80,10 @@ router.post('/recebimento/salvar', (req, res) => {
     converte2 = valor[i].replace(/\./g, '').replace (',', '.')
     orcamento.push (
       Orcamento.update (
-        {contratado: true,
-        valor_recebido: Sequelize.literal(`valor_recebido + ${converte2}`)},
+        {
+          valor_recebido: Sequelize.literal(`valor_recebido + ${converte2}`),
+          valor_aberto: resultadoFinal
+        },
         {where: {id: orcamentoId}}
       )
     )
@@ -66,7 +92,7 @@ router.post('/recebimento/salvar', (req, res) => {
 })
 .then(() => {
   console.log ('ok,feitos')
-  res.send ('cadastrado o pagamento')
+  res.redirect('/admin/orcamentos/pagamento/' + idCliente + '/' + orcamentoId)
 })
 .catch((error) => {
   console.log ('erro', error)
@@ -76,13 +102,85 @@ router.post('/recebimento/salvar', (req, res) => {
  
 })
 
-router.post ('/recebimento/excluir/:id_orcamento', (req, res) => {
-  const recebimentoId = req.params.id_orcamento;
+router.post('/recebimento/excluir/:id_recebimento', (req, res) => {
+  const idRecebimento = req.params.id_recebimento;
+  const idCliente = req.body.id_cliente;
+  const idOrcamento = req.body.id_orcamento;
+  
+  
+  const valorExcluido = req.body.valor_recebido;
+console.log(chalk.red.bold(`VALOR EXCLUÍDO que vem do body ${valorExcluido}`));
 
-  console.log(chalk.red.bold(`recebimento vindo do front ${recebimentoId}`));
+// Remover caracteres não numéricos, pontos e substituir vírgulas por ponto
+const valorNumerico = parseFloat(valorExcluido.replace(/[^\d,]/g, '').replace(',', '.'));
 
-  res.send ('proximo')
-})
+console.log(chalk.red.bold(`VALOR EXCLUÍDO convertido ${valorNumerico}`));
+
+  
+  
+ 
+
+  if (idRecebimento !== undefined && !isNaN(idRecebimento)) {
+    // Buscar o valor e o ID do orçamento associado ao recebimento
+    Recebimento.findByPk(idRecebimento)
+      .then((recebimento) => {
+        if (!recebimento) {
+          return res.send('Recebimento não encontrado');
+        }
+
+        const valorRecebido = recebimento.valor;
+        const orcamentoId = recebimento.orcamentoId;
+
+        // Excluir o recebimento
+        return Recebimento.destroy({
+          where: {
+            id: idRecebimento
+          }
+        })
+          .then(() => {
+            // Atualizar o valor recebido no orçamento
+            return Orcamento.findByPk(orcamentoId);
+          })
+          .then((orcamento) => {
+            if (orcamento) {
+              const novoValorRecebido = orcamento.valor_recebido - valorRecebido;
+              const novoValorEmAberto = orcamento.valor_aberto + valorNumerico
+          
+              return Orcamento.update(
+                {
+                  valor_recebido: novoValorRecebido,
+                  valor_aberto: novoValorEmAberto
+                },
+                {
+                  where: {
+                    id: orcamentoId
+                  }
+                }
+              );
+            } else {
+              return Promise.resolve(); // Orçamento não encontrado, retornar uma promessa resolvida
+            }
+          });
+      })
+      .then(() => {
+       res.redirect('/admin/orcamentos/pagamento/' + idCliente + '/' + idOrcamento)
+      })
+      .catch((err) => {
+        res.send('Erro >>' + err);
+      });
+  } else {
+    res.send('ID de recebimento inválido');
+  }
+});
+
+
+
+
+
+
+
+
+
 
 
 

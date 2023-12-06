@@ -74,8 +74,9 @@
                     <th>Modelo</th>
                     <th>Ambiente</th>
                     <th>Observações</th>
-                    <th>Valor</th>
+                    <th>Valor total</th>
                     <th>Valor recebido</th>
+                    <th>Valor em aberto</th>
                     <th>Ações</th>
                   </tr>
                 </thead>
@@ -112,9 +113,11 @@
                           <% } %>
                         <% }) %>
                         <td data-title="OBS:"><%= orcamento.observacao %></td>
-                        <td data-title="VALOR:">R$: <%= orcamento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                        <td data-title="VALOR TOTAL:">R$: <%= orcamento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
                         <% soma += parseFloat(orcamento.valor.toString().replace(',', '.')) || 0 %> 
                         <td data-title="VALOR RECEBIDO:">R$: <%= orcamento.valor_recebido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                        <% somaVr += parseFloat(orcamento.valor_recebido.toString().replace(',', '.')) || 0 %> 
+                        <td data-title="VALOR EM ABERTO:">R$: <%= orcamento.valor_aberto.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
                         <% somaVr += parseFloat(orcamento.valor_recebido.toString().replace(',', '.')) || 0 %> 
                         <td data-title="AÇÕES:" style="display: flex; justify-content: space-between;">
                           <a href="/admin/orcamentos/editar/<%= orcamento.clienteId %>/<%= orcamento.id %>" style="text-decoration: none;">

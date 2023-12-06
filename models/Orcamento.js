@@ -22,14 +22,15 @@ const Orcamento = connection.define('orcamentos', {
     type: Sequelize.DOUBLE,
     allowNull: true
   },
+  valor_aberto: {
+    type: Sequelize.DOUBLE,
+    allowNull: true
+  },
   observacao: {
     type: Sequelize.STRING,
     allowNull: false
   },
-  contratado: {
-    type: Sequelize.INTEGER,
-    allowNull: true
-  },
+ 
   finalizado: {
     type: Sequelize.INTEGER,
     allowNull: true
