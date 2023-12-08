@@ -87,7 +87,7 @@ router.get('/admin/cliente/novo', (req, res) => {
 
 router.get('/admin/cliente/detalhes/:id', (req, res) => {
   var id = req.params.id
-
+  sessao = req.session.colaborador;
   Cliente.findByPk(id).then (cliente => {
     if (cliente != undefined) {
       Endereco.findAll().then(enderecos => {
@@ -99,7 +99,7 @@ router.get('/admin/cliente/detalhes/:id', (req, res) => {
                   Marca.findAll().then(marcas => {
                     Modelo.findAll().then(modelos => {
                       Ambiente.findAll().then(ambientes => {
-                        res.render('cliente/detalhes', {cliente:cliente, enderecos:enderecos, origens:origens, orcamentos: orcamentos, prestacoes: prestacoes, colaboradores: colaboradores, btus: btus, marcas:marcas, modelos: modelos, ambientes:ambientes})
+                        res.render('cliente/detalhes', {cliente:cliente, enderecos:enderecos, origens:origens, orcamentos: orcamentos, prestacoes: prestacoes, colaboradores: colaboradores, btus: btus, marcas:marcas, modelos: modelos, ambientes:ambientes, sessao})
                       })
                     })
                   })
@@ -124,6 +124,7 @@ router.get('/admin/cliente/detalhes/:id', (req, res) => {
 router.get('/admin/orcamento/novo/:id', expirar, (req, res) => {
   var id = req.params.id
   sessao = req.session.colaborador
+  const errorMessage = req.query.error;
   Cliente.findByPk(id).then (cliente => {
     if (cliente != undefined) {
       Endereco.findAll().then(enderecos => {
@@ -133,7 +134,7 @@ router.get('/admin/orcamento/novo/:id', expirar, (req, res) => {
               Ambiente.findAll().then(ambientes => {
                 Prestacao.findAll().then(prestacoes => {
                   Btu.findAll().then(btus => {
-                    res.render('orcamento/novo', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, ambientes: ambientes, prestacoes:prestacoes, btus:btus, sessao})
+                    res.render('orcamento/novo', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, ambientes: ambientes, prestacoes:prestacoes, btus:btus, sessao, errorMessage})
                   })
                 })
               })
@@ -221,6 +222,7 @@ router.get ('/admin/orcamentos/decisao/:id', (req, res) => {
 router.get ('/admin/orcamentos/decisao2/:id', (req, res) => {
   var id = req.params.id
   sessao = req.session.colaborador
+  const mensagem = req.query.mensagem; // Obter mensagem da URL
   Cliente.findByPk(id).then (cliente => {
     if (cliente != undefined) {
       Endereco.findAll().then(enderecos => {
@@ -232,7 +234,7 @@ router.get ('/admin/orcamentos/decisao2/:id', (req, res) => {
                   Prestacao.findAll().then(prestacoes => {
                     Btu.findAll().then(btus => {
                       Ambiente.findAll().then(ambientes => {
-                        res.render('orcamento/decisao2', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id,sessao})
+                        res.render('orcamento/decisao2', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id,sessao, mensagem })
                       })
                     })
                   })
@@ -281,6 +283,7 @@ router.get('/admin/orcamentos/editar/:id/:orcamento_id', expirar, (req, res) => 
   var id = req.params.id;
   var orcamento_id = req.params.orcamento_id; // Corrigi o typo aqui (de oid para orcamento_id)
   sessao = req.session.colaborador;
+  const errorMessage = req.query.error;
 
   Cliente.findByPk(id).then(cliente => {
     if (cliente != undefined) {
@@ -312,7 +315,8 @@ router.get('/admin/orcamentos/editar/:id/:orcamento_id', expirar, (req, res) => 
                                 sessao: sessao,
                                 orcamento_id: orcamento_id,
                                 pagamentos: pagamentos,
-                                recebimentos: recebimentos
+                                recebimentos: recebimentos,
+                                errorMessage
                               });
                             })
                             
@@ -339,6 +343,8 @@ router.get('/admin/orcamentos/pagamento/:id/:orcamento_id', expirar, (req, res) 
   var id = req.params.id;
   var orcamento_id = req.params.orcamento_id; // Corrigi o typo aqui (de oid para orcamento_id)
   sessao = req.session.colaborador;
+
+  const errorMessage = req.query.error;
 
   Cliente.findByPk(id).then(cliente => {
     if (cliente != undefined) {
@@ -370,7 +376,8 @@ router.get('/admin/orcamentos/pagamento/:id/:orcamento_id', expirar, (req, res) 
                                 sessao: sessao,
                                 orcamento_id: orcamento_id,
                                 pagamentos: pagamentos,
-                                recebimentos: recebimentos
+                                recebimentos: recebimentos, 
+                                errorMessage
                               });
                             })
                             

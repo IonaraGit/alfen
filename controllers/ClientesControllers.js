@@ -4,7 +4,8 @@ const router = express.Router();
 const chalk = require('chalk')
 
 const Cliente = require ('../models/Cliente')
-const Endereco = require ('../models/Endereco')
+const Endereco = require ('../models/Endereco');
+const { or, where } = require('sequelize');
 
 
 router.post ('/clientes/salvar', (req,res) => {
@@ -86,5 +87,57 @@ router.post ('/clientes/salvar', (req,res) => {
   });
   
 })
+
+router.post ('/clientes/atualizar', (req, res) => {
+  var id = req.body.id
+
+  var cpf = req.body.cpf;
+  var nome = req.body.nome.toUpperCase();
+  var rg = req.body.rg;
+  var celular = req.body.celular;
+  var telefone = req.body.telefone;
+  var email = req.body.email.toUpperCase();
+  var origem = req.body.origem.toUpperCase();
+
+  var logadouro = req.body.logadouro.toUpperCase();
+  var numero = req.body.numero;
+  var complemento = req.body.complemento.toUpperCase();
+  var cidade = req.body.cidade.toUpperCase();
+  var cep = req.body.cep;
+
+
+
+  Cliente.update ({
+    cpf: cpf,
+    nome: nome,
+    rg: rg,
+    celular: celular,
+    telefone: telefone,
+    email: email,
+    origenId: origem
+  }, {
+    where: {
+      id: id
+    }
+  }).then (() => {
+    Endereco.update ({
+      logadouro: logadouro,
+      numero: numero,
+      complemento: complemento,
+      cidade: cidade,
+      cep: cep
+    }, { 
+      where: {
+        clienteId: id
+      }
+    })
+    res.send ('ok, acho que alterou')
+  }).catch ((err) => {
+    res.send ('err')
+  })
+
+
+})
+
 
 module.exports = router

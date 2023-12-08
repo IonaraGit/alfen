@@ -63,6 +63,33 @@
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" id="nav-todos" role="tabpanel" aria-labelledby="nav-todos-tanav-todos">
+               <!-- Se houver uma mensagem, exibi-la -->
+              <% if (mensagem) { %>
+            
+                <div class="alert alert-success">
+                  <p><%= mensagem %></p>
+                </div>
+               
+                
+                <style>
+                  .alert-success {
+                    margin: auto;
+                    margin-top: 15px;
+                    height: 43px;
+                    text-align: center;
+                  
+                  }
+                
+              
+                </style>
+                <script>
+                  // Aguardar 5 segundos e recarregar a página
+                  setTimeout(function() {
+                    window.location.href = '/admin/orcamentos/decisao2/8';
+                  }, 3000);
+                </script>
+              <% } %>
+
             <div class="table">
               <table class="rtable table table-bordered mt-2">
                 <thead>
@@ -239,4 +266,4 @@
 </body>
   
 
-<%- include ('../../partials/conf_footer.ejs') %>
+

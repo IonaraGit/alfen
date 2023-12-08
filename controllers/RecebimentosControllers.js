@@ -26,6 +26,7 @@ router.post('/recebimento/salvar', (req, res) => {
   console.log(chalk.red.bold(`EMPRESA ID  ${empresaId}`));
   console.log(chalk.red.bold(`Orçamento ID  ${orcamentoId}`));
   console.log(chalk.red.bold(`Forma de pagamento ${pagamentoId}`));
+  console.log(chalk.red.bold(`EM ABERTO VINDO DO FRONT ${ em_aberto}`));
   
 
   console.log(chalk.red.bold(`Parcelado em ${parcelamento} vezes`));
@@ -44,12 +45,21 @@ router.post('/recebimento/salvar', (req, res) => {
 
  for (let i = 0; i < conta2; i ++) {
   resultadoC += parseFloat(em_aberto[i].replace(/\./g, '').replace(',', '.'));
+
+  var converteEmAberto =  parseFloat(em_aberto[i].replace(/\./g, '').replace(',', '.'))
+
+  console.log(chalk.red.bold(`VALOR convertido EM ABERTO ${converteEmAberto}`));
  }
 
  let recebea = 0;
 
+ let somaRecebimentos = 0
  for (let i = 0; i <  conta; i++) {
   let converte = parseFloat(valor[i].replace(/\./g, '').replace(',', '.'));
+
+  somaRecebimentos += converte
+
+ 
  
   console.log(chalk.red.bold(`VALOR convertido ${converte}`));
   console.log(chalk.green.bold(`VEZES DO I ${i}`));
@@ -58,19 +68,44 @@ router.post('/recebimento/salvar', (req, res) => {
 
  console.log(chalk.green.bold(`testando rs ${recebea}`))
 
-    recebimento.push (
-      Recebimento.create ({
-        valor: converte,
-        empresaId: empresaId [i],
-        orcamentoId: orcamentoId [i],
-        pagamentoId: pagamentoId [i],
-        prestacoes: parcelamento [i]
-      })
-    )
+ 
   }
   let resultadoFinal = resultadoC - recebea;
 
+  console.log(chalk.green.bold(`SOMA RECEBIDOS final: ${somaRecebimentos}`));
   console.log(chalk.green.bold(`Resultado final: ${resultadoFinal}`));
+
+  let msg = 'O valor recebido não pode ser maior que o saldo devedor';
+
+  if (somaRecebimentos > converteEmAberto) {
+    // Codificar a mensagem na URL
+    const encodedMsg = encodeURIComponent(msg);
+    // Redirecionar para a página de pagamento com a mensagem de erro
+    return res.redirect(`/admin/orcamentos/pagamento/${idCliente}/${orcamentoId}?error=${encodedMsg}`);
+  }else {
+    for (let i = 0; i <  conta; i++) {
+      let converte = parseFloat(valor[i].replace(/\./g, '').replace(',', '.'));
+     
+      console.log(chalk.red.bold(`VALOR convertido ${converte}`));
+      console.log(chalk.green.bold(`VEZES DO I ${i}`));
+    
+      recebea += converte;
+    
+     console.log(chalk.green.bold(`testando rs ${recebea}`))
+    
+        recebimento.push (
+          Recebimento.create ({
+            valor: converte,
+            empresaId: empresaId [i],
+            orcamentoId: orcamentoId [i],
+            pagamentoId: pagamentoId [i],
+            prestacoes: parcelamento [i]
+          })
+        )
+      }
+
+    
+  }
 
  Promise.all (recebimento)
  .then((rec) => {
@@ -88,11 +123,12 @@ router.post('/recebimento/salvar', (req, res) => {
       )
     )
   }
+
   return Promise.all (orcamento)
 })
 .then(() => {
   console.log ('ok,feitos')
-  res.redirect('/admin/orcamentos/pagamento/' + idCliente + '/' + orcamentoId)
+  res.redirect(`/admin/orcamentos/pagamento/${idCliente}/${orcamentoId}`);
 })
 .catch((error) => {
   console.log ('erro', error)

@@ -32,7 +32,9 @@
         <div class="tab-pane fade show active" id="dados-pessoais" role="tabpanel" aria-labelledby="v-pills-home-tab">
           <!-- INICIO DADOS PESSOAIS -->
             <div class="principal" style="height: 100vh; text-transform: uppercase;">
-              <form method="POST" action="">
+              <form method="POST" action="/clientes/atualizar">
+                <input type="hidden" value="<%=cliente.id%>" name="id">
+                
                 <div class="p-1" style="background-color: #e3e3e3;">
                   <div class="form-row">
                     <div class="form-group col-md-12">
@@ -43,7 +45,7 @@
                   <div class="form-row">
                     <div class="form-group col-md-6">
                       <label for="cpf" class="label-novo">CPF <span style="color: crimson;">*</span></label>
-                      <input type="text" class="form-control" name="cpf" id="cpf" value="<%= cliente.cpf%>" required>
+                      <input type="text" class="form-control" name="cpf" id="cpf" value="<%= cliente.cpf%>" onkeypress="$(this).mask('000.000.000-00');" required>
                     </div>
                     <div class="form-group col-md-6">
                       <label for="rg" class="label-novo">RG</label>
@@ -53,11 +55,11 @@
                   <div class="form-row">
                     <div class="form-group col-md-6">
                       <label for="celular" class="label-novo">Celular <span style="color: crimson;">*</span></label>
-                      <input type="text" class="form-control" name="celular" id="celular" value="<%= cliente.celular%>" required>
+                      <input type="text" class="form-control" name="celular" id="celular" value="<%= cliente.celular%>" onkeypress="$(this).mask('(00) 0 0000-0000');" required>
                     </div>
                     <div class="form-group col-md-6">
                       <label for="telefone" class="label-novo">Telefone</label>
-                      <input type="text" class="form-control" name="telefone" id="telefone" value="<%= cliente.telefone%>">
+                      <input type="text" class="form-control" name="telefone" id="telefone" value="<%= cliente.telefone%>" onkeypress="$(this).mask('(00) 0000-0000');">
                     </div>
                   </div>
                   <div class="form-group">
@@ -69,6 +71,8 @@
                     <select class="form-control" name="origem">
                       <% origens.forEach((origem) => { %>
                         <% if (origem.id == cliente.origenId) { %>
+                          <option value="<%= origem.id %>" selected><%= origem.descricao %></option>
+                        <% } else { %>
                           <option value="<%= origem.id %>"><%= origem.descricao %></option>
                         <% } %>
                       <% }) %>
@@ -100,7 +104,7 @@
                         </div>
                         <div class="form-group col-md-6">
                           <label for="cep" class="label-novo">CEP <span style="color: crimson;">*</span></label>
-                          <input type="text" class="form-control" name="cep" id="cep" value="<%= endereco.cep %>" required>
+                          <input type="text" class="form-control" name="cep" id="cep" value="<%= endereco.cep %>" onkeypress="$(this).mask('00000-000');" required>
                         </div>
                       </div>
                     <% } %>
@@ -115,12 +119,8 @@
                 
           
                 <div class="row">
-                  
-                  <div class="col mt-3">
-                    <a type="button"class="btn bg-secondary" style="width: 100%; color: aliceblue;" data-toggle="modal" data-target="#exampleModal"><i class="bi bi-calculator"></i> CALCULO RÁPIDO</a>
-                  </div>
-                  <div class="col mt-3">
-                    <button class="btn btn-success" style="width: 100%;">SALVAR ALTERAÇÕES</button>
+                  <div class="col mt-3" style="text-align: right;">
+                    <button class="btn btn-success">SALVAR ALTERAÇÕES</button>
                   </div>
                 </div>
           
@@ -138,153 +138,256 @@
       
     </div>
   </div>
-  
 
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Novo orçamento</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="cpf" class="label-novo">Comprimento <span style="color: crimson;">*</span></label>
-              <input type="number" class="form-control" name="comprimento" id="comprimento" required>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="cpf" class="label-novo">Largura <span style="color: crimson;">*</span></label>
-              <input type="number" class="form-control" name="largura" id="largura" required>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="cpf" class="label-novo">Altura <span style="color: crimson;">*</span></label>
-              <input type="number" class="form-control" name="altura" id="altura" required>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="cpf" class="label-novo">Fator isolamento <span style="color: crimson;">*</span></label>
-              <input type="number" class="form-control" name="largura" id="largura" required>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="cpf" class="label-novo">Qtd de pessoas <span style="color: crimson;">*</span></label>
-              <input type="number" class="form-control" name="pessoas" id="pessoas" required>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="cpf" class="label-novo">Fontes de calor<span style="color: crimson;">*</span></label>
-              <input type="number" class="form-control" name="largura" id="largura" required>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="cpf" class="label-novo">Sugestão de Btus<span style="color: crimson;">*</span></label>
-              <select id="selecaoBtus" style="display: none;" class="form-control">
-                <option value="7">7 BTUs</option>
-                <option value="9">9 BTUs</option>
-                <option value="12">12 BTUs</option>
-              </select>
-            </div>
-          </div>
-        
-        </div>
-        <div class="modal-footer">
-         <button type="button" class="btn btn-primary" onclick="calcularESelecionarBtus()">Calcular</button>
-         <button id="alterarBotao" class="btn btn-primary"  onclick="habilitarEdicao()"  style="display: none;">Prosseguir para orçamento</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-
-  
-  
 </body>
 
+<style>
+  .campo-invalido {
+    border-color: red;
+  }
+
+  .campo-valido {
+    border-color: green;
+  }
+
+  .campo-neutro {
+    border-color: aqua;
+  }
+</style>
+
+<!-- Inclua o link da biblioteca SweetAlert2 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const nomeInput = document.getElementById("nome")
+    const rgInput = document.getElementById("rg")
+    const cpfInput = document.getElementById("cpf");
+    const emailInput = document.getElementById("email");
+    const celularInput = document.getElementById("celular");
+    const telefoneInput = document.getElementById("telefone");
+    const logadouroInput = document.getElementById("logadouro")
+    const numeroInput = document.getElementById("numero")
+    const complementoInput = document.getElementById("complemento")
+    const cepInput = document.getElementById("cep");
+    const cidadeInput = document.getElementById("cidade");
 
-  
+    nomeInput.addEventListener("input", function() {
+      const nomeValue = nomeInput.value
 
-  function calcularESelecionarBtus() {
-    var largura = parseFloat(document.getElementById('largura').value);
-  
-    console.log(largura)
-    if (isNaN(largura)) {
-    alert('Por favor, preencha todos os campos antes de calcular.');
-    return;
-    }
-
-    // Realize os cálculos, por exemplo:
-    var resultado = largura * largura;
-    
-    // Obtenha o elemento select
-    var selecaoBtus = document.getElementById('selecaoBtus');
-  
-    // Calcule a diferença mínima e inicialize a variável para armazenar o valor mais próximo
-    var diferencaMinima = Infinity;
-    var opcaoSelecionada = null;
-  
-    // Percorra as opções do select
-    for (var i = 0; i < selecaoBtus.options.length; i++) {
-      var valorOpcao = parseFloat(selecaoBtus.options[i].value);
-      var diferenca = Math.abs(resultado - valorOpcao);
-  
-      // Verifique se a diferença é menor que a diferença mínima atual
-      if (diferenca < diferencaMinima) {
-        diferencaMinima = diferenca;
-        opcaoSelecionada = selecaoBtus.options[i];
+      // Adiciona ou remove as classes de acordo com a validação
+      if (nomeValue.length < 3) {
+        nomeInput.classList.remove("campo-valido");
+        nomeInput.classList.add("campo-invalido");
+      } else {
+        nomeInput.classList.remove("campo-invalido");
+        nomeInput.classList.add("campo-valido");
       }
-    }
-  
-    // Selecione a opção mais próxima
-    opcaoSelecionada.selected = true;
-    selecaoBtus.style.display = 'block'
-    alterarBotao.style.display = 'block';
-  }
-  
-  
-  //CALCULAR BTUS
-  function calcularOrcamento() {
-    var largura = parseFloat(document.getElementById('largura').value);
-  
-    // Realize os cálculos, por exemplo:
-    var teste = largura * largura;
-  
-     // Selecione o campo de entrada e o botão "Alterar"
-    var resultadoInput = document.getElementById('resultadoInput');
-    var alterarBotao = document.getElementById('alterarBotao');
-  
-    // Defina o valor do campo de entrada com o resultado
-    resultadoInput.value = 'Carga Térmica: ' + teste + ' BTUs';
-  
-    // Mostre o campo de entrada e o botão "Alterar"
-    resultadoInput.style.display = 'block';
-    alterarBotao.style.display = 'block';
-  }
-  
-  
-  </script>
-
-<script>
-  var botaoAdicionarServico = document.getElementById('adicionarServicoButton');
-  var camposServicoContainer = document.getElementById('campoServicoContainer'); // Use o ID correto do contêiner
-  
-  // Adicione um ouvinte de evento para o botão "Adicionar mais serviços"
-  botaoAdicionarServico.addEventListener('click', function () {
-    var novoCampoServico = document.getElementById('modeloCamposServico').cloneNode(true); // Clone o modelo
-  
-    novoCampoServico.style.display = 'block'; // Tornar o novo campo de serviço visível
-  
-    // Adicione um ouvinte de evento para o botão "X" do novo campo de serviço
-    var botaoRemover = novoCampoServico.querySelector('.botao-remover-servico');
-    botaoRemover.addEventListener('click', function () {
-      camposServicoContainer.removeChild(novoCampoServico); // Remova o campo de serviço
     });
-  
-    camposServicoContainer.appendChild(novoCampoServico); // Adicione o novo campo de serviço ao contêiner
+
+    cidadeInput.addEventListener("input", function() {
+      const cidadeValue = cidadeInput.value
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (cidadeValue.length < 2) {
+        cidadeInput.classList.remove("campo-valido");
+        cidadeInput.classList.add("campo-invalido");
+      } else {
+        cidadeInput.classList.remove("campo-invalido");
+        cidadeInput.classList.add("campo-valido");
+      }
+    });
+
+
+    numeroInput.addEventListener("input", function() {
+      const numeroValue = numeroInput.value
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (numeroValue.length < 1) {
+        numeroInput.classList.remove("campo-valido");
+        numeroInput.classList.add("campo-invalido");
+      } else {
+        numeroInput.classList.remove("campo-invalido");
+        numeroInput.classList.add("campo-valido");
+      }
+    });
+
+    complementoInput.addEventListener("input", function() {
+      const complementoValue = complementoInput.value
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (complementoValue.length < 1) {
+        complementoInput.classList.remove("campo-valido");
+        complementoInput.classList.add("campo-invalido");
+      } else {
+        complementoInput.classList.remove("campo-invalido");
+        complementoInput.classList.add("campo-valido");
+      }
+    });
+
+    logadouroInput.addEventListener("input", function() {
+      const logadouroValue = logadouroInput.value
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (logadouroValue.length < 3) {
+        logadouroInput.classList.remove("campo-valido");
+        logadouroInput.classList.add("campo-invalido");
+      } else {
+        logadouroInput.classList.remove("campo-invalido");
+        logadouroInput.classList.add("campo-valido");
+      }
+    });
+
+    rgInput.addEventListener("input", function() {
+      const rgValue = rgInput.value
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (rgValue.length < 3) {
+        rgInput.classList.remove("campo-valido");
+        rgInput.classList.add("campo-invalido");
+      } else {
+        rgInput.classList.remove("campo-invalido");
+        rgInput.classList.add("campo-valido");
+      }
+    });
+
+    emailInput.addEventListener("input", function() {
+    const emailValue = emailInput.value;
+
+    // Adiciona ou remove as classes de acordo com a validação
+    if (validarEmail(emailValue)) {
+      emailInput.classList.remove("campo-invalido");
+      emailInput.classList.add("campo-valido");
+    } else {
+      emailInput.classList.remove("campo-valido");
+      emailInput.classList.add("campo-invalido");
+    }
   });
-  
-  </script>
+    
+    cpfInput.addEventListener("input", function() {
+      const cpfValue = cpfInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (validarCPF(cpfValue)) {
+        cpfInput.classList.remove("campo-invalido");
+        cpfInput.classList.add("campo-valido");
+      } else {
+        cpfInput.classList.remove("campo-valido");
+        cpfInput.classList.add("campo-invalido");
+      }
+    });
+
+    celularInput.addEventListener("input", function() {
+      const celularValue = celularInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (celularValue.length < 11) {
+        celularInput.classList.remove("campo-valido");
+        celularInput.classList.add("campo-invalido");
+      } else {
+        celularInput.classList.remove("campo-invalido");
+        celularInput.classList.add("campo-valido");
+      }
+    });
+
+    telefoneInput.addEventListener("input", function() {
+      const telefoneValue = telefoneInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (telefoneValue.length < 10) {
+        telefoneInput.classList.remove("campo-valido");
+        telefoneInput.classList.add("campo-invalido");
+      } else {
+        telefoneInput.classList.remove("campo-invalido");
+        telefoneInput.classList.add("campo-valido");
+      }
+    });
+
+    cepInput.addEventListener("input", function() {
+      const cepValue = cepInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+      // Adiciona ou remove as classes de acordo com a validação
+      if (cepValue.length < 8) {
+        cepInput.classList.remove("campo-valido");
+        cepInput.classList.add("campo-invalido");
+      } else {
+        cepInput.classList.remove("campo-invalido");
+        cepInput.classList.add("campo-valido");
+      }
+    });
+    
+    document.querySelector("form").addEventListener("submit", function(event) {
+      const cpfValue = cpfInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+      const celularValue = celularInput.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+      // Verifica se todos os campos estão corretos
+      if (!validarCPF(cpfValue) || celularValue.length < 11) {
+        event.preventDefault();
+
+        // Utiliza SweetAlert2 para exibir um alerta mais bonito
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Confira os campos digitados.',
+        });
+      }
+    });
+
+  function validarEmail(email) {
+    // Utilizando uma expressão regular para validar o formato do e-mail
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regexEmail.test(email);
+  }
+
+
+  function validarCPF(cpf) {
+  // Remove caracteres não numéricos
+  cpf = cpf.replace(/\D/g, '');
+
+  // Verifica se o CPF tem 11 dígitos
+  if (cpf.length !== 11) {
+    return false;
+  }
+
+  // Verifica se todos os dígitos são iguais (caso contrário, é um CPF inválido)
+  if (/^(\d)\1+$/.test(cpf)) {
+    return false;
+  }
+
+  // Calcula o primeiro dígito verificador
+  let sum = 0;
+  for (let i = 10; i > 1; i--) {
+    sum += parseInt(cpf.charAt(10 - i)) * i;
+  }
+  let mod = (sum * 10) % 11;
+  let digit1 = mod === 10 || mod === 11 ? 0 : mod;
+
+  // Verifica se o primeiro dígito verificador é igual ao fornecido no CPF
+  if (parseInt(cpf.charAt(9)) !== digit1) {
+    return false;
+  }
+
+  // Calcula o segundo dígito verificador
+  sum = 0;
+  for (let i = 11; i > 1; i--) {
+    sum += parseInt(cpf.charAt(11 - i)) * i;
+  }
+  mod = (sum * 10) % 11;
+  let digit2 = mod === 10 || mod === 11 ? 0 : mod;
+
+  // Verifica se o segundo dígito verificador é igual ao fornecido no CPF
+  if (parseInt(cpf.charAt(10)) !== digit2) {
+    return false;
+  }
+
+  // Se passou por todas as verificações, o CPF é válido
+  return true;
+}
+
+  });
+</script>
+
+
+
 
 <%- include ('../../partials/conf_footer.ejs') %>

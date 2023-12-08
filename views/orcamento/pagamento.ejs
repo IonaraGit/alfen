@@ -149,8 +149,8 @@
                     <label for="observacoes" class="label-novo">OBSERVAÇÕES <span style="color: crimson;">*</span></label>
                     <input class="form-control" rows="1" name="observacao" value="<%= orcamento.observacao %>" disabled></input>
                   </div>
-                
-                
+       
+                  
           
               <% recebimentos.forEach (recebimento => { %>
                 <% if (recebimento.orcamentoId == orcamento.id) { %>
@@ -198,8 +198,16 @@
                   
                   <% } %>
               <% }) %>
+<!-- Botão para abrir o modal -->
+<button id="openModalBtn" style="display: none;">Abrir Modal</button>
 
-             
+<!-- Estrutura do modal -->
+<div id="errorModal" class="modal">
+  <div class="modal-content">
+    <p id="errorMessage"></p>
+    <button class="btn btn-ok" onclick="fecharEMRecarregar()">Ok</button>
+  </div>
+</div>
                
               <form method="POST" action="/recebimento/salvar" style="width: -webkit-fill-available; margin: 0px 15px;">
                 <input type="hidden" name="id_cliente" value="<%=cliente.id%>">
@@ -303,7 +311,36 @@
 
 </body>
 
+<script>
+  // Função para abrir o modal
+  function abrirModal() {
+    document.getElementById('errorModal').style.display = 'block';
+  }
 
+  // Função para fechar o modal e recarregar a página
+  function fecharEMRecarregar() {
+    document.getElementById('errorModal').style.display = 'none';
+    // Recarregar a página após um pequeno atraso para permitir o fechamento do modal
+    setTimeout(function () {
+      location.href = '/admin/orcamentos/pagamento/<%=orcamento.clienteId%>/<%=orcamento.id%>';
+    }, 100);
+  }
+
+  // Verificar se há uma mensagem de erro e exibi-la no modal
+  const errorMessage = '<%= errorMessage %>'; // Substitua pelo método correto de obter a mensagem no seu template engine
+  if (errorMessage) {
+    document.getElementById('errorMessage').innerText = errorMessage;
+    abrirModal();
+  }
+
+  // Se preferir usar jQuery para abrir o modal
+  // $(document).ready(function() {
+  //   abrirModal();
+  // });
+
+  // Ou abrir o modal ao carregar a página
+  // window.onload = abrirModal;
+</script>
 
 <!-- Inclua as bibliotecas necessárias -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>

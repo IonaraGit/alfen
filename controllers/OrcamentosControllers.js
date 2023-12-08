@@ -28,8 +28,10 @@ router.post('/orcamento/salvar', (req, res) => {
   const para = observacao.length;
  
 
+  let msg = 'Salvo com sucesso';
 
   console.log(chalk.red.bold(`VALOR ${valor}`));
+  const encodedMsg = encodeURIComponent(msg);
   
  var converte = []
   const orcamento = [];
@@ -52,7 +54,8 @@ router.post('/orcamento/salvar', (req, res) => {
         colaboradoreId: colaboradoreId[i],
         clienteId: clienteId[i],
         empresaId: empresaId[i],
-        valor_recebido: valor_recebido
+        valor_recebido: valor_recebido,
+        valor_aberto: converte
       })
     );
   }
@@ -60,7 +63,9 @@ router.post('/orcamento/salvar', (req, res) => {
   Promise.all(orcamento)
     .then(() => {
       console.log('Orçamentos criados com sucesso.');
-      res.redirect ('/admin/orcamentos/decisao/' + id)
+
+
+      res.redirect (`/admin/orcamentos/decisao2/${id}?mensagem=${encodedMsg}`)
     })
     .catch((error) => {
       console.error('Erro ao criar os orçamentos:', error);
@@ -156,6 +161,91 @@ router.post ('/orcamento/agendamento/editar/salvar', (req, res) => {
   })
 
 })
+
+router.post('/orcamento/atualizar', async (req, res) => {
+  try {
+    const {
+      id,
+      quantidade,
+      prestacao,
+      btus,
+      marca,
+      modelo,
+      ambiente,
+      valor,
+      observacao,
+      orcamentoId,
+      valor_aberto
+    } = req.body;
+
+   
+
+    console.log (chalk.blue.bold ('valor que esta em aberto ', valor_aberto ))
+
+    const valorAlterado = parseFloat(valor.replace(/\./g, '').replace(',', '.'));
+
+    let msg = 'O valor total do orçamento não pode ser menor que o valor já recebido!';
+
+    if (valorAlterado < valor_aberto) {
+      // Codificar a mensagem na URL
+      const encodedMsg = encodeURIComponent(msg);
+      res.redirect(`/admin/orcamentos/editar/${id}/${orcamentoId}?error=${encodedMsg}`);
+      
+    } else {
+      
+       // Obtenha o orçamento atual para calcular a diferença no valor
+      const orcamentoAtual = await Orcamento.findByPk(orcamentoId);
+
+      if (!orcamentoAtual) {
+        return res.send("Orçamento não encontrado");
+      }
+
+      // Calcule a diferença no valor
+      const diferencaValor = valorAlterado - orcamentoAtual.valor;
+      // Atualize o orçamento
+      await Orcamento.update({
+        qtd: quantidade,
+        valor: valorAlterado,
+        observacao: observacao,
+        marcaId: marca,
+        modeloId: modelo,
+        prestacoId: prestacao,
+        ambienteId: ambiente,
+        btuId: btus
+      }, {
+        where: {
+          id: orcamentoId
+        }
+      });
+
+        // Atualize o valor em aberto considerando a diferença
+      const novoValorAberto = orcamentoAtual.valor_aberto + diferencaValor;
+      await Orcamento.update({
+        valor_aberto: novoValorAberto
+      }, {
+        where: {
+          id: orcamentoId
+        }
+      });
+      res.send("Orçamento atualizado com sucesso!");
+    }
+
+   
+
+  
+
+  
+
+    // Atualize o valor em aberto no banco de dados
+   
+
+    
+  } catch (err) {
+    console.error("Erro:", err);
+    res.status(500).send("Erro ao atualizar o orçamento");
+  }
+});
+
 
 
 module.exports = router

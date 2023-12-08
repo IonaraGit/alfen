@@ -58,12 +58,30 @@
           <% }) %>   
           
           <hr>
-         
 
-          <form method="POST" action="/recebimento/salvar" >
+<!-- Botão para abrir o modal -->
+<button id="openModalBtn" style="display: none;">Abrir Modal</button>
+
+<!-- Estrutura do modal -->
+<div id="errorModal" class="modal">
+  <div class="modal-content">
+    <p id="errorMessage"></p>
+    <button class="btn btn-ok" onclick="fecharEMRecarregar()">Ok</button>
+  </div>
+</div>
+
+
+
+
+
+   
+
+          <form method="POST" action="/orcamento/atualizar" >
             <input type="hidden" value="<%= sessao.id %>" name="colaboradoreId"/>
             <input type="hidden" value="<%= cliente.id %>" name="clienteId"/>
             <input type="hidden" value="<%= cliente.id %>" name="id"/>
+            <input type="hidden" value="<%= orcamento.id %>" name="orcamentoId"/>
+            <input type="hidden" value="<%= orcamento.valor_aberto %>" name="valor_aberto">
             
             
            
@@ -151,12 +169,7 @@
                 <input class="form-control" rows="1" name="observacao" value="<%= orcamento.observacao %>"></input>
               </div>
                
-             
-              
-              
-              
-              
-              
+  
 
               <hr>
                   
@@ -165,9 +178,7 @@
         
            
            
-            <div id="campoServicoContainer">
-            </div>
-
+         
             <hr>
             <div class="mt-3">
               <div class="form-row">
@@ -179,50 +190,8 @@
               </div>
             </div>
           </form>
-
-          <div id="modeloCamposServico" style="display: none;">
-            <input type="hidden" value="<%= sessao.id %>" name="colaboradoreId"/>
-            <input type="hidden" value="<%= cliente.id %>" name="clienteId"/>
-            <input type="hidden" value="<%= cliente.id %>" name="id"/>
-            <input type="hidden" value="<%= cliente.empresaId %>" name="empresaId"/>
-            <input type="hidden" value="<%= orcamento.id %>" name="orcamentoId"/>
-            <hr>
-           
-            <div class="row">
-              <div class="form-group col-lg-4">
-                <label for="valor" class="label-novo">VALOR RECEBIDO</label>
-                <input type="text" class="form-control" name="valor_recebido" id="valor_recebido" onkeypress="$(this).mask(' ###.###.##0,00', {reverse: true});" placeholder="0,00">
-              </div>              
-            
-              <div class="form-group col-lg-3">
-                <label for="valor" class="label-novo">FORMA DE PAGAMENTO</label>
-                <select id="pagamento" class="form-control" name="pagamento" onchange="atualizarCampos()" required>
-                  <option value="" data-parcelado="" disabled selected hidden>Selecione uma opção</option>
-                  <% var verifica = false %>
-                  <% pagamentos.forEach(pagamento => { %>
-                    <option value="<%= pagamento.id %>" data-parcelado="<%= pagamento.parcelado %>"><%= pagamento.descricao %></option>
-                  <% }) %>
-                </select>
-              </div>
-
-         
-              <div class="form-group col-lg-4" id="campoParcelamento" style="display: none;">
-                <label for="parcelamento" class="label-novo">PARCELAMENTO <span style="color: crimson;">*</span></label>
-                <input type="text" inputmode="numeric" class="form-control" name="parcelamento" id="parcelamento" required pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');" readonly>
-              </div>
-              
-
-              <!-- Campo de preenchimento desabilitado -->
-              <div class="form-group col-lg-4" id="campoPreenchimento" style="display: block;">
-                <label for="a_vista" class="label-novo">PARCELAMENTO <span style="color: crimson;">*</span></label>
-                <input type="text" class="form-control" readonly disabled>
-              </div>
+      
           
-              <div class=" form-group col-lg-1 m-auto text-center">
-                <button class="btn-danger botao-remover-servico rounded-circle"><i class="bi bi-x-lg"></i></button>
-              </div>
-            </div>
-          </div>
 
 
         </div>
@@ -235,59 +204,35 @@
 
 
 
-<!-- Inclua as bibliotecas necessárias -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.maskmoney/3.0.2/jquery.maskmoney.min.js"></script>
-
 <script>
-  var botaoAdicionarServico = document.getElementById('adicionarServicoButton');
-  var camposServicoContainer = document.getElementById('campoServicoContainer');
-
-  botaoAdicionarServico.addEventListener('click', function () {
-    var novoCampoServico = document.getElementById('modeloCamposServico').cloneNode(true);
-    novoCampoServico.style.display = 'block';
-
-    var botaoRemover = novoCampoServico.querySelector('.botao-remover-servico');
-    botaoRemover.addEventListener('click', function () {
-      camposServicoContainer.removeChild(novoCampoServico);
-    });
-
-    camposServicoContainer.appendChild(novoCampoServico);
-
-    // Adiciona o ouvinte de evento para o novo campo
-    var novoCampoPagamento = novoCampoServico.querySelector('#pagamento');
-    novoCampoPagamento.addEventListener('change', function () {
-      atualizarCampos(novoCampoServico);
-    });
-  });
-
-  function atualizarCampos(campoServico) {
-    var select = campoServico.querySelector('#pagamento');
-    var selectedOption = select.options[select.selectedIndex];
-    var verifica = selectedOption.getAttribute('data-parcelado');
-    var campoPreenchimento = campoServico.querySelector('#campoPreenchimento');
-    var campoParcelamento = campoServico.querySelector('#campoParcelamento');
-    var qtdParcelas = campoServico.querySelector('#parcelamento');
-
-    campoParcelamento.style.display = 'block';
-    campoPreenchimento.style.display = 'none';
-
-    // Define o campo como editável apenas se a forma de pagamento permitir parcelamento
-    if (verifica === 'true') {
-      qtdParcelas.readOnly = false;
-    } else {
-      qtdParcelas.readOnly = true;
-      qtdParcelas.value = '1';
-
-      // Defina o valor '1' se débito for selecionado
-      if (selectedOption.value === 'debito') {
-        qtdParcelas.value = '1';
-      }
-    }
+  // Função para abrir o modal
+  function abrirModal() {
+    document.getElementById('errorModal').style.display = 'block';
   }
+
+  // Função para fechar o modal e recarregar a página
+  function fecharEMRecarregar() {
+    document.getElementById('errorModal').style.display = 'none';
+    // Recarregar a página após um pequeno atraso para permitir o fechamento do modal
+    setTimeout(function () {
+      location.href = '/admin/orcamentos/editar/<%=orcamento.clienteId%>/<%=orcamento.id%>';
+    }, 100);
+  }
+
+  // Verificar se há uma mensagem de erro e exibi-la no modal
+  const errorMessage = '<%= errorMessage %>'; // Substitua pelo método correto de obter a mensagem no seu template engine
+  if (errorMessage) {
+    document.getElementById('errorMessage').innerText = errorMessage;
+    abrirModal();
+  }
+
+  // Se preferir usar jQuery para abrir o modal
+  // $(document).ready(function() {
+  //   abrirModal();
+  // });
+
+  // Ou abrir o modal ao carregar a página
+  // window.onload = abrirModal;
 </script>
-
-
-
 
 <%- include ('../../partials/conf_footer.ejs') %>
