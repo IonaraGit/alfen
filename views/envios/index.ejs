@@ -1,0 +1,242 @@
+<%- include ('../../partials/conf_header.ejs') %>
+<%- include ('../../partials/header_sistema.ejs') %>
+
+<body>
+  <div class="row">
+    <div class="col-md-2 lateral">
+      <ul class="lateral-ul">
+        <li class="lateral-li">
+          <a href="/admin/cliente/detalhes/<%= cliente.id %>">
+            Dados Pessoais
+          </a>
+        </li>
+        <li class="lateral-li">
+          <a href="/admin/orcamento/novo/<%= cliente.id %>">
+            Novo Orçamento
+          </a>
+        </li>
+        <li class="lateral-li">
+          <a href="/admin/orcamentos/decisao2/<%= cliente.id %>">
+            Orçamentos Cadastrados
+          </a>
+        </li>
+        <li class="lateral-li">
+          <a href="/admin/orcamentos/prosseguir/<%= cliente.id %>">
+            Agendamentos
+          </a>
+        </li>
+        <li class="lateral-li" style="background-color: #b8b8c0">
+          <a href="/admin/orcamentos/envios/<%= cliente.id %>">
+            Enviar Orçamentos
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-10">
+      <form action="/orcamento/envio/pdf" method="post" id="orcamentoForm">
+        <div class="principal">
+          <div class="mt-3">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="nome" class="label-novo">Nome <span style="color: crimson;">*</span></label>
+                <input type="text" class="form-control" name="nome" id="nome" value="<%= cliente.nome%>" readonly>
+              </div>
+            </div>
+        
+            <% enderecos.forEach (endereco => { %>
+              <% if (endereco.clienteId === cliente.id) { %>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="logadouro" class="label-novo">Logadouro <span style="color: crimson;">*</span></label>
+                    <input type="text" class="form-control" name="logadouro" id="logadouro" value="<%= endereco.logadouro %>" readonly>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="numero" class="label-novo">N° <span style="color: crimson;">*</span></label>
+                    <input type="text" class="form-control" name="numero" id="numero" value="<%= endereco.numero %>" readonly>
+                  </div>
+                </div>
+              <% } %> 
+            <% }) %>  
+      
+          </div>
+          
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-item nav-link active" id="nav-todos-tab" data-toggle="tab" href="#nav-todos" role="tab" aria-controls="nav-todos" aria-selected="false">Todos</a>
+              <a class="nav-item nav-link" id="nav-em-aberto-tab" data-toggle="tab" href="#nav-em-aberto" role="tab" aria-controls="nav-em-aberto" aria-selected="true">Em aberto</a>
+              <a class="nav-item nav-link" id="nav-finalizado-tab" data-toggle="tab" href="#nav-finalizado" role="tab" aria-controls="nav-finalizado" aria-selected="false">Finalizados</a>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-todos" role="tabpanel" aria-labelledby="nav-todos-tanav-todos">
+              
+              <div class="table">
+                <table class="rtable table table-bordered mt-2">
+                  <thead>
+                    <tr class="ajuste-tr">
+                  
+                      <th >Quantidade</th>
+                      <th>Serviço Prestado</th>
+                      <th>BTUS</th>
+                      <th>Marca</th>
+                      <th>Modelo</th>
+                      <th>Ambiente</th>
+                      <th>Observações</th>
+                      <th>Valor total</th>
+                      <th>Valor recebido</th>
+                      <th>Valor em aberto</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% var soma = 0%>
+                    <% var somaVr = 0%>
+                    <% orcamentos.forEach((orcamento) => { %>
+                      <% if (cliente.id == orcamento.clienteId)  { %>
+                        
+                        <tr class="ajuste-tr">
+                          
+                          <td data-title="QTD:"><%= orcamento.qtd %>  </td>
+                          <% prestacoes.forEach((prestacao) => { %>
+                            <% if (prestacao.id == orcamento.prestacoId) { %>
+                              <td data-title="SERVIÇO:"><%= prestacao.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% btus.forEach((btu) => { %>
+                            <% if (btu.id == orcamento.btuId) { %>
+                              <td data-title="BTUS:"><%= btu.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% marcas.forEach((marca) => { %>
+                            <% if (marca.id == orcamento.marcaId) { %>
+                              <td data-title="MARCA:"><%= marca.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% modelos.forEach((modelo) => { %>
+                            <% if (modelo.id == orcamento.modeloId) { %>
+                              <td data-title="MODELO:"><%= modelo.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% ambientes.forEach((ambiente) => { %>
+                            <% if (ambiente.id == orcamento.ambienteId) { %>
+                              <td data-title="AMBIENTE:"><%= ambiente.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <td data-title="OBS:"><%= orcamento.observacao %></td>
+                          <td data-title="VALOR TOTAL:">R$: <%= orcamento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                          <% soma += parseFloat(orcamento.valor.toString().replace(',', '.')) || 0 %> 
+                          <td data-title="VALOR RECEBIDO:">R$: <%= orcamento.valor_recebido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                          <% somaVr += parseFloat(orcamento.valor_recebido.toString().replace(',', '.')) || 0 %> 
+                          <td data-title="VALOR EM ABERTO:">R$: <%= orcamento.valor_aberto.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></td>
+                          <% somaVr += parseFloat(orcamento.valor_recebido.toString().replace(',', '.')) || 0 %> 
+                          <td data-title="AÇÕES:" >
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="<%= orcamento.id %>" name="orcamentoCheck">
+                            </div>
+                          </td>
+                          
+                          
+                          
+                          
+                          
+                        </tr>
+                      
+                        
+                      <% } %>
+                    <% }) %>
+                  </tbody>
+                </table>
+              
+              
+            
+              </div>
+            </div>
+            <div class="tab-pane fade" id="nav-em-aberto" role="tabpanel" aria-labelledby="nav-em-aberto-tab">
+              565
+            </div>
+            <div class="tab-pane fade" id="nav-finalizado" role="tabpanel" aria-labelledby="nav-finalizado-tab">
+              <div>
+                <table class="table table-bordered mt-2">
+                  <thead>
+                    <tr>
+                      <th>Quantidade</th>
+                      <th>Serviço Prestado</th>
+                      <th>BTUS</th>
+                      <th>Marca</th>
+                      <th>Modelo</th>
+                      <th>Ambiente</th>
+                      <th>Observações</th>
+                      <th>Data de Finalização</th>
+                      <th>Responsável</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% orcamentos.forEach((orcamento) => { %>
+                      <% if ((cliente.id == orcamento.clienteId) && (orcamento.contratado == 1)) { %>
+                        <tr>
+                          <td><%= orcamento.qtd %></td>
+                          <% prestacoes.forEach((prestacao) => { %>
+                            <% if (prestacao.id == orcamento.prestacoId) { %>
+                              <td><%= prestacao.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% btus.forEach((btu) => { %>
+                            <% if (btu.id == orcamento.btuId) { %>
+                              <td><%= btu.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% marcas.forEach((marca) => { %>
+                            <% if (marca.id == orcamento.marcaId) { %>
+                              <td><%= marca.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% modelos.forEach((modelo) => { %>
+                            <% if (modelo.id == orcamento.modeloId) { %>
+                              <td><%= modelo.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <% ambientes.forEach((ambiente) => { %>
+                            <% if (ambiente.id == orcamento.ambienteId) { %>
+                              <td><%= ambiente.descricao %></td>
+                            <% } %>
+                          <% }) %>
+                          <td><%= orcamento.observacao %></td>
+                          <td><%= new Date(orcamento.updatedAt).toLocaleDateString('pt-BR') %></td>
+                          <% colaboradores.forEach((colaborador) => { %>
+                            <% if (colaborador.id == orcamento.colaboradoreId) { %>
+                              <td><%= colaborador.nome %></td>
+                            <% } %>
+                          <% }) %>
+                        </tr>
+                      <% } %>
+                    <% }) %>
+                  </tbody>
+                </table>
+                
+      
+              </div>
+            </div>
+          
+          </div>
+        
+          
+          <div class="row" style="justify-content: right;">
+            <div class="col-md-3 mt-1">
+              
+              <button class="btn btn-info btn-block" type="submit">
+                Enviar E-mail
+             </button>
+            
+            </div>
+            
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+</body>
+
+

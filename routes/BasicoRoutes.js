@@ -557,4 +557,43 @@ router.get('/alterarsenha', (req, res) => {
 /*** FIM LOGIN */
 
 
+/* INICIO ENVIOS */
+
+
+router.get ('/admin/orcamentos/envios/:id', (req, res) => {
+  var id = req.params.id
+  sessao = req.session.colaborador
+  const mensagem = req.query.mensagem; // Obter mensagem da URL
+  Cliente.findByPk(id).then (cliente => {
+    if (cliente != undefined) {
+      Endereco.findAll().then(enderecos => {
+        Origem.findAll().then(origens => {
+          Marca.findAll().then(marcas => {
+            Modelo.findAll().then(modelos => {
+              Orcamento.findAll().then(orcamentos => {
+                Colaborador.findAll().then(colaboradores => {
+                  Prestacao.findAll().then(prestacoes => {
+                    Btu.findAll().then(btus => {
+                      Ambiente.findAll().then(ambientes => {
+                        res.render('envios/index', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id,sessao, mensagem })
+                      })
+                    })
+                  })
+                })
+              })
+              
+            })
+          })
+         
+        })
+      })
+    } else {
+      res.send ('erro')
+    } 
+  })
+})
+
+/*** FIM ENVIOS */
+
+
 module.exports = router

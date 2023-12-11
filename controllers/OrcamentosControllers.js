@@ -4,7 +4,12 @@ const router = express.Router();
 const chalk = require('chalk')
 
 const Orcamento = require ('../models/Orcamento')
-const Agenda = require ('../models/Agenda')
+const Agenda = require ('../models/Agenda');
+const Cliente = require('../models/Cliente');
+
+const nodemailer = require ('nodemailer')
+const fs = require('fs');
+const PDFDocument = require('pdfkit');
 
 router.post('/orcamento/salvar', (req, res) => {
 
@@ -20,8 +25,7 @@ router.post('/orcamento/salvar', (req, res) => {
   var colaboradoreId = Array.isArray(req.body.colaboradoreId) ? req.body.colaboradoreId : [req.body.colaboradoreId];
   var clienteId = Array.isArray(req.body.clienteId) ? req.body.clienteId : [req.body.clienteId];
   var empresaId = Array.isArray(req.body.empresaId) ? req.body.empresaId : [req.body.empresaId];
-  var contratado = false;
-  var finalizado = false;
+  var status = 0;
   var valor_recebido = 0;
 
   const conta = quantidade.length;
@@ -49,8 +53,7 @@ router.post('/orcamento/salvar', (req, res) => {
         modeloId: modelo[i],
         ambienteId: ambiente[i],
         prestacoId: prestacao[i],
-        contratado: contratado,
-        finalizado: finalizado,
+        status: status,
         colaboradoreId: colaboradoreId[i],
         clienteId: clienteId[i],
         empresaId: empresaId[i],
@@ -115,7 +118,7 @@ router.post ('/orcamento/agendamento/salvar', (req, res) => {
       for (let i = 0; i < ag.length; i++) {
         orcamento.push (
           Orcamento.update (
-            {contratado: true},
+            {status: 1},
             {where: { id: orcamentoId}}
           )
         )
@@ -245,6 +248,74 @@ router.post('/orcamento/atualizar', async (req, res) => {
     res.status(500).send("Erro ao atualizar o orçamento");
   }
 });
+
+
+router.post('/orcamento/envio/pdf', (req, res) => {
+
+  const orcamentoIds = req.body.orcamentoCheck;
+
+  // Faça o que for necessário com os IDs no backend
+  console.log('IDs dos Orçamentos:', orcamentoIds);
+
+
+
+  Orcamento.findAll({
+    include: [
+      {
+        model: Cliente,
+      },
+    ],
+  }).then(orcamentos => {
+    Cliente.findAll().then(clientes => {
+
+      orcamentos.forEach(orcamento => {
+        if (orcamentoIds.includes(orcamento.id.toString())) {
+          clientes.forEach(cliente => {
+            if (cliente.id == orcamento.clienteId) {
+              console.log(chalk.red.bold('Aqui foi ' + orcamento.id +' o cliente é: ' + orcamento.clienteId + ' e o e-mail é: ' + cliente.email));
+
+              var conteudo = ` ID ORÇAMANTO = ${orcamento.id}`
+
+              
+
+            }
+          })
+
+          
+        }
+      });
+
+    })
+    
+    const transporter = nodemailer.createTransport({
+      service: 'hotmail',
+      auth:{
+        user: 'ionara_002@hotmail.com',
+        pass: 'caixa2103'
+      }
+    })
+              
+    const emailop ={
+      from: 'ionara_002@hotmail.com',
+      to: cliente.email,
+      subject: 'TESTE ORÇAMENTO',
+      text: conteudo
+    }
+    
+    transporter.sendMail(emailop, (err, info) => {
+      if (err) {
+        console.error('Erro ao enviar o e-mail:', err);
+      } else {
+        console.log('E-mail enviado:', info.response);
+      }
+    })
+
+    res.send ('ok')
+  });
+});
+
+
+
 
 
 

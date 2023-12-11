@@ -30,8 +30,7 @@ const Orcamento = connection.define('orcamentos', {
     type: Sequelize.STRING,
     allowNull: false
   },
- 
-  finalizado: {
+  status: {
     type: Sequelize.INTEGER,
     allowNull: true
   }

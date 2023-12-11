@@ -25,6 +25,11 @@
             Agendamentos
           </a>
         </li>
+        <li class="lateral-li">
+          <a href="/admin/orcamentos/envios/<%= cliente.id %>">
+            Enviar Orçamentos
+          </a>
+        </li>
       </ul>
     </div>
     <div class="col-md-10">
@@ -251,9 +256,9 @@
             <div class="tab-pane" id="nav-nao-agendados" role="tabpanel" aria-labelledby="nav-nao-agendados-tab">
               <div class="row">
 
-                <% agendas.forEach ((agenda) => { %>
+                
                   <% orcamentos.forEach((orcamento) => { %>
-                      <% if ((orcamento.clienteId == cliente.id) && (agenda.orcamentoId =! orcamento.id))  { %>
+                      <% if ((orcamento.clienteId == cliente.id) && (orcamento.status == 0))  { %>
                         <form method="post" action="/orcamento/agendamento/salvar" style="width: 100vw;">
                           <input type="hidden" class="form-control" name="id" id="id" value="<%= cliente.id%>" readonly>
                           <input type="hidden" class="form-control" name="empresa" id="empresa" value="<%= cliente.empresaId %>" readonly>
@@ -342,11 +347,10 @@
                           </table>
     
                       </form>
-                      <% }%>
+                      <% } %>
                     <% }) %>
                     
-                  <% }) %>
-                  
+                                   
               </div> 
             </div>
 

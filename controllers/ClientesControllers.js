@@ -131,7 +131,7 @@ router.post ('/clientes/atualizar', (req, res) => {
         clienteId: id
       }
     })
-    res.send ('ok, acho que alterou')
+    res.redirect ('/admin/cliente/detalhes/' + id)
   }).catch ((err) => {
     res.send ('err')
   })
