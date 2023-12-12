@@ -6,10 +6,19 @@ const chalk = require('chalk')
 const Orcamento = require ('../models/Orcamento')
 const Agenda = require ('../models/Agenda');
 const Cliente = require('../models/Cliente');
+const Prestacao = require('../models/Prestacao');
+const Btu = require ('../models/Btu');
+const Marca = require('../models/Marca');
+const Ambiente = require('../models/Ambiente');
+const Modelo = require('../models/Modelo');
 
 const nodemailer = require ('nodemailer')
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
+const pdf = require('html-pdf');
+
+
+
 
 router.post('/orcamento/salvar', (req, res) => {
 
@@ -250,69 +259,230 @@ router.post('/orcamento/atualizar', async (req, res) => {
 });
 
 
-router.post('/orcamento/envio/pdf', (req, res) => {
 
+router.post('/orcamento/envio/pdf', (req, res) => {
   const orcamentoIds = req.body.orcamentoCheck;
 
   // Faça o que for necessário com os IDs no backend
   console.log('IDs dos Orçamentos:', orcamentoIds);
 
-
+  // Envie uma resposta de volta para o frontend, se necessário
+  res.send('ok');
+  
 
   Orcamento.findAll({
     include: [
       {
         model: Cliente,
       },
+      {
+        model: Prestacao,
+      },
+      {
+        model: Btu,
+      },
+      {
+        model: Marca,
+      },
+      {
+        model: Modelo,
+      },
+      {
+        model: Ambiente,
+      }
     ],
   }).then(orcamentos => {
-    Cliente.findAll().then(clientes => {
+    Cliente.findAll().then (clientes => {
+      Prestacao.findAll().then (prestacoes => {
+        Btu.findAll().then (btus => {
+          Marca.findAll().then (marcas =>{
+            Modelo.findAll().then (modelos =>{
+              Ambiente.findAll().then(ambientes =>{
 
-      orcamentos.forEach(orcamento => {
-        if (orcamentoIds.includes(orcamento.id.toString())) {
-          clientes.forEach(cliente => {
-            if (cliente.id == orcamento.clienteId) {
-              console.log(chalk.red.bold('Aqui foi ' + orcamento.id +' o cliente é: ' + orcamento.clienteId + ' e o e-mail é: ' + cliente.email));
+                const orcamentosSelecionados = orcamentos.filter(orcamento => orcamentoIds.includes(orcamento.id.toString()));
 
-              var conteudo = ` ID ORÇAMANTO = ${orcamento.id}`
+                if (orcamentosSelecionados.length > 0) {
+                  const primeiroClienteId = orcamentosSelecionados[0].clienteId;
+                  const clienteDoOrcamento = clientes.find(cliente => cliente.id == primeiroClienteId);
+        
+                  if (clienteDoOrcamento) {
+                    console.log(chalk.red.bold('Cliente para o e-mail é: ' + clienteDoOrcamento.email));
+        
+                    // Agora você pode criar o conteúdo do e-mail e do PDF
+                    var conteudoEmail = 'Orçamentos:\n';
+                    var conteudoHTML = '';
+                
+                    var headerHTML = '<h3 style="color:red; text-align:left;">Cabeçalho, com todas as informações da empresa</h3>';
+                    var dadosCliente = `<p style="font-weight: bold">Cliente: <span style="font-weight: 200"> ${clienteDoOrcamento.nome} </span></p>`
+        
+                    var somaValoresCobrados = 0;
+                    var somaValoresAbertos = 0;
+                    var somaValoresPagos = 0;
 
-              
+                    orcamentosSelecionados.forEach(orcamento => {
+                      conteudoEmail += `ID ORÇAMENTO: ${orcamento.id}\n`;
 
-            }
+                      const prestacaoDoOrcamento = prestacoes.find(prestacao => prestacao.id == orcamento.prestacoId);
+                      
+                      const btuDoOrcamento = btus.find (btu => btu.id == orcamento.btuId)
+
+                      const marcaDoOrcamento = marcas.find (marca => marca.id == orcamento.marcaId)
+
+                      const modeloDoOrcamento = modelos.find (modelo => modelo.id == orcamento.modeloId)
+
+                      const ambienteDoOrcamento = ambientes.find (ambiente => ambiente.id == orcamento.ambienteId)
+        
+                     // Cria uma tabela para cada orçamento
+                      var tabelaOrcamentoHTML = `
+
+                      <style>
+                        .orcamento-table th,
+                        .orcamento-table td {
+                          text-align: justify;
+                          font-family: 'Source Sans Pro', sans-serif;
+                        }
+                  
+                        .orcamento-table th {
+                          width: 180px;
+                        }
+                  
+                        .orcamento-table td {
+                          width: 350px;
+                        }
+
+                      
+                    
+                      </style>
+                  
+
+                        <table border="1" class="orcamento-table">
+                          <tr>
+                            <th>Quantidade</th>
+                            <td>${orcamento.qtd}</td>
+                          </tr>
+                          <tr>
+                            <th>Serviço Prestado</th>
+                            <td>${prestacaoDoOrcamento ? prestacaoDoOrcamento.descricao : 'N/A'}</td>
+                          </tr>
+                          <tr>
+                            <th>Btus</th>
+                            <td>${btuDoOrcamento ? btuDoOrcamento.descricao : 'N/A'}</td>
+                          </tr>
+                          <tr>
+                            <th>Marca</th>
+                            <td>${marcaDoOrcamento ? marcaDoOrcamento.descricao : 'N/A'}</td>
+                          </tr>
+                          <tr>
+                            <th>Modelo</th>
+                            <td>${modeloDoOrcamento ? modeloDoOrcamento.descricao : 'N/A'}</td>
+                          </tr>
+                          <tr>
+                            <th>Ambiente</th>
+                            <td>${ambienteDoOrcamento ? ambienteDoOrcamento.descricao : 'N/A'}</td>
+                          </tr>
+                          <tr>
+                            <th>Observação</th>
+                            <td>${orcamento.observacao}</td>
+                          </tr>
+                          <tr>
+                            <th>Valor Cobrado</th>
+                            <td>R$ ${orcamento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                          </tr>
+                          <tr>
+                            <th>Valor Recebido</th>
+                            <td>R$ ${orcamento.valor_recebido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                          </tr>
+                          <tr>
+                            <th>Valor em aberto</th>
+                            <td>R$ ${orcamento.valor_aberto.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                          </tr>
+                        </table>
+                        <hr>
+                      `;
+
+                      
+
+
+                      somaValoresCobrados += orcamento.valor;  
+                      somaValoresAbertos += orcamento.valor_aberto;
+                      somaValoresPagos += orcamento.valor_recebido
+                      conteudoHTML += tabelaOrcamentoHTML;
+
+                      
+                    });
+
+                    
+
+                    var valoresAtualizados = `
+                      <h3>VALOR TOTAL COBRADO = R$ ${somaValoresCobrados.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} </h3>
+                      <h3>VALOR TOTAL RECEBIDO = R$ ${somaValoresPagos.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} </h3>
+                      <h3>VALOR TOTAL ABERTO = R$ ${somaValoresAbertos.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} </h3>
+                    `;
+
+                    conteudoHTML += valoresAtualizados;
+        
+                    const pdfOptions = { 
+                      format: 'Letter',
+                      header: {
+                        height: '50px',
+                      }, 
+                    };
+        
+                    pdf.create(headerHTML + dadosCliente + conteudoHTML, pdfOptions).toFile('orcamento.pdf', (err, res) => {
+                      if (err) return console.log(err);
+                      console.log(res); // informações sobre o arquivo PDF
+                    });
+        
+                    /*
+                    const transporter = nodemailer.createTransport({
+                      service: 'hotmail',
+                      auth: {
+                        user: 'ionara_002@hotmail.com',
+                        pass: 'caixa2103',
+                      },
+                    });
+        
+                    const emailOpcao = {
+                      from: 'ionara_002@hotmail.com',
+                      to: clienteDoOrcamento.email,
+                      subject: 'TESTE ORÇAMENTO',
+                      text: conteudoEmail,
+                      attachments: [
+                        {
+                          filename: 'orcamento.pdf',
+                          content: fs.createReadStream('orcamento.pdf'),
+                        },
+                        // Você pode adicionar mais anexos aqui, se desejar
+                      ],
+                    };
+        
+                    transporter.sendMail(emailOpcao, (err, info) => {
+                      if (err) {
+                        console.error('Erro ao enviar o e-mail:', err);
+                      } else {
+                        console.log('E-mail enviado:', info.response);
+                      }
+                    });
+                    */
+                  }
+                }
+
+              })
+            })
           })
-
-          
-        }
-      });
-
-    })
-    
-    const transporter = nodemailer.createTransport({
-      service: 'hotmail',
-      auth:{
-        user: 'ionara_002@hotmail.com',
-        pass: 'caixa2103'
-      }
-    })
-              
-    const emailop ={
-      from: 'ionara_002@hotmail.com',
-      to: cliente.email,
-      subject: 'TESTE ORÇAMENTO',
-      text: conteudo
-    }
-    
-    transporter.sendMail(emailop, (err, info) => {
-      if (err) {
-        console.error('Erro ao enviar o e-mail:', err);
-      } else {
-        console.log('E-mail enviado:', info.response);
-      }
-    })
-
-    res.send ('ok')
+        })
+     })
+    });
   });
 });
+
+
+
+
+
+
+
+
 
 
 
