@@ -340,18 +340,14 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                       </style>
                       
               
-                      <header>
-                      <div>
-                        <div>
+                      <header class="teste-color">
+                      
                         
-                          <img src='https://raw.githubusercontent.com/IonaraGit/alfen/main/public/img/logologin.png' style="width: 70px; margin: 10px;">
+                      <img src='https://raw.githubusercontent.com/IonaraGit/alfen/main/public/img/sistec-orcamento.png' style="width: 254px; margin: 10px;">
                         
-                        </div>
-                        <div >
-                        teste
-                        </div>
-                      </div>
-
+                       
+                       
+                       
                         
                       </header>
 
@@ -376,8 +372,8 @@ router.post('/orcamento/envio/pdf', (req, res) => {
               
                       `
                       var dadosCliente = `
-                      <p style="font-weight: bold">Cliente: <span style="font-weight: 200"> ${clienteDoOrcamento.nome} 
-                      <p style="font-weight: bold">Endereço: <span style="font-weight: 200"> ${enderecoDoCliente.logadouro} , n° ${enderecoDoCliente.numero}
+                      <p style="font-weight: bold">Cliente: <span style="font-weight: 200"> ${clienteDoOrcamento.nome} </span> </p>
+                      <p style="font-weight: bold">Endereço: <span style="font-weight: 200"> ${enderecoDoCliente.logadouro}, n° ${enderecoDoCliente.numero} </span> </p>
                       
                       `
           
@@ -412,10 +408,15 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                     
                           .orcamento-table th {
                             width: 180px;
+                            background-color: #d9d9d9;
                           }
                     
                           .orcamento-table td {
-                            width: 350px;
+                            width: 450px;
+                          }
+
+                          .orcamento-table {
+                            margin-top: 15px;
                           }
   
                          
@@ -429,7 +430,7 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                               <td>${orcamento.qtd}</td>
                             </tr>
                             <tr>
-                              <th>Serviço Prestado</th>
+                              <th>Serviço prestado</th>
                               <td>${prestacaoDoOrcamento ? prestacaoDoOrcamento.descricao : 'N/A'}</td>
                             </tr>
                             <tr>
@@ -453,22 +454,23 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                               <td>${orcamento.observacao}</td>
                             </tr>
                             <tr>
-                              <th>Valor Cobrado</th>
+                              <th>Valor cobrado</th>
                               <td>R$ ${orcamento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                             </tr>
                             <tr>
-                              <th>Valor Recebido</th>
+                              <th>Valor recebido</th>
                               <td>R$ ${orcamento.valor_recebido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                             </tr>
                             <tr>
                               <th>Valor em aberto</th>
                               <td>R$ ${orcamento.valor_aberto.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                             </tr>
+                           
                           </table>
                           </div>
   
                           
-                          <hr>
+                          
                         `;
   
                         somaValoresCobrados += orcamento.valor;  
@@ -489,20 +491,23 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                       });
   
                       var valoresAtualizados = `
-
+                      <br>
                       <table border="1" class="orcamento-table">
                         <tr>
-                          <th>Valor Cobrado</th>
-                          <td style='color: red'>R$ ${somaValoresCobrados.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                          <th>Total cobrado</th>
+                          <td style='color: red; font-weight: 600;'>R$ ${somaValoresCobrados.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                         </tr>
                         <tr>
-                          <th>Valor Recebido</th>
-                          <td style='color: green'>R$ ${somaValoresPagos.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                          <th>Total recebido</th>
+                          <td style='color: green; font-weight: 600;'>R$ ${somaValoresPagos.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                         </tr>
                         <tr>
-                          <th>Valor em Aberto</th>
-                          <td style='color: blue'>R$ ${somaValoresAbertos.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                          <th>Total em aberto</th>
+                          <td style='color: blue; font-weight: 600;'>R$ ${somaValoresAbertos.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                         </tr>
+                        <td colspan="2">
+                        <p style="font-weight: bold">OBS: <span style="font-weight: 200">Valores acima mencionados, são refentes a orçamentos contidos neste documento. </span> </p>
+                        </td>
                       </table>
                         
                       `;
