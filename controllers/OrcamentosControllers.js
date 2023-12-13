@@ -16,6 +16,8 @@ const nodemailer = require ('nodemailer')
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
 const pdf = require('html-pdf');
+const path = require('path');
+
 
 
 
@@ -309,17 +311,33 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                     console.log(chalk.red.bold('Cliente para o e-mail é: ' + clienteDoOrcamento.email));
         
                     // Agora você pode criar o conteúdo do e-mail e do PDF
+                    const caminhoDaImagem = 'https://raw.githubusercontent.com/IonaraGit/alfen/main/public/img/testelogo.JPG';
                     var conteudoEmail = 'Orçamentos:\n';
                     var conteudoHTML = '';
+                    
                 
-                    var headerHTML = '<h3 style="color:red; text-align:left;">Cabeçalho, com todas as informações da empresa</h3>';
+                    var headerHTML = `
+                    <style>
+                    .img-teste {
+                      background-image: url('../../../../../../img/logologin.png');
+                    }
+                    
+                    .teste-color {
+                      color: blue;
+                    }
+                    </style>
+                    <div class="teste-color">
+                    <img src="${caminhoDaImagem}" alt="Logo" width="25%">
+                    <h3 ; style="text-align:left;">Cabeçalho, com todas as informações da empresa</h3>
+                    </div>
+                    `;
                     var dadosCliente = `<p style="font-weight: bold">Cliente: <span style="font-weight: 200"> ${clienteDoOrcamento.nome} </span></p>`
         
                     var somaValoresCobrados = 0;
                     var somaValoresAbertos = 0;
                     var somaValoresPagos = 0;
 
-                    orcamentosSelecionados.forEach(orcamento => {
+                    orcamentosSelecionados.forEach((orcamento, index) => {
                       conteudoEmail += `ID ORÇAMENTO: ${orcamento.id}\n`;
 
                       const prestacaoDoOrcamento = prestacoes.find(prestacao => prestacao.id == orcamento.prestacoId);
@@ -350,6 +368,7 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                           width: 350px;
                         }
 
+                       
                       
                     
                       </style>
@@ -400,18 +419,19 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                         <hr>
                       `;
 
-                      
-
-
                       somaValoresCobrados += orcamento.valor;  
                       somaValoresAbertos += orcamento.valor_aberto;
                       somaValoresPagos += orcamento.valor_recebido
                       conteudoHTML += tabelaOrcamentoHTML;
 
-                      
+                      // Adiciona uma quebra de página a cada duas tabelas
+                      if ((index + 1) % 2 === 0 && index < orcamentosSelecionados.length - 1) {
+                        conteudoHTML += 
+                        `<div style="page-break-before: always;"></div> 
+                        ${headerHTML}
+                        ${dadosCliente}` ;
+                      }
                     });
-
-                    
 
                     var valoresAtualizados = `
                       <h3>VALOR TOTAL COBRADO = R$ ${somaValoresCobrados.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} </h3>
@@ -475,6 +495,8 @@ router.post('/orcamento/envio/pdf', (req, res) => {
     });
   });
 });
+
+
 
 
 

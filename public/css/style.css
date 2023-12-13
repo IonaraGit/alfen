@@ -510,3 +510,6 @@ a {
 }
 
 /*CSS DO PDF*/
+.img-teste {
+  background-image: url('../img/logologin.png');
+}
