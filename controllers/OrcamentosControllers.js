@@ -18,6 +18,7 @@ const fs = require('fs');
 const PDFDocument = require('pdfkit');
 const pdf = require('html-pdf');
 const path = require('path');
+const { count } = require('console');
 
 
 
@@ -177,7 +178,75 @@ router.post ('/orcamento/agendamento/editar/salvar', (req, res) => {
 
 })
 
+router.post('/agendamentos/deletar', async (req, res) => {
+  try {
+    const idAgendamento = req.body.id_agendamento;
+    const id_cliente_a = req.body.id_cliente_a;
+    let msg = 'Agendamentos iniciados e/ou finalizados, não podem ser exluidos!';
+    const mgserro = encodeURIComponent(msg)
+
+    if (idAgendamento !== undefined && !isNaN(idAgendamento)) {
+      // Obtém o ID do orçamento associado ao agendamento
+      const agenda = await Agenda.findOne({
+        where: {
+          id: idAgendamento
+        }
+      });
+
+      if (agenda) {
+        const orcamentoId = agenda.orcamentoId;
+
+        // Obtém o status do Orçamento
+        const orcamento = await Orcamento.findOne({
+          where: {
+            id: orcamentoId
+          }
+        });
+
+        if (orcamento) {
+          const statusOrcamento = orcamento.status;
+
+          // Verifica se o status do Orçamento é diferente de 2 (iniciado) ou 3 (finalizado)
+          if (statusOrcamento !== 2 && statusOrcamento !== 3) {
+            // Atualiza o campo status na tabela Orçamento
+            await Orcamento.update(
+              { status: 0 }, // Defina o valor desejado para o status
+              {
+                where: {
+                  id: orcamentoId
+                }
+              }
+            );
+
+            // Remove o agendamento da tabela Agenda
+            await Agenda.destroy({
+              where: {
+                id: idAgendamento
+              }
+            });
+
+           res.redirect (`/admin/orcamentos/prosseguir/${id_cliente_a}`)
+          } else {
+            res.status(400).redirect (`/admin/orcamentos/prosseguir/${id_cliente_a}?error=${mgserro}`)
+          }
+        } else {
+          res.status(404).send('Orçamento não encontrado.');
+        }
+      } else {
+        res.status(404).send('Agendamento não encontrado.');
+      }
+    } else {
+      res.status(400).send('ID de agendamento inválido.');
+    }
+  } catch (error) {
+    console.error('Erro ao excluir agendamento:', error);
+    res.status(500).send('Erro interno ao processar a exclusão do agendamento.');
+  }
+});
+
 router.post('/orcamento/atualizar', async (req, res) => {
+  let msg = 'Edição concluida!';
+  const testemsg = encodeURIComponent(msg);
   try {
     const {
       id,
@@ -242,7 +311,9 @@ router.post('/orcamento/atualizar', async (req, res) => {
           id: orcamentoId
         }
       });
-      res.send("Orçamento atualizado com sucesso!");
+      
+      res.redirect (`/admin/orcamentos/editar/${id}/${orcamentoId}?mensagem=${testemsg}`)
+
     }
 
    
@@ -261,16 +332,52 @@ router.post('/orcamento/atualizar', async (req, res) => {
   }
 });
 
+router.post('/orcamentos/deletar', async (req, res) => {
+  try {
+    const idOrcamento = req.body.idOrcamento;
+    const idCliente = req.body.idCliente;
+    
+    let msg = 'Orçamentos agendados, inicializados e/ou finalizados, não podem ser exluidos!';
+    const mgserro = encodeURIComponent(msg)
+
+    if (idOrcamento !== undefined && !isNaN(idOrcamento)) {
+      Agenda.count ({
+        where: {
+          orcamentoId: idOrcamento
+        }
+      }).then (count => {
+        if ( count > 0) {
+          res.redirect (`/admin/orcamentos/decisao2/${idCliente}?error=${mgserro}`)
+        } else {
+          Orcamento.destroy ({
+            where: {
+              id: idOrcamento
+            }
+          }).then(() => {
+            res.redirect (`/admin/orcamentos/decisao2/${idCliente}`)
+          })
+        }
+      })
+    }else {
+      res.send ('Procure o suporte!')
+    }
+
+   
+  } catch (error) {
+    console.error('Erro ao excluir agendamento:', error);
+    res.status(500).send('Erro interno ao processar a exclusão do agendamento.');
+  }
+});
 
 
 router.post('/orcamento/envio/pdf', (req, res) => {
   const orcamentoIds = req.body.orcamentoCheck;
+  const clienteId = req.body.clienteId
+  let msg = 'Enviando...';
+  const envioEmailMsg = encodeURIComponent (msg)
 
   // Faça o que for necessário com os IDs no backend
   console.log('IDs dos Orçamentos:', orcamentoIds);
-
- 
-  
 
   Orcamento.findAll({
     include: [
@@ -321,8 +428,7 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                       console.log(chalk.red.bold('Cliente para o e-mail é: ' + clienteDoOrcamento.email));
           
                       // Agora você pode criar o conteúdo do e-mail e do PDF
-                      const caminhoDaImagem = 'https://raw.githubusercontent.com/IonaraGit/alfen/main/public/img/logo-pdf.png';
-                      var conteudoEmail = 'Orçamentos:\n';
+                      var conteudoEmail = 'Segue anexo, orçamentos!';
                       var conteudoHTML = '';
                                       
                       var headerHTML = `
@@ -382,7 +488,7 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                       var somaValoresPagos = 0;
   
                       orcamentosSelecionados.forEach((orcamento, index) => {
-                        conteudoEmail += `ID ORÇAMENTO: ${orcamento.id}\n`;
+                       
   
                         const prestacaoDoOrcamento = prestacoes.find(prestacao => prestacao.id == orcamento.prestacoId);
                         
@@ -526,7 +632,6 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                         console.log(res); // informações sobre o arquivo PDF
                       });
           
-                      /*
                       const transporter = nodemailer.createTransport({
                         service: 'hotmail',
                         auth: {
@@ -556,7 +661,7 @@ router.post('/orcamento/envio/pdf', (req, res) => {
                           console.log('E-mail enviado:', info.response);
                         }
                       });
-                      */
+                  
                     }
                   }
 
@@ -569,7 +674,289 @@ router.post('/orcamento/envio/pdf', (req, res) => {
     });
   });
    // Envie uma resposta de volta para o frontend, se necessário
-   res.send('ok');
+   res.redirect (`/admin/orcamentos/envios/${clienteId}?error=${envioEmailMsg}`)
+});
+
+
+
+router.post('/orcamento/vizualizar', (req, res) => {
+  const orcamentoIds = req.body.orcamentoCheck;
+  const clienteId = req.body.clienteId
+  
+
+  // Faça o que for necessário com os IDs no backend
+  console.log('IDs dos Orçamentos:', orcamentoIds);
+
+  Orcamento.findAll({
+    include: [
+      {
+        model: Cliente,
+      },
+      {
+        model: Prestacao,
+      },
+      {
+        model: Btu,
+      },
+      {
+        model: Marca,
+      },
+      {
+        model: Modelo,
+      },
+      {
+        model: Ambiente,
+      },
+      
+    ],
+  }).then(orcamentos => {
+    Cliente.findAll({
+      include: [
+        {
+          model: Endereco
+        }
+      ]
+    }).then (clientes => {
+      Prestacao.findAll().then (prestacoes => {
+        Btu.findAll().then (btus => {
+          Marca.findAll().then (marcas =>{
+            Modelo.findAll().then (modelos =>{
+              Ambiente.findAll().then(ambientes =>{
+                Endereco.findAll().then(enderecos => {
+                  const orcamentosSelecionados = orcamentos.filter(orcamento => orcamentoIds.includes(orcamento.id.toString()));
+                
+
+                  if (orcamentosSelecionados.length > 0) {
+                    const primeiroClienteId = orcamentosSelecionados[0].clienteId;
+                    const clienteDoOrcamento = clientes.find(cliente => cliente.id == primeiroClienteId);
+          
+                    if (clienteDoOrcamento) {
+                      const enderecoDoCliente = enderecos.find (endereco => endereco.clienteId == clienteDoOrcamento.id)
+
+                      
+          
+                      
+                      var conteudoHTML = '';
+                                      
+                      var headerHTML = `
+                      <style>
+                      
+                      .teste-color {
+                        color: #ffffff;
+                        border: solid;
+                        align-items: start;
+                        margin-top: 0;
+                        padding-top: 0;
+                        background-color: #d9d9d9;
+                      }
+                      
+                      </style>
+                      
+              
+                      <header class="teste-color">
+                      
+                        
+                      <img src='https://raw.githubusercontent.com/IonaraGit/alfen/main/public/img/sistec-orcamento.png' style="width: 254px; margin: 10px;">
+                        
+                        
+                        
+                        
+                        
+                      </header>
+
+                      `;
+  
+                      var footerHTML = `
+                      <style>
+                      .footer {
+                        
+                        bottom: auto;
+                        left: 0;
+                        width: 100%;
+                        text-align: center;
+                        padding: 10px;
+                        background-color: #f1f1f1;
+                      }
+                      </style>
+
+                      <div class="footer">
+                        <p>Seu rodapé aqui</p>
+                      </div>
+              
+                      `
+                      var dadosCliente = `
+                      <p style="font-weight: bold">Cliente: <span style="font-weight: 200"> ${clienteDoOrcamento.nome} </span> </p>
+                      <p style="font-weight: bold">Endereço: <span style="font-weight: 200"> ${enderecoDoCliente.logadouro}, n° ${enderecoDoCliente.numero} </span> </p>
+                      
+                      `
+          
+                      var somaValoresCobrados = 0;
+                      var somaValoresAbertos = 0;
+                      var somaValoresPagos = 0;
+  
+                      orcamentosSelecionados.forEach((orcamento, index) => {
+                        
+  
+                        const prestacaoDoOrcamento = prestacoes.find(prestacao => prestacao.id == orcamento.prestacoId);
+                        
+                        const btuDoOrcamento = btus.find (btu => btu.id == orcamento.btuId)
+  
+                        const marcaDoOrcamento = marcas.find (marca => marca.id == orcamento.marcaId)
+  
+                        const modeloDoOrcamento = modelos.find (modelo => modelo.id == orcamento.modeloId)
+  
+                        const ambienteDoOrcamento = ambientes.find (ambiente => ambiente.id == orcamento.ambienteId)
+
+                        
+          
+                        // Cria uma tabela para cada orçamento
+                        var tabelaOrcamentoHTML = `
+  
+                        <style>
+                          .orcamento-table th,
+                          .orcamento-table td {
+                            text-align: left;
+                            font-family: 'Source Sans Pro', sans-serif;
+                          }
+                    
+                          .orcamento-table th {
+                            width: 180px;
+                            background-color: #d9d9d9;
+                          }
+                    
+                          .orcamento-table td {
+                            width: 450px;
+                          }
+
+                          .orcamento-table {
+                            margin-top: 15px;
+                          }
+  
+                          
+                        
+                      
+                        </style>
+                          <div>
+                          <table border="1" class="orcamento-table">
+                            <tr>
+                              <th>Quantidade</th>
+                              <td>${orcamento.qtd}</td>
+                            </tr>
+                            <tr>
+                              <th>Serviço prestado</th>
+                              <td>${prestacaoDoOrcamento ? prestacaoDoOrcamento.descricao : 'N/A'}</td>
+                            </tr>
+                            <tr>
+                              <th>Btus</th>
+                              <td>${btuDoOrcamento ? btuDoOrcamento.descricao : 'N/A'}</td>
+                            </tr>
+                            <tr>
+                              <th>Marca</th>
+                              <td>${marcaDoOrcamento ? marcaDoOrcamento.descricao : 'N/A'}</td>
+                            </tr>
+                            <tr>
+                              <th>Modelo</th>
+                              <td>${modeloDoOrcamento ? modeloDoOrcamento.descricao : 'N/A'}</td>
+                            </tr>
+                            <tr>
+                              <th>Ambiente</th>
+                              <td>${ambienteDoOrcamento ? ambienteDoOrcamento.descricao : 'N/A'}</td>
+                            </tr>
+                            <tr>
+                              <th>Observação</th>
+                              <td>${orcamento.observacao}</td>
+                            </tr>
+                            <tr>
+                              <th>Valor cobrado</th>
+                              <td>R$ ${orcamento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            </tr>
+                            <tr>
+                              <th>Valor recebido</th>
+                              <td>R$ ${orcamento.valor_recebido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            </tr>
+                            <tr>
+                              <th>Valor em aberto</th>
+                              <td>R$ ${orcamento.valor_aberto.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            </tr>
+                            
+                          </table>
+                          </div>
+  
+                          
+                          
+                        `;
+  
+                        somaValoresCobrados += orcamento.valor;  
+                        somaValoresAbertos += orcamento.valor_aberto;
+                        somaValoresPagos += orcamento.valor_recebido
+                        
+                        conteudoHTML += tabelaOrcamentoHTML;
+  
+                        // Adiciona uma quebra de página a cada duas tabelas
+                        if ((index + 1) % 2 === 0 && index < orcamentosSelecionados.length - 1) {
+                          conteudoHTML += 
+                          `
+                          
+                          <div style="page-break-before: always;"><br></div> 
+                          ${headerHTML}
+                          ${dadosCliente}` ;
+                        }
+                      });
+  
+                      var valoresAtualizados = `
+                      <br>
+                      <table border="1" class="orcamento-table">
+                        <tr>
+                          <th>Total cobrado</th>
+                          <td style='color: red; font-weight: 600;'>R$ ${somaValoresCobrados.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        </tr>
+                        <tr>
+                          <th>Total recebido</th>
+                          <td style='color: green; font-weight: 600;'>R$ ${somaValoresPagos.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        </tr>
+                        <tr>
+                          <th>Total em aberto</th>
+                          <td style='color: blue; font-weight: 600;'>R$ ${somaValoresAbertos.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        </tr>
+                        <td colspan="2">
+                        <p style="font-weight: bold">OBS: <span style="font-weight: 200">Valores acima mencionados, são refentes a orçamentos contidos neste documento. </span> </p>
+                        </td>
+                      </table>
+                        
+                      `;
+  
+                      
+                      var testandobr = `
+                      <div style="margin-top: 20px"></div>
+                      `
+                      const pdfOptions = { 
+                        format: 'Letter',
+                        
+                      };
+          
+                      pdf.create(testandobr + headerHTML + dadosCliente + conteudoHTML, pdfOptions).toStream((err, stream) => {
+                        if (err) {
+                          res.status(500).send('Erro ao gerar o PDF');
+                          return;
+                      }
+              
+                      res.setHeader('Content-Type', 'application/pdf');
+                      stream.pipe(res);
+                      });
+     
+                    }
+                  }
+
+                })
+              })
+            })
+          })
+        })
+      })
+    });
+  });
+    // Envie uma resposta de volta para o frontend, se necessário
+    //res.redirect (`/admin/orcamentos/envios/${clienteId}`)
 });
 
 

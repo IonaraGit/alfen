@@ -57,7 +57,16 @@
             <% } %> 
           <% }) %>   
         </div>  
-        
+        <!-- Botão para abrir o modal -->
+<button id="openModalBtn" style="display: none;">Abrir Modal</button>
+
+<!-- Estrutura do modal -->
+<div id="errorModal" class="modal">
+  <div class="modal-content">
+    <p id="errorMessage"></p>
+    <button class="btn btn-ok" onclick="fecharEMRecarregar()">Ok</button>
+  </div>
+</div>
         <nav>
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active" id="nav-agendados-tab" data-toggle="tab" href="#nav-agendados" role="tab" aria-controls="nav-agendados" aria-selected="false">Agendados</a>
@@ -151,6 +160,19 @@
                                       <button type="button" id="btn-editar<%= orcamento.id %>" class="btn-agendar-verde ajuste-input" style="cursor: pointer;" onclick="toggleEditarCampos('<%= orcamento.id %>')">
                                         Editar
                                       </button>
+                                      <form method="POST"
+                                      action="/agendamentos/deletar"
+                                      style="display: inline"
+                                      onsubmit="confirmardelete(event,this)">
+                                        <input type="hidden" name="id_agendamento" value="<%= agenda.id %>">
+                                        <input type="hidden" name="id_cliente_a" value="<%= agenda.clienteId %>">
+                                        <button 
+                                        class="btn-excluir" style="cursor: pointer;" >
+                                          Exluir
+                                        </button>
+
+                                      </form>
+                                      
   
                                  
                                     </div>
@@ -480,7 +502,65 @@
   }
 </script>
 
+<!-- Adicione este script abaixo do código anterior -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function confirmardelete(event, form) {
+    event.preventDefault();
+
+    Swal.fire({
+      //title: 'Tem certeza?',
+      text: 'Tem certeza que quer excluir esse agendamento?',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar',
+      width: '300px', // Largura do modal
+      heigt: '200px',
+      
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.submit();
+      }
+    });
+  }
+</script>
+
+<script>
+  // Função para abrir o modal
+  function abrirModal() {
+    document.getElementById('errorModal').style.display = 'block';
+  }
+
+  // Função para fechar o modal e recarregar a página
+  function fecharEMRecarregar() {
+    document.getElementById('errorModal').style.display = 'none';
+    // Recarregar a página após um pequeno atraso para permitir o fechamento do modal
+    setTimeout(function () {
+      location.href = '/admin/orcamentos/prosseguir/<%=cliente.id%>';
+    }, 100);
+  }
+
+  // Verificar se há uma mensagem de erro e exibi-la no modal
+  const errorMessage = '<%= errorMessage %>'; // Substitua pelo método correto de obter a mensagem no seu template engine
+  if (errorMessage) {
+    document.getElementById('errorMessage').innerText = errorMessage;
+    abrirModal();
+  }
+
+  // Se preferir usar jQuery para abrir o modal
+  // $(document).ready(function() {
+  //   abrirModal();
+  // });
+
+  // Ou abrir o modal ao carregar a página
+  // window.onload = abrirModal;
+</script>
 
 
 

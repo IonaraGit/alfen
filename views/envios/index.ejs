@@ -2,8 +2,6 @@
 <%- include ('../../partials/header_sistema.ejs') %>
 
 <body>
-
-  
   <div class="row">
     <div class="col-md-2 lateral">
       <ul class="lateral-ul">
@@ -34,6 +32,19 @@
         </li>
       </ul>
     </div>
+
+                  <!-- Botão para abrir o modal -->
+                  <button id="openModalBtn" style="display: none;">Abrir Modal</button>
+
+                  <!-- Estrutura do modal -->
+                  <div id="errorModal" class="modal">
+                    <div class="modal-content">
+                      <p id="errorMessage"></p>
+                      <i class="bi bi-arrow-clockwise rotate"></i>
+                      <button class="btn btn-ok" onclick="fecharEMRecarregar()" style="display: none;">Ok</button>
+                    </div>
+                  </div>
+
     <div class="col-md-10">
       <form action="/orcamento/envio/pdf" method="post" id="orcamentoForm">
         <div class="principal">
@@ -133,7 +144,7 @@
                           <% somaVr += parseFloat(orcamento.valor_recebido.toString().replace(',', '.')) || 0 %> 
                           <td data-title="AÇÕES:" >
                             <div class="form-check">
-                              <input class="form-check-input" type="checkbox" value="<%= orcamento.id %>" name="orcamentoCheck">
+                              <input class="form-check-input checkbox-orcamento" type="checkbox" value="<%= orcamento.id %>" name="orcamentoCheck">
                             </div>
                           </td>
                           
@@ -224,16 +235,19 @@
           
           <div class="row" style="justify-content: right;">
             <div class="col-md-3 mt-1">
-              
-                <button class="btn btn-info btn-block" type="submit">
+                <button id="btnEnviarEmail" class="btn btn-info btn-block" type="submit" disabled>
                   Enviar E-mail
                 </button>
-             
-            </div>
-            
+              </div>
+              <div class="col-md-3 mt-1">
+                <button id="btnImprimirPDF" class="btn btn-info btn-block" type="submit" disabled>
+                  Ver PDF
+                </button>
+              </div>
           </div>
 
         </div>
+        <input type="hidden" value="<%=cliente.id%>" name="clienteId">
       </form>
     </div>
     
@@ -243,5 +257,92 @@
 </div>
 
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Quando qualquer checkbox é alterado
+    $('.checkbox-orcamento').change(function () {
+      // Verifica se pelo menos um checkbox está marcado
+      var peloMenosUmMarcado = $('.checkbox-orcamento:checked').length > 0;
+
+      // Habilita ou desabilita o botão com base na verificação
+      $('#btnEnviarEmail').prop('disabled', !peloMenosUmMarcado);
+      $('#btnImprimirPDF').prop('disabled', !peloMenosUmMarcado);
+    });
+  });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+   $(document).ready(function () {
+      $('#orcamentoForm').submit(function (event) {
+         // Verifica qual botão foi clicado
+         var btnClicado = $("button:focus").attr('id');
+
+         // Atualiza a ação do formulário com base no botão clicado
+         if (btnClicado === 'btnEnviarEmail') {
+            $(this).attr('action', '/orcamento/envio/pdf');
+         } else if (btnClicado === 'btnImprimirPDF') {
+            $(this).attr('action', '/orcamento/vizualizar');
+         }
+         
+         // Continua com o envio do formulário
+         return true;
+      });
+
+      // Outros scripts...
+   });
+</script>
+
+<!-- Botão para abrir o modal -->
+<button id="openModalBtn" style="display: none;">Abrir Modal</button>
+
+<!-- Estrutura do modal -->
+<div id="errorModal" class="modal">
+  <div class="modal-content">
+    <p id="errorMessage"></p>
+    <i class="bi bi-arrow-clockwise rotate"></i>
+    <button class="btn btn-ok" onclick="fecharEMRecarregar()">Ok</button>
+  </div>
+</div>
+
+<script>
+  // Função para abrir o modal
+  function abrirModal() {
+    document.getElementById('errorModal').style.display = 'block';
+
+   
+
+    // Configurar um temporizador para fechar o modal após 5 segundos
+    setTimeout(function () {
+      fecharEMRecarregar();
+    }, 2000);
+  }
+
+  // Função para fechar o modal e recarregar a página
+  function fecharEMRecarregar() {
+    document.getElementById('errorModal').style.display = 'none';
+    // Recarregar a página após um pequeno atraso para permitir o fechamento do modal
+    setTimeout(function () {
+      location.href = '/admin/orcamentos/envios/<%=cliente.id%>';
+    }, 100);
+  }
+
+  // Verificar se há uma mensagem de erro e exibi-la no modal
+  const errorMessage = '<%= errorMessage %>'; // Substitua pelo método correto de obter a mensagem no seu template engine
+  if (errorMessage) {
+    document.getElementById('errorMessage').innerText = errorMessage;
+    abrirModal();
+  }
+
+  // Se preferir usar jQuery para abrir o modal
+  // $(document).ready(function() {
+  //   abrirModal();
+  // });
+
+  // Ou abrir o modal ao carregar a página
+  // window.onload = abrirModal;
+</script>
 
 

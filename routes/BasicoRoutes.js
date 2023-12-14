@@ -150,7 +150,8 @@ router.get('/admin/orcamento/novo/:id', expirar, (req, res) => {
 
 router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
   var id = req.params.id
-  
+  const errorMessage = req.query.error;
+  const mensagem = req.query.mensagem
 
   Cliente.findByPk(id).then (cliente => {
     if (cliente != undefined) {
@@ -164,7 +165,7 @@ router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
                     Btu.findAll().then(btus => {
                       Ambiente.findAll().then(ambientes => {
                         Agenda.findAll().then(agendas => {
-                          res.render('orcamento/prosseguir', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos: orcamentos, colaboradores: colaboradores, prestacoes:prestacoes, btus: btus, ambientes:ambientes, agendas: agendas})
+                          res.render('orcamento/prosseguir', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos: orcamentos, colaboradores: colaboradores, prestacoes:prestacoes, btus: btus, ambientes:ambientes, agendas: agendas, errorMessage, mensagem})
                         })
                         
                       })
@@ -223,6 +224,7 @@ router.get ('/admin/orcamentos/decisao2/:id', (req, res) => {
   var id = req.params.id
   sessao = req.session.colaborador
   const mensagem = req.query.mensagem; // Obter mensagem da URL
+  const errorMessage = req.query.error;
   Cliente.findByPk(id).then (cliente => {
     if (cliente != undefined) {
       Endereco.findAll().then(enderecos => {
@@ -234,7 +236,7 @@ router.get ('/admin/orcamentos/decisao2/:id', (req, res) => {
                   Prestacao.findAll().then(prestacoes => {
                     Btu.findAll().then(btus => {
                       Ambiente.findAll().then(ambientes => {
-                        res.render('orcamento/decisao2', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id,sessao, mensagem })
+                        res.render('orcamento/decisao2', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id,sessao, mensagem, errorMessage })
                       })
                     })
                   })
@@ -280,6 +282,7 @@ router.get ('/admin/orcamentos/prosseguir/:id', (req, res) => {
 
 
 router.get('/admin/orcamentos/editar/:id/:orcamento_id', expirar, (req, res) => {
+  const mensagem = req.query.mensagem; // Obter mensagem da URL
   var id = req.params.id;
   var orcamento_id = req.params.orcamento_id; // Corrigi o typo aqui (de oid para orcamento_id)
   sessao = req.session.colaborador;
@@ -316,7 +319,7 @@ router.get('/admin/orcamentos/editar/:id/:orcamento_id', expirar, (req, res) => 
                                 orcamento_id: orcamento_id,
                                 pagamentos: pagamentos,
                                 recebimentos: recebimentos,
-                                errorMessage
+                                errorMessage, mensagem
                               });
                             })
                             
@@ -564,6 +567,7 @@ router.get ('/admin/orcamentos/envios/:id', (req, res) => {
   var id = req.params.id
   sessao = req.session.colaborador
   const mensagem = req.query.mensagem; // Obter mensagem da URL
+  const errorMessage = req.query.error;
   Cliente.findByPk(id).then (cliente => {
     if (cliente != undefined) {
       Endereco.findAll().then(enderecos => {
@@ -575,7 +579,7 @@ router.get ('/admin/orcamentos/envios/:id', (req, res) => {
                   Prestacao.findAll().then(prestacoes => {
                     Btu.findAll().then(btus => {
                       Ambiente.findAll().then(ambientes => {
-                        res.render('envios/index', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id,sessao, mensagem })
+                        res.render('envios/index', {cliente:cliente, enderecos:enderecos, origens:origens, marcas:marcas, modelos:modelos, orcamentos:orcamentos, colaboradores:colaboradores, prestacoes:prestacoes, btus:btus, ambientes:ambientes, id,sessao, mensagem,errorMessage })
                       })
                     })
                   })

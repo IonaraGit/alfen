@@ -513,3 +513,23 @@ a {
 .img-teste {
   background-image: url('../img/logologin.png');
 }
+
+.btn-excluir {
+  cursor: pointer;
+  display: block;
+  background: rgb(240, 38, 38);
+  color: #FFf;
+  padding: 4px;
+  margin-left: 6px;
+  border-radius: 6px;
+  height: 29px;
+}
+
+.rotate {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

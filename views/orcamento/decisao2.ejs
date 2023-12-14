@@ -90,10 +90,21 @@
                 <script>
                   // Aguardar 5 segundos e recarregar a página
                   setTimeout(function() {
-                    window.location.href = '/admin/orcamentos/decisao2/8';
+                    window.location.href = '/admin/orcamentos/decisao2/<%=cliente.id%>';
                   }, 3000);
                 </script>
               <% } %>
+
+              <!-- Botão para abrir o modal -->
+<button id="openModalBtn" style="display: none;">Abrir Modal</button>
+
+<!-- Estrutura do modal -->
+<div id="errorModal" class="modal">
+  <div class="modal-content">
+    <p id="errorMessage"></p>
+    <button class="btn btn-ok" onclick="fecharEMRecarregar()">Ok</button>
+  </div>
+</div>
 
             <div class="table">
               <table class="rtable table table-bordered mt-2">
@@ -156,6 +167,18 @@
                             <i class="bi bi-eye"></i>
                           </a>
                           <a href="/admin/orcamentos/pagamento/<%= orcamento.clienteId %>/<%= orcamento.id %>"><i class="bi bi-currency-dollar"></i></a>
+                          <form  method="POST"
+                          action="/orcamentos/deletar"
+                          style="display: inline"
+                          onsubmit="confirmardelete(event,this)">
+                          <input type="hidden" name="idOrcamento" value="<%= orcamento.id %>">
+                          <input type="hidden" name="idCliente" value="<%= orcamento.clienteId %>">
+                          <button>
+                            <a href=""><i class="bi bi-x"></i></a>
+                          </button>
+
+                          </form>
+                          
                         </td>
                          
                       </tr>
@@ -271,4 +294,61 @@
 </body>
   
 
+<!-- Adicione este script abaixo do código anterior -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function confirmardelete(event, form) {
+    event.preventDefault();
+
+    Swal.fire({
+      //title: 'Tem certeza?',
+      text: 'Tem certeza que quer excluir esse orçamento?',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar',
+      width: '300px', // Largura do modal
+      heigt: '200px',
+      
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.submit();
+      }
+    });
+  }
+</script>
+<script>
+  // Função para abrir o modal
+  function abrirModal() {
+    document.getElementById('errorModal').style.display = 'block';
+  }
+
+  // Função para fechar o modal e recarregar a página
+  function fecharEMRecarregar() {
+    document.getElementById('errorModal').style.display = 'none';
+    // Recarregar a página após um pequeno atraso para permitir o fechamento do modal
+    setTimeout(function () {
+      location.href = '/admin/orcamentos/decisao2/<%=cliente.id%>';
+    }, 100);
+  }
+
+  // Verificar se há uma mensagem de erro e exibi-la no modal
+  const errorMessage = '<%= errorMessage %>'; // Substitua pelo método correto de obter a mensagem no seu template engine
+  if (errorMessage) {
+    document.getElementById('errorMessage').innerText = errorMessage;
+    abrirModal();
+  }
+
+  // Se preferir usar jQuery para abrir o modal
+  // $(document).ready(function() {
+  //   abrirModal();
+  // });
+
+  // Ou abrir o modal ao carregar a página
+  // window.onload = abrirModal;
+</script>
