@@ -5,7 +5,7 @@ const chalk = require('chalk')
 
 const Cliente = require ('../models/Cliente')
 const Endereco = require ('../models/Endereco');
-const { or, where } = require('sequelize');
+
 
 
 router.post ('/clientes/salvar', (req,res) => {

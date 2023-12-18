@@ -14,6 +14,8 @@ const Btu = require('../models/Btu');
 const Agenda = require ('../models/Agenda')
 const Pagamento = require ('../models/Pagamento')
 const Recebimento = require ('../models/Recebimento')
+const Estoque = require ('../models/Estoque')
+const Medida = require ('../models/Medida')
 
 const expirar = require ('../middlewares/expirar');
 
@@ -44,7 +46,11 @@ router.get('/acesso/adm', expirar, (req, res) =>{
       Prestacao.findAll().then(prestacoes => {
         Colaborador.findAll().then(colaboradores => {
           Orcamento.findAll().then(orcamentos => {
-            res.render('sistema/admin', {agendas: agendas, clientes: clientes, prestacoes: prestacoes, colaboradores: colaboradores, orcamentos: orcamentos, sessao})
+            Recebimento.findAll().then(recebimentos => {
+              res.render('sistema/admin', {agendas: agendas, clientes: clientes, prestacoes: prestacoes, colaboradores: colaboradores, orcamentos: orcamentos, recebimentos: recebimentos, sessao})
+
+            })
+           
           })
           
         })
@@ -599,5 +605,25 @@ router.get ('/admin/orcamentos/envios/:id', (req, res) => {
 
 /*** FIM ENVIOS */
 
+
+/* INICIO ESTOQUE */
+router.get('/acesso/adm/estoque', expirar, (req, res) =>{
+  sessao = req.session.colaborador
+  Estoque.findAll().then(estoques => {
+    Empresa.findAll().then (empresas => {
+      Medida.findAll().then (medidas => {
+        res.render('estoque/index', {estoques:estoques, empresas:empresas, medidas:medidas, sessao})
+      })
+    })
+  })
+})
+
+router.get('/admin/estoque/:id', (req, res) => {
+  var id = req.params.id
+  Estoque.findByPk(id).then (estoque => {
+    res.render('estoque/detalhes', {estoque: estoque})
+  })
+})
+/*** FIM ESTOQUE */
 
 module.exports = router

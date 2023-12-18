@@ -8,6 +8,7 @@
       <div class="col-12 col-md-6">
         <button type="submit" class="btn btn-outline-primary btn-novo-cliente" data-toggle="modal" data-target="#cadastrarMarca">Cadastrar novo <i class="bi bi-plus-circle-dotted"></i></button>
       </div>
+      
 
       <div class="col-12 col-md-6">
         <div class="input-group" style="width: 41%; float: right;">
@@ -78,7 +79,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Cadastrar Marca</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -86,7 +87,6 @@
           <form method="POST" action="/marca/salvar">
             <div class="form-row">
               <div class="form-group col-md-12">
-                <label for="nome" class="label-novo">Descrição <span style="color: crimson;">*</span></label>
                 <input type="text" class="form-control" name="descricao" id="descricao" placeholder="LG, SAMSUMG, GREEN ETC..." required>
               </div>
             </div>
@@ -95,13 +95,10 @@
                 <input type="hidden" class="form-control" name="empresa" id="empresa" value="<%=empresa.id%>" readonly>
               <% } %>
             <% }) %>
-            <button class="btn btn-secondary">Salvar</button>
+            <button class="btn btn-success">Salvar</button>
           </form>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-          
-        </div>
+        
       </div>
     </div>
   </div>
@@ -109,41 +106,9 @@
 
   
 </body>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var confirmationAlert = document.getElementById('confirmationAlert');
-    var confirmButton = document.getElementById('confirmButton');
-    var cancelButton = document.getElementById('cancelButton');
-    var currentForm;
 
-    function showConfirmationAlert(form) {
-      currentForm = form;
-      confirmationAlert.classList.add('show');
-    }
 
-    confirmButton.onclick = function () {
-      confirmationAlert.classList.remove('show');
-      if (currentForm) {
-        currentForm.submit();
-      }
-    };
 
-    cancelButton.onclick = function () {
-      confirmationAlert.classList.remove('show');
-      currentForm = null;
-    };
-
-    function confirmaDesativar(event, form) {
-      event.preventDefault();
-      showConfirmationAlert(form);
-    }
-
-    function confirmaAtivar(event, form) {
-      event.preventDefault();
-      showConfirmationAlert(form);
-    }
-  });
-</script>
 
 
 

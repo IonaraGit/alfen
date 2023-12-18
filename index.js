@@ -20,6 +20,7 @@ const BtusControllers = require ('./controllers/BtusControllers')
 const PagamentosControllers = require ('./controllers/PagamentosControllers')
 const LoginsControllers = require ('./controllers/LoginsControllers')
 const RecebimentosControllers = require ('./controllers/RecebimentosControllers')
+const EstoquesControllers = require ('./controllers/EstoquesControllers')
 
 //Models
 const Empresa = require ('./models/Empresa')
@@ -37,6 +38,8 @@ const Cliente = require ('./models/Cliente')
 const Orcamento = require ('./models/Orcamento')
 const Agenda = require ('./models/Agenda')
 const Recebimento = require ('./models/Recebimento')
+const Estoque = require ('./models/Estoque')
+const Medida = require ('./models/Medida')
 
 
 
@@ -89,6 +92,7 @@ app.use('/', BtusControllers)
 app.use('/', PagamentosControllers)
 app.use('/', RecebimentosControllers)
 app.use('/', LoginsControllers)
+app.use ('/', EstoquesControllers)
 
 app.get ('/', (req, res) => {
   res.render('informacao/index')

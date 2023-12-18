@@ -1,0 +1,41 @@
+<%- include ('../../partials/conf_header.ejs') %>
+<%- include ('../../partials/header_sistema.ejs') %>
+
+<body>
+  <div class="tab-content principal" id="v-pills-tabContent">
+    
+      <div class="principal" style="height: 100vh;">
+        <form method="POST" action="/cestoque/atualizar">
+          <input type="hidden" value="<%=estoque.id%>" name="id">
+          
+            <div class="form-row">
+              <div class="form-group col-md-5">
+                <label for="descricao" class="label-novo">Descrição <span style="color: crimson;"></span></label>
+                <input type="text" class="form-control" name="descricao" id="descricao" value="<%= estoque.descricao%>" readonly>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="cpf" class="label-novo">Quantidade atual<span style="color: crimson;"></span></label>
+                <% if(estoque.qtd_atual == false) { %>
+                  <input type="text" class="form-control" name="qtd_atual" id="qtd_atual" value="0" readonly>
+                <% } else { %>
+                  <input type="text" class="form-control" name="qtd_atual" id="qtd_atual" value="<%= estoque.qtd_atual%>" readonly>
+                <% } %>
+                
+              </div>
+              <div class="form-group col-md-4">
+                <label for="medida" class="label-novo">Medida <span style="color: crimson;"></span></label>
+                <input type="text" class="form-control" name="medida" id="medida" value="<%= estoque.medida%>" readonly>
+              </div>
+            </div>
+          
+        </form>
+      </div>
+   
+  </div>     
+</body>
+
+
+
+
+
+<%- include ('../../partials/conf_footer.ejs') %>

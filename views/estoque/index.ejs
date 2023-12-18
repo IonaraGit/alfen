@@ -1,0 +1,141 @@
+<%- include ('../../partials/conf_header.ejs') %>
+<%- include ('../../partials/header_sistema.ejs') %>
+
+<body>
+  <div class="principal" style="height: 100vh;">
+
+    <div class="row mt-3 mb-3">
+      <div class="col-12 col-md-6">
+        <button type="submit" class="btn btn-outline-primary btn-novo-cliente" data-toggle="modal" data-target="#cadastrarEstoque">Cadastrar novo <i class="bi bi-plus-circle-dotted"></i></button>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="input-group" style="width: 41%; float: right;">
+          <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Pesquisar">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <i class="bi bi-search"></i>
+            </div>
+          </div>
+        </div>
+      </div>     
+    </div>
+    
+
+    <table class="table table-hover text-center">
+      <thead>
+        <tr>
+          <th scope="col">Descrição</th>
+          <th scope="col">Quantidade Atual</th>
+          <th scope="col">Medida</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% estoques.forEach (estoque => { %>
+          <tr>
+            <td> <%= estoque.descricao %> </td>
+            <% if (estoque.qtd_atual == false) { %>
+              <td>0</td>
+            <% } else { %>
+              <td> <%= estoque.qtd_atual %> </td>
+            <% } %>
+            
+            <td> <%= estoque.medida %> </td>
+          
+            <td class="d-flex justify-content-around">
+              <% if (estoque.ativo == 1) { %>
+                <form method="POST" action="/estoque/desativar" style="display: inline;" onsubmit="confirmaDesativar(event, this)">
+                  <input type="hidden" name="id" value="<%= estoque.id %>">
+                  <button type="submit" class="btn btn-success" data-toggle="popover" data-trigger="hover" data-content="Mercadoria Ativa" data-placement="top">
+                    <i class="bi bi-check2"></i>
+                  </button>
+                </form>
+
+                <div class="custom-alert" id="confirmationAlert">
+                  <div class="alert-content">
+                    <p>Deseja realmente alterar o status deste Estoque?</p>
+                  </div>
+                  <div class="alert-buttons">
+                    <button class="btn btn-secondary" id="cancelButton">Cancelar</button>
+                    <button class="btn btn-danger" id="confirmButton">Confirmar</button>
+                  </div>
+                </div>
+
+              <% } else if (estoque.ativo == 0) { %>
+                <form method="POST" action="/estoque/ativar" style="display: inline;" onsubmit="confirmaAtivar(event, this)">
+                  <input type="hidden" name="id" value="<%= estoque.id %>">
+                  <button type="submit" class="btn btn-danger" data-toggle="popover" data-trigger="hover" data-content="Marca Inativa" data-placement="top">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                  </form>
+              <% } %>
+              
+              <a href="/admin/estoque/<%=estoque.id%>" style="text-decoration: none;">
+                <button type="button" class="btn btn-info"><i class="bi bi-eye"></i></button>
+              </a>
+              <a href="" style="text-decoration: none;">
+                <button type="button" class="btn btn-primary"><i class="bi bi-cart-plus"></i></button>
+              </a>   
+              <a href="" style="text-decoration: none;">
+                <button type="button" class="btn btn-dark"><i class="bi bi-cart-dash"></i></button>
+              </a>                 
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <!--Inicio Modal NOVO CADASTRO-->
+  <div class="modal fade" id="cadastrarEstoque" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Cadastrar Mercadorias</h5>
+          <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="/estoque/salvar">
+            <div class="form-row text-justify">
+              <div class="form-group col-md-12">
+                <label for="nome" class="label-novo">Descrição <span style="color: crimson;">*</span></label>
+                <input type="text" class="form-control" name="descricao" id="descricao" required>
+              </div>
+              <div class="form-group col-md-12">
+                <label for="nome" class="label-novo">Unidade de medida <span style="color: crimson;">*</span></label>
+                <select class="form-control" name="medidaId">
+                  <% medidas.forEach((medida) => { %>
+                    <% if (medida.ativo == true) { %>
+                      <option value="<%= medida.id %>"><%= medida.descricao %></option>
+                    <% } %>
+                    
+                  <% }) %>
+                </select>
+                
+              </div>
+            </div>
+            <% empresas.forEach(empresa => { %>
+              <% if (empresa.id == sessao.empresaId) { %>
+                <input type="hidden" class="form-control" name="empresa" id="empresa" value="<%=empresa.id%>" readonly>
+              <% } %>
+            <% }) %>
+            <button class="btn btn-success">Salvar</button>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <!--Fim Modal NOVO CADASTRO-->
+
+  
+</body>
+
+
+
+
+<%- include ('../../partials/footer.ejs') %>
+<%- include ('../../partials/conf_footer.ejs') %></br>

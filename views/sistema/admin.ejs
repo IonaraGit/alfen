@@ -8,10 +8,8 @@
         <h5 class="text-center mt-3 bg-info text-white">
           AGENDAMENTOS DE HOJE
         </h5>
-        <div class="p-3 mt-2" style="max-height: 605px; overflow-y: auto">
-          <div class="p-3 mt-2">
-            <div>
-             
+        <div class="p-3" style="max-height: 605px; overflow-y: auto">
+         
               <% const dataAtual = new Date().toLocaleDateString('pt-BR', { timeZone: 'UTC' }); %> 
               <% const testeDataA = dataAtual.toLocaleString('pt-BR', { timeZone: 'UTC' }) %>
             
@@ -20,10 +18,11 @@
                 <% const testedata = new Date(agenda.previsao_inicio).toLocaleDateString('pt-BR', { timeZone: 'UTC' })%>
                 <% const dataAgendaUTC = new Date(agenda.previsao_inicio).toDateString('pt-BR'); %>
                 <% const dataAgendaLocal = new Date(dataAgendaUTC.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })); %>
-                  
+                <%if(testedata === testeDataA) {%>
                 <div style="background-color: rgb(164, 214, 214);" class="row mt-2">
+                  
                   <div class="col-10 mt-2">
-                    <%if(testedata === testeDataA) {%>
+                   
                       <!-- A data da agenda é do dia atual -->
                       <% clientes.forEach(cliente => { %> 
                         <% if (cliente.id == agenda.clienteId) { %>
@@ -51,24 +50,25 @@
                       
                       <h6><b>Status: </b>verifcar</h6>
                       
-                    <% } %>
+                    
                   </div>
   
                   <div class="col-2 m-auto mt-2">
                     <% clientes.forEach(cliente => { %> 
                       <% if (cliente.id ==  agenda.clienteId) { %>
-                        <a href="/admin/orcamentos/prosseguir/<%=cliente.id%>">
+                        <a href="/admin/orcamentos/prosseguir/<%=agenda.clienteId%>">
                           <button type="button" class="btn btn-primary rounded-circle"> <i class="bi bi-arrow-right-short"></i> </button>
                         </a>
                       <% } %>
                     <% })%>
                   </div>
+                  
                 </div>
-                
+                <% } %>
               <% }) %>
-            </div>
+      
            
-          </div>
+          
         </div>
         <div class="p-3 mt-2">
           <i class="bi bi-wrench-adjustable-circle" style="color: rgb(252, 3, 23)"></i> <span> Não iniciado: <b>1</b></span>
@@ -87,7 +87,17 @@
             <h6 style="color: rgb(1, 136, 23)">
               <b>Entrada</b>
               <br />
-              <b>R$ 3500,00</b>
+              <% var soma = 0%>
+              <% recebimentos.forEach(recebimento => { %>
+                <% if (dataAtual == recebimento.createdAt.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }).split('/').join('/')) { %>
+                  <% soma += parseFloat(recebimento.valor.toString().replace(',', '.')) || 0 %> 
+                  
+
+                <% } %>
+              
+                
+              <% })%>
+              <b>R$ <%= soma.toFixed(2).replace('.', ',') %></b>
             </h6>
           </div>
           <div class="col p-3 m-2" style="background-color: rgb(215 241 241)">
