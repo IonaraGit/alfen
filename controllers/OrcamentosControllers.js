@@ -15,12 +15,8 @@ const Endereco = require('../models/Endereco')
 
 const nodemailer = require ('nodemailer')
 const fs = require('fs');
-const PDFDocument = require('pdfkit');
+
 const pdf = require('html-pdf');
-const path = require('path');
-const { count } = require('console');
-
-
 
 
 
@@ -88,7 +84,6 @@ router.post('/orcamento/salvar', (req, res) => {
       res.status(500).send('erro');
     });
 });
-
 
 router.post ('/orcamento/agendamento/salvar', (req, res) => {
   var data1 = Array.isArray(req.body.data1) ? req.body.data1 : [req.body.data1];
@@ -676,8 +671,6 @@ router.post('/orcamento/envio/pdf', (req, res) => {
    // Envie uma resposta de volta para o frontend, se necessário
    res.redirect (`/admin/orcamentos/envios/${clienteId}?error=${envioEmailMsg}`)
 });
-
-
 
 router.post('/orcamento/vizualizar', (req, res) => {
   const orcamentoIds = req.body.orcamentoCheck;

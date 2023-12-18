@@ -2,16 +2,6 @@
 <%- include ('../../partials/header_sistema.ejs') %>
 
 <body>
-  Id Empresa => <%=sessao.empresaId%>
-  <br>
-  <% empresas.forEach (empresa => { %>
-    <% if (empresa.id == sessao.empresaId) { %>
-      Nome empresa => <%=empresa.descricao%>
-    <% } %>
-  <% })%>
-  <br>
-  Colaborador => <%=sessao.nome%>
-
   <div class="principal" style="height: 100vh;">
 
     <div class="row mt-3 mb-3">
