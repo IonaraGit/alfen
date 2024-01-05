@@ -52,16 +52,6 @@
                   </button>
                 </form>
 
-                <div class="custom-alert" id="confirmationAlert">
-                  <div class="alert-content">
-                    <p>Deseja realmente alterar o status deste Estoque?</p>
-                  </div>
-                  <div class="alert-buttons">
-                    <button class="btn btn-secondary" id="cancelButton">Cancelar</button>
-                    <button class="btn btn-danger" id="confirmButton">Confirmar</button>
-                  </div>
-                </div>
-
               <% } else if (estoque.ativo == 0) { %>
                 <form method="POST" action="/estoque/ativar" style="display: inline;" onsubmit="confirmaAtivar(event, this)">
                   <input type="hidden" name="id" value="<%= estoque.id %>">

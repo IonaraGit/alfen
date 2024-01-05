@@ -1,86 +1,75 @@
 <%- include ('../../partials/conf_header.ejs') %> 
 <%- include ('../../partials/header.ejs') %>
 
-<div class="container" style="height: 70vh;">
+<div class="container">
 
-  
-  <form class="form-login" method="post" action="/salvarnovasenha">
+  <form class="form-login" method="post" action="/recuperarsenhasalvando">
   
     <div style="text-align: center">
-      <img src="img/logologin.png" alt="logo" style="width: 130px" />
+      <img src="/../img/logologin.png" alt="logo" style="width: 130px" />
     </div>
     <br />
 
     <div class="form-group row">
       <div class="col-sm-6">
         <label for="usuario" class="label-novo">ID SISTEC <span style="color: crimson;">*</span></label>
-        <input type="text" class="form-control" id="empresa" name="empresa" required/>
+        <input type="text" class="form-control" id="empresa" name="empresa" value="<%=empresa%>" readonly/>
       </div>
     
       <div class="col-sm-6">
         <label for="usuario" class="label-novo">CPF <span style="color: crimson;">*</span></label>
-        <input type="text" class="form-control" id="CPF" name="cpf" required/>
+        <input type="text" class="form-control" id="CPF" name="cpf" value="<%=cpf%>" readonly/>
       </div>
     </div>
     <div class="form-group row">
       <div class="col-sm-6">
         <label for="qtd" class="label-novo">Pergunta secreta <span style="color: crimson;">*</span></label>
-        <select class="form-control" name="pergunta" required>
-          <% perguntas.forEach((pergunta) => { %>
-              <option value="<%= pergunta.descricao %>"> <%=pergunta.descricao%> </option>      
-          <% }) %>
-        </select>
+        <input type="text" class="form-control" id="pergunta" name="pergunta" value="<%=pergunta%>" readonly/>
       </div>
     
       <div class="col-sm-6">
         <label for="usuario" class="label-novo">Resposta <span style="color: crimson;">*</span></label>
-        <input type="text" class="form-control" id="resposta" name="resposta" required/>
+        <input type="text" class="form-control" id="resposta" name="resposta" value="<%=resposta%>" readonly/>
       </div>
     </div>
     
 
-<div class="form-group row">
-    <div class="col-sm-6">
-        <label for="nova-senha" class="label-novo">Senha <span style="color: crimson;">*</span></label>
-        <input type="password" class="form-control" id="nova-senha" name="senha" required/>
-        <span toggle="#nova-senha" class="fa fa-fw fa-eye field-icon toggle-nova-senha">
-            <i class="bi bi-eye"></i>
-        </span>
-    </div>
-
-    <div class="col-sm-6">
+    <div class="form-group row">
+      <div class="col-sm-6">
+          <label for="nova-senha" class="label-novo">Senha <span style="color: crimson;">*</span></label>
+          <input type="password" class="form-control" id="nova-senha" name="senha" required/>
+          <span toggle="#nova-senha" class="fa fa-fw fa-eye field-icon toggle-nova-senha">
+              <i class="bi bi-eye"></i>
+          </span>
+      </div>
+  
+      <div class="col-sm-6">
         <label for="confirmacao-senha" class="label-novo">Confirme a senha <span style="color: crimson;">*</span></label>
         <input type="password" class="form-control" id="confirmacao-senha" name="confirmacao-senha" required/>
         <span toggle="#confirmacao-senha" class="fa fa-fw fa-eye field-icon toggle-confirmacao-senha">
             <i class="bi bi-eye"></i>
         </span>
-        <!-- Adicione um elemento para exibir a mensagem -->
-<div id="mensagem-senhas-diferentes" style="color: crimson; display: none; margin-top: 5px;">As senhas não coincidem.</div>
 
-    </div>
-         
-</div>
+      </div>
+  
+      <div id="mensagem-senhas-diferentes" style="color: crimson; display: none; margin-top: 5px;">As senhas não coincidem.</div>
 
-
-
-    <br>
-    <h6 style="color: crimson;">Olá! Este é o seu primeiro acesso ao sistema. Por favor, escolha uma pergunta e forneça uma resposta que você possa lembrar facilmente. Essa pergunta será usada para recuperar sua senha no caso de esquecimento. Certifique-se de escolher uma informação que seja memorável para você.
-    </h6>
-    <div class="form-group row">
-      <div class="col text-center">
-        <button
-          type="submit"
-          class="btn btn-outline-primary"
-          style="width: 80%" disabled
-        >
-          Salvar
-        </button>
+      <br>
+      <h6 style="color: crimson;">
+      </h6>
+      <div class="form-group row">
+        <div class="col text-center">
+          <button type="submit" class="btn btn-outline-primary" style="width: 80%" disabled> Prosseguir </button>
+        </div>
       </div>
     </div>
   </form>
 </div>
 
-<!-- Adicione um script para verificar se as senhas coincidem -->
+
+<%- include ('../../partials/footer.ejs') %> 
+<%- include ('../../partials/conf_footer.ejs') %>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     // Configuração para o campo de nova senha
@@ -96,6 +85,10 @@
 
     // Botão Salvar
     const botaoSalvar = document.querySelector('button[type="submit"]');
+
+    // Adiciona um ouvinte de eventos ao formulário
+    const formulario = document.querySelector('form.form-login');
+    formulario.addEventListener('input', verificarSenhas);
 
     // Adiciona um ouvinte de eventos ao campo de confirmação de senha
     confirmacaoSenhaField.addEventListener('input', function () {
@@ -116,6 +109,21 @@
     toggleNovaSenha.addEventListener('click', toggleSenha.bind(null, novaSenhaField));
     toggleConfirmacaoSenha.addEventListener('click', toggleSenha.bind(null, confirmacaoSenhaField));
 
+    // Função para verificar se as senhas coincidem
+    function verificarSenhas() {
+      const senha = novaSenhaField.value;
+      const confirmacaoSenha = confirmacaoSenhaField.value;
+
+      // Verifica se as senhas coincidem
+      if (senha !== confirmacaoSenha) {
+        mensagemSenhasDiferentes.style.display = 'block';
+        botaoSalvar.disabled = true; // Desabilita o botão se as senhas não coincidirem
+      } else {
+        mensagemSenhasDiferentes.style.display = 'none';
+        botaoSalvar.disabled = false; // Habilita o botão se as senhas coincidirem
+      }
+    }
+
     // Função para alternar entre texto e senha
     function toggleSenha(inputField) {
       const type = inputField.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -125,7 +133,5 @@
     }
   });
 </script>
-<%- include ('../../partials/footer.ejs') %> 
-<%- include ('../../partials/conf_footer.ejs') %>
 
 

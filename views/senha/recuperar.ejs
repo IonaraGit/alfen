@@ -1,0 +1,63 @@
+<%- include ('../../partials/conf_header.ejs') %> 
+<%- include ('../../partials/header.ejs') %>
+
+<div class="container" style="height: 70vh;">
+
+  
+  <form class="form-login" method="post" action="/recuperarsenha">
+  
+    <div style="text-align: center">
+      <img src="img/logologin.png" alt="logo" style="width: 130px" />
+    </div>
+    <br />
+
+    <div class="form-group row">
+      <div class="col-sm-6">
+        <label for="usuario" class="label-novo">ID SISTEC <span style="color: crimson;">*</span></label>
+        <input type="text" class="form-control" id="empresa" name="empresa" required/>
+      </div>
+    
+      <div class="col-sm-6">
+        <label for="usuario" class="label-novo">CPF <span style="color: crimson;">*</span></label>
+        <input type="text" class="form-control" id="CPF" name="cpf" required/>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-6">
+        <label for="qtd" class="label-novo">Pergunta secreta <span style="color: crimson;">*</span></label>
+        <select class="form-control" name="pergunta" required>
+          <% perguntas.forEach((pergunta) => { %>
+              <option value="<%= pergunta.id %>"> <%=pergunta.descricao%> </option>      
+          <% }) %>
+        </select>
+      </div>
+    
+      <div class="col-sm-6">
+        <label for="usuario" class="label-novo">Resposta <span style="color: crimson;">*</span></label>
+        <input type="text" class="form-control" id="resposta" name="resposta" required/>
+      </div>
+    </div>
+    
+
+    <br>
+    <h6 style="color: crimson;">
+    </h6>
+    <div class="form-group row">
+      <div class="col text-center">
+        <button
+          type="submit"
+          class="btn btn-outline-primary"
+          style="width: 80%"
+        >
+          Prosseguir
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<%- include ('../../partials/footer.ejs') %> 
+<%- include ('../../partials/conf_footer.ejs') %>
+
+

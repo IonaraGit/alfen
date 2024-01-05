@@ -16,6 +16,7 @@ const Pagamento = require ('../models/Pagamento')
 const Recebimento = require ('../models/Recebimento')
 const Estoque = require ('../models/Estoque')
 const Medida = require ('../models/Medida')
+const Pergunta = require ('../models/Pergunta')
 
 const expirar = require ('../middlewares/expirar');
 
@@ -36,7 +37,10 @@ router.get('/inicio', (req, res) => {
 
 /* INICIO SISTEMA */
 router.get('/acesso', (req, res) => {
-  res.render('sistema/login')
+  const mensagem = req.query.mensagem;
+  const mensagemcolaborador = req.query.mensagemcolaborador
+  const errorMessage = req.query.error;
+  res.render('sistema/login', {mensagem, mensagemcolaborador, errorMessage})
 })
 
 router.get('/acesso/adm', expirar, (req, res) =>{
@@ -560,14 +564,51 @@ router.get('/admin/pagamento/:id', (req, res) => {
 /* INICIO LOGIN */
 
 router.get('/alterarsenha', (req, res) => {
-  res.render('senha/index')
+  Pergunta.findAll().then(perguntas =>{
+    res.render('senha/index', {perguntas: perguntas})
+  })
+  
+})
+
+router.get('/recuperarsenha', (req, res) => {
+  Pergunta.findAll().then(perguntas =>{
+    res.render('senha/recuperar', {perguntas: perguntas})
+  })
+})
+
+router.get('/recuperando/passo1', (req, res) => {
+  const mensagemcolaborador = req.query.mensagemcolaborador
+  const errorMessage = req.query.error;
+  res.render ('senha/recuperando1', {mensagemcolaborador, errorMessage})
+})
+
+router.get ('/recuperando/passo2/:empresa/:cpf/:pergunta', (req, res) => {
+  var empresa = req.params.empresa
+  var cpf = req.params.cpf
+  var pergunta = req.params.pergunta
+  const mensagemcolaborador = req.query.mensagemcolaborador
+  const errorMessage = req.query.error;
+ 
+ 
+  res.render('senha/recuperando2', {empresa, cpf, pergunta, mensagemcolaborador, errorMessage})
+
+})
+
+router.get ('/recuperando/passo3/:empresa/:cpf/:pergunta/:resposta', (req, res) => {
+  var empresa = req.params.empresa
+  var cpf = req.params.cpf
+  var pergunta = req.params.pergunta
+  var resposta = req.params.resposta
+ 
+ 
+  res.render('senha/recuperando3', {empresa, cpf, pergunta, resposta})
+
 })
 
 /*** FIM LOGIN */
 
 
 /* INICIO ENVIOS */
-
 
 router.get ('/admin/orcamentos/envios/:id', (req, res) => {
   var id = req.params.id

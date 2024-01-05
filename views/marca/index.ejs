@@ -44,15 +44,7 @@
                   </button>
                 </form>
 
-                <div class="custom-alert" id="confirmationAlert">
-                  <div class="alert-content">
-                    <p>Deseja realmente alterar o status desta marca?</p>
-                  </div>
-                  <div class="alert-buttons">
-                    <button class="btn btn-secondary" id="cancelButton">Cancelar</button>
-                    <button class="btn btn-danger" id="confirmButton">Confirmar</button>
-                  </div>
-                </div>
+              
 
               <% } else if (marca.ativo == 0) { %>
                 <form method="POST" action="/marca/ativar" style="display: inline;" onsubmit="confirmaAtivar(event, this)">

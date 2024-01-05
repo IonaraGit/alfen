@@ -1,0 +1,86 @@
+<%- include ('../../partials/conf_header.ejs') %> 
+<%- include ('../../partials/header.ejs') %>
+
+<div class="container">
+
+  <form class="form-login" method="post" action="/recuperandosenha2">
+  
+    <div style="text-align: center">
+      <img src="/../img/logologin.png" alt="logo" style="width: 130px" />
+    </div>
+    <br />
+    <% if (mensagemcolaborador) { %>
+              
+      <div class="div-margin">
+       <p class="alerta-erro"><%= mensagemcolaborador %></p> 
+      </div>
+
+      <style>
+        .alerta-erro {
+          background: #ffb2b2;
+          color: #454545;
+          font-weight: 400;
+          text-align: center;
+          border-radius: 8px;
+          border: solid 1px #a42f2f;
+          padding: 9px;
+        }
+
+        .div-margin {
+          margin-top: 15px;
+          margin-bottom: -15px;
+        }
+      </style>
+     
+      
+     
+      <script>
+        // Aguardar 3 segundos e recarregar a página
+        setTimeout(function() {
+          window.location.href = `/recuperando/passo2/${empresa}/${cpf}/${pergunta}`;
+        }, 3000);
+      </script>
+    <% } %>
+     <br>
+
+    <div class="form-group row">
+      <div class="col-sm-6">
+        <label for="usuario" class="label-novo">ID SISTEC <span style="color: crimson;">*</span></label>
+        <input type="text" class="form-control" id="empresa" name="empresa" value="<%=empresa%>" readonly/>
+      </div>
+    
+      <div class="col-sm-6">
+        <label for="usuario" class="label-novo">CPF <span style="color: crimson;">*</span></label>
+        <input type="text" class="form-control" id="CPF" name="cpf" value="<%=cpf%>" readonly/>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-6">
+        <label for="qtd" class="label-novo">Pergunta secreta <span style="color: crimson;">*</span></label>
+        <input type="text" class="form-control" id="pergunta" name="pergunta" value="<%=pergunta%>" readonly/>
+      </div>
+    
+      <div class="col-sm-6">
+        <label for="usuario" class="label-novo">Resposta <span style="color: crimson;">*</span></label>
+        <input type="text" class="form-control" id="resposta" name="resposta" required/>
+      </div>
+    </div>
+
+    <div class="form-group row">
+
+      <br>
+      <h6 style="color: crimson;"></h6>
+      <div class="form-group row">
+        <div class="col text-center">
+          <button type="submit" class="btn btn-outline-primary" style="width: 80%"> Prosseguir </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<%- include ('../../partials/footer.ejs') %> 
+<%- include ('../../partials/conf_footer.ejs') %>
+
+

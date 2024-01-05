@@ -40,7 +40,7 @@ const Agenda = require ('./models/Agenda')
 const Recebimento = require ('./models/Recebimento')
 const Estoque = require ('./models/Estoque')
 const Medida = require ('./models/Medida')
-
+const Pergunta = require ('./models/Pergunta')
 
 
 
