@@ -536,3 +536,19 @@ a {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.btn-iniciar-colaborador {
+ border-radius: 6px;
+ background: #197315;
+ color: #fff;
+ cursor: pointer;
+ padding: 0px 3px;
+}
+
+.btn-finalizar-colaborador {
+  border-radius: 6px;
+  background:rgb(240, 38, 38);
+  color: #fff;
+  cursor: pointer;
+  padding: 0px 3px;
+ }

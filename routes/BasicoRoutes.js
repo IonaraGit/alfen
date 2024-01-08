@@ -78,6 +78,21 @@ router.get('/acesso/adm/clientes', (req, res) =>{
 router.get('/acesso/cliente/orcamento', (req, res) => {
   res.render('sistema/orcamento')
 })
+
+router.get ('/acesso/colaborador', (req, res) =>{
+  sessao = req.session.colaborador
+  Agenda.findAll().then(agendas =>{
+    Cliente.findAll().then(clientes => {
+      Prestacao.findAll().then(prestacoes => {
+        Colaborador.findAll().then(colaboradores => {
+          Orcamento.findAll().then(orcamentos => {
+            res.render ('sistema/colaborador', {agendas: agendas, clientes: clientes, prestacoes: prestacoes, colaboradores: colaboradores, orcamentos: orcamentos, sessao})
+          })
+        })
+      })
+    })
+  })
+})
 /*** FIM SISTEMA */
 
 /* CLIENTES */

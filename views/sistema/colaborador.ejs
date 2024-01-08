@@ -1,0 +1,107 @@
+<%- include ('../../partials/conf_header.ejs') %> 
+<%- include ('../../partials/header_colaborador.ejs') %>
+
+<div class="principal" style="height: 100vh;">
+  <div class="col-12 col-lg-4">
+
+      
+    <h5 class="text-center mt-3 bg-info text-white">
+      AGENDAMENTOS DE HOJE
+    </h5>
+    <div class="p-3" style="max-height: 605px; overflow-y: auto">
+     
+          <% const dataAtual = new Date().toLocaleDateString('pt-BR', { timeZone: 'UTC' }); %> 
+          <% const testeDataA = dataAtual.toLocaleString('pt-BR', { timeZone: 'UTC' }) %>
+        
+          
+          <% agendas.forEach(agenda => { %> 
+            <% if (agenda.colaboradoreId == sessao.id ) { %>
+
+           
+            <% const testedata = new Date(agenda.previsao_inicio).toLocaleDateString('pt-BR', { timeZone: 'UTC' })%>
+            <% const dataAgendaUTC = new Date(agenda.previsao_inicio).toDateString('pt-BR'); %>
+            <% const dataAgendaLocal = new Date(dataAgendaUTC.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })); %>
+            <%if(testedata === testeDataA) {%>
+            <div style="background-color: rgb(164, 214, 214); padding: 15px 0px;" class="row mt-2">
+              
+              <div class="col-lg-10 mt-2">
+               
+                  <!-- A data da agenda é do dia atual -->
+                  <% clientes.forEach(cliente => { %> 
+                    <% if (cliente.id == agenda.clienteId) { %>
+                      <h6><b>Cliente: </b><%=cliente.nome%></h6>
+                      <% prestacoes.forEach (prestacao => { %> 
+                        <% orcamentos.forEach (orcamento => { %> 
+                          <% if ((orcamento.id == agenda.orcamentoId) && (prestacao.id == orcamento.prestacoId)) { %>
+                            <h6><b>Prestação do serviço:</b> <%= prestacao.descricao %></h6>
+                          <% } %> 
+                        <% }) %>
+                        <h6> <b>Agendado para iniciar às: </b><%= formatarHorario(agenda.horario) %> </h6>
+
+                        <% function formatarHorario(horario) { %> 
+                          <% const [hora, minutos] = horario.split(':'); %> 
+                          <%= `${hora}h${minutos}m` %>
+                        <% } %> 
+                        <% colaboradores.forEach(colaborador => { %> 
+                          <% if (colaborador.id == agenda.colaboradoreId) { %>
+                            <h6><b>Funcionário responsável: </b><%= colaborador.nome %></h6>
+                          <% } %> 
+                        <% }) %> 
+                      <% }) %> 
+                    <% } %> 
+                  <% }) %>
+                  
+                  <h6><b>Status: </b>verifcar</h6>
+                  
+                  <button id="btnIniciar" class="btn-iniciar-colaborador" style="cursor: pointer;">Iniciar</button>
+
+                  <button id="btnFinalizar" class="btn-finalizar-colaborador" style="cursor: pointer; display: none;">Finalizar</button>
+                  
+                
+                  
+                  
+              </div>
+
+              
+              
+            </div>
+            <% } %>
+            <% } %>
+          <% }) %>
+  
+       
+      
+    </div>
+    <div class="p-3 mt-2">
+      <i class="bi bi-wrench-adjustable-circle" style="color: rgb(252, 3, 23)"></i> <span> Não iniciado: <b>implentar</b></span>
+      <br />
+      <br />
+      <i class="bi bi-wrench-adjustable-circle" style="color: rgb(4, 114, 4)"></i> <span> Iniciado: <b>implementar</b></span>
+      <br />
+      <br />
+      
+    </div>
+  </div>
+</div>
+
+<%- include ('../../partials/footer.ejs') %> 
+<%- include ('../../partials/conf_footer.ejs') %>
+
+
+<script>
+  document.getElementById('btnIniciar').addEventListener('click', function() {
+  // Faça as ações que deseja realizar ao iniciar
+  // Por exemplo, mostrar o botão "Finalizar" e ocultar o botão "Iniciar"
+  document.getElementById('btnFinalizar').style.display = 'inline-block';
+  this.style.display = 'none'; // "this" se refere ao botão que acionou o evento
+});
+
+// Adicione um evento ao botão "Finalizar" se desejar realizar alguma ação quando for clicado
+document.getElementById('btnFinalizar').addEventListener('click', function() {
+  // Faça as ações que deseja realizar ao finalizar
+  // Por exemplo, mostrar o botão "Iniciar" e ocultar o botão "Finalizar"
+  document.getElementById('btnIniciar').style.display = 'inline-block';
+  this.style.display = 'none'; // "this" se refere ao botão que acionou o evento
+});
+
+</script>

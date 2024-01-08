@@ -32,6 +32,14 @@ router.post('/autenticacao', (req, res) => {
         }
       }).then(empresaEncontrada => {
         if (empresaEncontrada != undefined) {
+          
+          if (colaborador.ativo == 0){
+            console.log ('você não tem acesso a esse sistema!')
+            res.redirect (`/acesso?mensagemcolaborador=${encodedMsg}`)
+            return
+          }
+
+
           // Agora, você tem o colaborador e a empresa
           if (colaborador.primeiro_acesso == 0) {
             sessao = req.session.colaborador = {
@@ -40,39 +48,45 @@ router.post('/autenticacao', (req, res) => {
               id: colaborador.id,
               empresaId: colaborador.empresaId
             }
+            if ((colaborador.permissoId == 1) && (colaborador.ativo == 1)) {
+              res.redirect('/alterarsenha')
+              return
+            }
+
+            if ((colaborador.permissoId == 2) && (colaborador.ativo == 1)) {
+              res.redirect('/alterarsenha')
+              return
+            }
           }
+
+                  
 
           var correto = bcrypt.compareSync(senha, colaborador.senha);
 
           if (correto) {
-            sessao = req.session.colaborador = {
-              id: colaborador.id,
-              cpf: colaborador.cpf,
-              nome: colaborador.nome,
-              empresaId: colaborador.empresaId,
-              permissoId: colaborador.permissoId 
 
-              
+            sessao = req.session.colaborador = {
+              cpf: colaborador.cpf,
+              resposta: colaborador.resposta,
+              id: colaborador.id,
+              empresaId: colaborador.empresaId
+            }
+
+            
+            if ((colaborador.permissoId == 1) && (colaborador.ativo == 1) && (colaborador.primeiro_acesso == 1)) {
+              res.redirect('/acesso/adm')
+            }
+            if ((colaborador.permissoId == 2) && (colaborador.ativo == 1) && (colaborador.primeiro_acesso == 1)) {
+              res.redirect('/acesso/colaborador')
             }
           } else {
-            console.log(chalk.red.bold('Senhas não iguais'));
-            console.log('Senha do banco de dados:', colaborador.senha);
-            console.log('Senha fornecida:', senha);
-          }
-          
-          
-          if ((colaborador.permissoId == 1) && (colaborador.ativo == 1) && (colaborador.primeiro_acesso == 1)) {
-            res.redirect('/acesso/adm')
-          } else if ((colaborador.permissoId == 2) && (colaborador.ativo == 1) && (colaborador.primeiro_acesso == 1)) {
-            res.send ('É do geral, crirar uma pagina para ele')
-          } else if ((colaborador.permissoId == 1) && (colaborador.ativo == 1) && (colaborador.primeiro_acesso == 0)) {
-            res.redirect('/alterarsenha')
-          } else if ((colaborador.permissoId == 2) && (colaborador.ativo == 1) && (colaborador.primeiro_acesso == 0)) {
-            res.redirect('/alterarsenha')
-          } else if (colaborador.ativo == 0){
-            console.log ('você não tem acesso a esse sistema!')
+            console.log(chalk.red.bold('Senha incorreta'));
             res.redirect (`/acesso?mensagemcolaborador=${encodedMsg}`)
           }
+
+         
+          
+        
         } else {
           console.log('Empresa não encontrada');
           res.redirect (`/acesso?mensagemcolaborador=${encodedMsg}`)
@@ -177,7 +191,7 @@ router.post('/recuperarsenha', (req, res) => {
           } 
 
           else {
-            res.send('não');
+            res.redirect (`/recuperando/passo1?mensagemcolaborador=${`Você não tem acesso a este sistema!`}`)
           }
         } else {
           console.log('Colaborador não encontrado');
