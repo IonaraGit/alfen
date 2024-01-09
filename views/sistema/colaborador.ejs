@@ -2,106 +2,319 @@
 <%- include ('../../partials/header_colaborador.ejs') %>
 
 <div class="principal" style="height: 100vh;">
-  <div class="col-12 col-lg-4">
 
+  <nav>
+    <div class="nav flex-column flex-sm-row nav-pills" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link active" id="nav-de-hoje-tab" data-toggle="tab" href="#nav-de-hoje" role="tab" aria-controls="nav-de-hoje" aria-selected="false">Agenda de hoje</a>
+      <a class="nav-item nav-link" id="nav-em-andamento-tab" data-toggle="tab" href="#nav-em-andamento" role="tab" aria-controls="nav-em-andamento" aria-selected="false">Em andamento</a>
+      <a class="nav-item nav-link" id="nav-atrasados-tab" data-toggle="tab" href="#atrasados" role="tab" aria-controls="nav-atrasados" aria-selected="false">Em atraso</a>
+      <a class="nav-item nav-link" id="nav-proximos-tab" data-toggle="tab" href="#nav-proximos" role="tab" aria-controls="nav-proximos" aria-selected="true">Próximos agendamentos</a>
       
-    <h5 class="text-center mt-3 bg-info text-white">
-      AGENDAMENTOS DE HOJE
-    </h5>
-    <div class="p-3" style="max-height: 605px; overflow-y: auto">
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-de-hoje" role="tabpanel" aria-labelledby="nav-de-hoje-tab">
+      <h5 class="text-center mt-3 bg-info text-white">
+        AGENDAMENTOS DE HOJE
+      </h5>
+      
      
-          <% const dataAtual = new Date().toLocaleDateString('pt-BR', { timeZone: 'UTC' }); %> 
-          <% const testeDataA = dataAtual.toLocaleString('pt-BR', { timeZone: 'UTC' }) %>
-        
-          
-          <% agendas.forEach(agenda => { %> 
-            <% if (agenda.colaboradoreId == sessao.id ) { %>
-
-           
-            <% const testedata = new Date(agenda.previsao_inicio).toLocaleDateString('pt-BR', { timeZone: 'UTC' })%>
-            <% const dataAgendaUTC = new Date(agenda.previsao_inicio).toDateString('pt-BR'); %>
-            <% const dataAgendaLocal = new Date(dataAgendaUTC.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })); %>
-            <%if(testedata === testeDataA) {%>
-            <div style="background-color: rgb(164, 214, 214); padding: 15px 0px;" class="row mt-2">
-              
-              <div class="col-lg-10 mt-2">
-               
-                  <!-- A data da agenda é do dia atual -->
-                  <% clientes.forEach(cliente => { %> 
-                    <% if (cliente.id == agenda.clienteId) { %>
-                      <h6><b>Cliente: </b><%=cliente.nome%></h6>
-                      <% prestacoes.forEach (prestacao => { %> 
-                        <% orcamentos.forEach (orcamento => { %> 
-                          <% if ((orcamento.id == agenda.orcamentoId) && (prestacao.id == orcamento.prestacoId)) { %>
-                            <h6><b>Prestação do serviço:</b> <%= prestacao.descricao %></h6>
-                          <% } %> 
-                        <% }) %>
-                        <h6> <b>Agendado para iniciar às: </b><%= formatarHorario(agenda.horario) %> </h6>
-
-                        <% function formatarHorario(horario) { %> 
-                          <% const [hora, minutos] = horario.split(':'); %> 
-                          <%= `${hora}h${minutos}m` %>
-                        <% } %> 
-                        <% colaboradores.forEach(colaborador => { %> 
-                          <% if (colaborador.id == agenda.colaboradoreId) { %>
-                            <h6><b>Funcionário responsável: </b><%= colaborador.nome %></h6>
-                          <% } %> 
-                        <% }) %> 
-                      <% }) %> 
-                    <% } %> 
-                  <% }) %>
-                  
-                  <h6><b>Status: </b>verifcar</h6>
-                  
-                  <button id="btnIniciar" class="btn-iniciar-colaborador" style="cursor: pointer;">Iniciar</button>
-
-                  <button id="btnFinalizar" class="btn-finalizar-colaborador" style="cursor: pointer; display: none;">Finalizar</button>
-                  
-                
-                  
-                  
-              </div>
-
-              
-              
-            </div>
-            <% } %>
-            <% } %>
-          <% }) %>
-  
        
+            <% const dataAtual = new Date().toLocaleDateString('pt-BR', { timeZone: 'UTC' }); %> 
+            <% const testeDataA = dataAtual.toLocaleString('pt-BR', { timeZone: 'UTC' }) %>
+          
+            
+            <% agendas.forEach(agenda => { %> 
+              <% if (agenda.colaboradoreId == sessao.id ) { %>
+  
+             
+              <% const testedata = new Date(agenda.previsao_inicio).toLocaleDateString('pt-BR', { timeZone: 'UTC' })%>
+              <% const dataAgendaUTC = new Date(agenda.previsao_inicio).toDateString('pt-BR'); %>
+              <% const dataAgendaLocal = new Date(dataAgendaUTC.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })); %>
+              <%orcamentos.forEach (orcamento => { %>
+                <% if (orcamento.id == agenda.orcamentoId) { %>
+                  <%if((testedata === testeDataA) && (orcamento.status === 1)) {%>
+                    <form action="/orcamento/iniciar/<%=agenda.orcamentoId%>" method="post" onsubmit="confirmaIniciar(event,this)">
+                      <div style="background-color: rgb(164, 214, 214); padding: 15px 0px;" class="row m-auto mt-2">
+                        
+                        <div class="col-lg-10 mt-2">
+                        
+                            <!-- A data da agenda é do dia atual -->
+                            <% clientes.forEach(cliente => { %> 
+                              <% if (cliente.id == agenda.clienteId) { %>
+                                <h6><b>Cliente: </b><%=cliente.nome%></h6>
+                                <% prestacoes.forEach (prestacao => { %> 
+                                  <% orcamentos.forEach (orcamento => { %> 
+                                    <% if ((orcamento.id == agenda.orcamentoId) && (prestacao.id == orcamento.prestacoId)) { %>
+                                      <h6><b>Prestação do serviço:</b> <%= prestacao.descricao %></h6>
+                                    <% } %> 
+                                  <% }) %>
+                                  <h6> <b>Agendado para iniciar às: </b><%= formatarHorario(agenda.horario) %> </h6>
+          
+                                  <% function formatarHorario(horario) { %> 
+                                    <% const [hora, minutos] = horario.split(':'); %> 
+                                    <%= `${hora}h${minutos}m` %>
+                                  <% } %> 
+                                  <% colaboradores.forEach(colaborador => { %> 
+                                    <% if (colaborador.id == agenda.colaboradoreId) { %>
+                                      <h6><b>Funcionário responsável: </b><%= colaborador.nome %></h6>
+                                    <% } %> 
+                                  <% }) %> 
+                                <% }) %> 
+                              <% } %> 
+                            <% }) %>
+                            
+                            
+                            
+                            <button id="btnIniciar" class="btn-iniciar-colaborador" style="cursor: pointer;">Iniciar</button>
+          
+                            
+                            
+                          
+                            
+                            
+                        </div>
+          
+                        
+                        
+                      </div>
+                    </form>
+                  <% } %>
+                <% } %>
+
+              <% }) %>
+
+              
+              <% } %>
+            <% }) %>
+    
+         
+        
+      
+
       
     </div>
-    <div class="p-3 mt-2">
-      <i class="bi bi-wrench-adjustable-circle" style="color: rgb(252, 3, 23)"></i> <span> Não iniciado: <b>implentar</b></span>
-      <br />
-      <br />
-      <i class="bi bi-wrench-adjustable-circle" style="color: rgb(4, 114, 4)"></i> <span> Iniciado: <b>implementar</b></span>
-      <br />
-      <br />
+    <div class="tab-pane fade" id="nav-em-andamento" role="tabpanel" aria-labelledby="nav-em-andamento-tab">
+      <h5 class="text-center mt-3 bg-info text-white">
+        EM ANDAMENTO
+      </h5>
+      <% agendas.forEach(agenda => { %> 
+        <% if (agenda.colaboradoreId == sessao.id ) { %>
+          <%orcamentos.forEach (orcamento => { %>
+            <% if ((orcamento.id == agenda.orcamentoId) && (orcamento.status === 2)) { %>
+              
+               
+                  <div style="background-color: rgb(164, 214, 214); padding: 15px 0px;" class="row m-auto mt-2">
+                    
+                    <div class="col-lg-10 mt-2">
+                    
+                        <!-- A data da agenda é do dia atual -->
+                        <% clientes.forEach(cliente => { %> 
+                          <% if (cliente.id == agenda.clienteId) { %>
+                            
+                            <h6><b>Cliente: </b><%=cliente.nome%></h6>
+                            <%enderecos.forEach (endereco => { %>
+                              <%if (endereco.clienteId == cliente.id) { %>
+                                <h6><b>Endereco: </b><%= endereco.logadouro %>, <%= endereco.numero %> - <%= endereco.complemento %></h6>
+                              <% } %>
+                            <% }) %>
+                            <% prestacoes.forEach (prestacao => { %> 
+                              
+                                <% if ((orcamento.id === agenda.orcamentoId) && (prestacao.id === orcamento.prestacoId) && (cliente.id == agenda.clienteId)) { %>
+                                  <h6><b>Prestação do serviço:</b> <%= prestacao.descricao %></h6>
+                                <% } %> 
+                                <% }) %>  
+                              <h6> <b>Agendado para iniciar às: </b><%= formatarHorario(agenda.horario) %> </h6>
       
+                              <% function formatarHorario(horario) { %> 
+                                <% const [hora, minutos] = horario.split(':'); %> 
+                                <%= `${hora}h${minutos}m` %>
+                              <% } %> 
+                             
+                             
+                              <% } %> 
+                            <% }) %>
+
+                        <% comentarios.forEach(comentario => { %>
+
+                          <%if (agenda.id == comentario.agendaId)  { %>
+                            <% colaboradores.forEach(colaborador => { %> 
+                              <% if (colaborador.id == comentario.colaboradoreId) { %>
+                                <h6><b>Comentário de: </b><%=colaborador.nome%> - <b><%= new Date(comentario.createdAt).toLocaleDateString('pt-BR') %></b>
+                              
+                                  <i>( <%= comentario.descricao %> ) </i> </h6>
+                              <%}%>
+                           
+                          <% }) %>
+
+                        <% }%>
+                        <%})%>
+                       
+                        
+                        
+                   
+                        <button class="btn-comentar-colaborador" style="cursor: pointer" data-toggle="modal" data-target="#comentar-<%= orcamento.id %>">Comentar</button>
+
+                        <!-- Modal Comentar -->
+                        <div class="modal fade" id="comentar-<%= orcamento.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Comentar serviço</h5>
+
+                                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form method="POST" action="/orcamento/agendamento/comentar/<%=agenda.id%>">
+                                  <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                      <textarea rows="4" class="form-control" name="descricao" id="descricao" required></textarea>
+
+                                      
+                                      <input type="hidden" name="empresa" value="<%=agenda.empresaId%>">
+                                      <input type="hidden" name="colaborador" value="<%=sessao.id%>">
+                                    </div>
+                                  </div>
+                                  <button class="btn btn-success">Salvar</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Fim Modal Comentar -->
+
+
+                        <form action="/orcamento/finalizar/<%=orcamento.id%>" method="post"  onsubmit="confirmaFinalizar(event,this)" style="display: inline-block;">
+                          <button class="btn-finalizar-colaborador" style="cursor: pointer;">Finalizar</button>
+                        </form>
+                        
+
+
+
+                        
+                       
+                        
+      
+                        
+                        
+                      
+                        
+                        
+                    </div>
+      
+                    
+                    
+                  </div>
+              
+             
+            <% } %>
+
+          <% }) %>
+        <% } %>
+       <% }) %> 
     </div>
+    <div class="tab-pane fade" id="atrasados" role="tabpanel" aria-labelledby="nav-atrasados-tanav-atrasados">
+      <h5 class="text-center mt-3 bg-info text-white">
+        ATRASADOS
+      </h5>
+    </div>
+    <div class="tab-pane fade" id="nav-proximos" role="tabpanel" aria-labelledby="nav-proximos-tab">
+      <h5 class="text-center mt-3 bg-info text-white">
+        PRÓXIMOS AGENDAMENTOS
+      </h5>
+    </div>
+    
   </div>
+  <div class="p-3 mt-2">
+    <i class="bi bi-wrench-adjustable-circle" style="color: rgb(252, 3, 23)"></i> <span> Não iniciado: <b>implentar</b></span>
+    <br />
+    <br />
+    <i class="bi bi-wrench-adjustable-circle" style="color: rgb(4, 114, 4)"></i> <span> Iniciado: <b>implementar</b></span>
+    <br />
+    <br />
+    
+  </div>
+  
+  
+
+      
+   
+  
 </div>
+
+  
+
+<!-- Adicione este script abaixo do código anterior -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function confirmaIniciar(event, form) {
+    event.preventDefault();
+
+    Swal.fire({
+      //title: 'Tem certeza?',
+      text: 'Tem certeza que quer iniciar esse serviço?',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, iniciar!',
+      cancelButtonText: 'Cancelar',
+      width: '300px', // Largura do modal
+      heigt: '200px',
+      
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.submit();
+      }
+    });
+  }
+</script>
+
+<script>
+  function confirmaFinalizar(event, form) {
+    event.preventDefault();
+
+    Swal.fire({
+      //title: 'Tem certeza?',
+      text: 'Tem certeza que quer finalizar esse serviço?',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, iniciar!',
+      cancelButtonText: 'Cancelar',
+      width: '300px', // Largura do modal
+      heigt: '200px',
+      
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.submit();
+      }
+    });
+  }
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      // Verifica se há um identificador de guia na URL
+      var tabId = window.location.hash.substring(1);
+      
+      // Ativa a guia correspondente
+      if (tabId) {
+          var tabElement = document.getElementById(tabId + '-tab');
+          if (tabElement) {
+              tabElement.click();
+          }
+      }
+  });
+  </script>
+  
 
 <%- include ('../../partials/footer.ejs') %> 
 <%- include ('../../partials/conf_footer.ejs') %>
 
 
-<script>
-  document.getElementById('btnIniciar').addEventListener('click', function() {
-  // Faça as ações que deseja realizar ao iniciar
-  // Por exemplo, mostrar o botão "Finalizar" e ocultar o botão "Iniciar"
-  document.getElementById('btnFinalizar').style.display = 'inline-block';
-  this.style.display = 'none'; // "this" se refere ao botão que acionou o evento
-});
-
-// Adicione um evento ao botão "Finalizar" se desejar realizar alguma ação quando for clicado
-document.getElementById('btnFinalizar').addEventListener('click', function() {
-  // Faça as ações que deseja realizar ao finalizar
-  // Por exemplo, mostrar o botão "Iniciar" e ocultar o botão "Finalizar"
-  document.getElementById('btnIniciar').style.display = 'inline-block';
-  this.style.display = 'none'; // "this" se refere ao botão que acionou o evento
-});
-
-</script>
